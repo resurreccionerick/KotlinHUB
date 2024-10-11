@@ -1,6 +1,7 @@
 package com.example.flutterhub_jetpackcompose.viewmodel_repository
 
 import android.net.Uri
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -32,12 +33,9 @@ class LessonViewModel @Inject constructor(
     fun addNewLesson(name: String, desc: String, img: Uri) {
         viewModelScope.launch {
             val imgUrl = repository.uploadImageToFirebase(img)
-            if(imgUrl !=null ){
+            if (imgUrl != null) {
                 val lesson = LessonModel(
-                    id = "",
-                    name = name,
-                    description =  desc,
-                    imgUrl = imgUrl
+                    id = "", name = name, description = desc, imgUrl = imgUrl
                 )
 
                 repository.addLesson(lesson)
@@ -58,6 +56,49 @@ class LessonViewModel @Inject constructor(
     fun deleteLesson(lessonID: String) {
         viewModelScope.launch {
             repository.deleteLesson(lessonID)
+        }
+    }
+
+
+    // ---------------------------------------------------- USER PART ---------------------------------------------------- //
+    fun userSignUp(
+        name: String,
+        email: String,
+        password: String,
+        onSuccess: () -> Unit,
+        onFailure: (String) -> Unit
+    ) {
+        viewModelScope.launch {
+            repository.userRegister(name, email, password, onSuccess = {
+                onSuccess()
+            }, onFailure = { errorMsg ->
+                onFailure(errorMsg)
+            });
+        }
+    }
+
+    fun userLogin(
+        email: String, password: String, onSuccess: () -> Unit, onFailure: (String) -> Unit
+    ) {
+
+        viewModelScope.launch {
+            repository.userLogin(email, password, onSuccess = {
+                onSuccess()
+            }, onFailure = { errorMsg ->
+                onFailure(errorMsg)
+            })
+        }
+    }
+
+    fun forgotPass(
+        email: String, onSuccess: () -> Unit, onFailure: (String) -> Unit
+    ) {
+        viewModelScope.launch {
+            repository.forgotPass(email, onSuccess = {
+                onSuccess()
+            }, onFailure = { errorMsg ->
+                onFailure(errorMsg)
+            })
         }
     }
 }

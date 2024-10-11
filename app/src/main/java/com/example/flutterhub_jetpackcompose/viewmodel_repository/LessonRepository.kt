@@ -3,6 +3,9 @@ package com.example.flutterhub_jetpackcompose.viewmodel_repository
 import android.net.Uri
 import android.util.Log
 import com.example.flutterhub_jetpackcompose.models.LessonModel
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.UserProfileChangeRequest
+import com.google.firebase.auth.userProfileChangeRequest
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.tasks.await
@@ -12,10 +15,10 @@ import javax.inject.Inject
 class LessonRepository @Inject constructor() {
 
     private val firestore = FirebaseFirestore.getInstance()
+    private val auth = FirebaseAuth.getInstance()
 
     suspend fun addLesson(lesson: LessonModel) {
         try {
-
             val lessonDocRef =
                 firestore.collection("lessons") // Generate a document reference with an auto-ID
                     .document(lesson.id)
@@ -77,4 +80,83 @@ class LessonRepository @Inject constructor() {
             null
         }
     }
+
+    // ---------------------------------------------------- USER PART ---------------------------------------------------- //
+    suspend fun userRegister(
+        name: String,
+        email: String,
+        pass: String,
+        onSuccess: () -> Unit, //callback if success
+        onFailure: (String) -> Unit
+    ) {
+        try {
+            val authResult = auth.createUserWithEmailAndPassword(email, pass).await()
+
+            // Get current user after registration
+            val user = authResult.user
+
+            // Check if user is not null, then update their profile with name
+            user?.let {
+                val profileUpdates = UserProfileChangeRequest.Builder()
+                    .setDisplayName(name)
+                    .build()
+
+                // Update the user's profile with name
+                it.updateProfile(profileUpdates).await()
+                Log.d("userRegister", "User profile updated with name: $name")
+
+                onSuccess()
+            } ?: run {
+                onFailure("User registration failed. Please try again.")
+            }
+        } catch (e: Exception) {
+            onFailure(e.message.toString())
+            Log.e("userRegister ERROR: ", e.message.toString())
+        }
+    }
+
+    suspend fun userLogin(
+        email: String,
+        pass: String,
+        onSuccess: () -> Unit,
+        onFailure: (String) -> Unit
+    ) {
+        try {
+            auth.signInWithEmailAndPassword(email, pass)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        onSuccess()
+                        Log.e("USER LOGIN SUCCESS", "USER LOGIN SUCCESS")
+                    } else {
+                        onFailure("No account found")
+                    }
+                }.addOnFailureListener { fail ->
+                    onFailure("Error: " + fail.message.toString())
+                }
+        } catch (e: Exception) {
+            Log.e("userLogin ERROR: ", e.message.toString())
+        }
+    }
+
+
+    suspend fun forgotPass(
+        email: String,
+        onSuccess: () -> Unit,  // Callback when the operation succeeds
+        onFailure: (String) -> Unit // Callback when the operation fails
+    ) {
+        try {
+            auth.sendPasswordResetEmail(email)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        onSuccess() // Call success callback
+                    }
+                }.addOnFailureListener { fail ->
+                    onFailure("Error: " + fail.message.toString())
+                }
+        } catch (e: Exception) {
+            onFailure(e.message.toString()) // Call failure callback on exception
+            Log.e("forgotPass ERROR: ", e.message.toString())
+        }
+    }
+
 }

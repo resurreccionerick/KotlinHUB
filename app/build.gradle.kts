@@ -62,8 +62,11 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
 
+    implementation ("androidx.compose.material:material-icons-extended:1.0.0")
+
     implementation("com.google.dagger:hilt-android:2.51.1")
     implementation(libs.firebase.storage)
+    implementation(libs.androidx.espresso.core)
     kapt("com.google.dagger:hilt-android-compiler:2.51.1")
 
     implementation (libs.androidx.hilt.navigation.compose)
