@@ -24,14 +24,18 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.flutterhub_jetpackcompose.models.LessonModel
+import com.example.flutterhub_jetpackcompose.screen.LessonCard
 import com.example.flutterhub_jetpackcompose.viewmodel_repository.LessonViewModel
+import com.orhanobut.hawk.Hawk
 
 @Composable
-fun AdminHomeScreen(navController: NavController, viewModel: LessonViewModel, context: Context) {
+fun BasicHomeScreen(navController: NavController, viewModel: LessonViewModel, context: Context) {
+
 
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(onClick = {
+
                 navController.navigate("addLesson")
             }) {
                 Icon(Icons.Default.Add, contentDescription = "Add lesson")
@@ -46,79 +50,12 @@ fun AdminHomeScreen(navController: NavController, viewModel: LessonViewModel, co
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text("Lesson: ")
+            Hawk.put("difficulty", "basic")
 
             LazyColumn {
                 items(viewModel.lessons) { lesson ->
                     LessonCard(navController, lesson, viewModel, context)
                 }
-            }
-        }
-    }
-}
-
-@Composable
-fun LessonCard(
-    navController: NavController,
-    lesson: LessonModel,
-    viewModel: LessonViewModel,
-    context: Context
-) {
-    Card(
-        shape = RoundedCornerShape(8.dp), // Rounded corners for the card
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp), // Card padding
-        elevation = CardDefaults.cardElevation(4.dp) // Card elevation (shadow effect)
-    ) {
-        // Box to align content inside the card
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp) // Padding inside the card
-        ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically, // Center vertically
-                horizontalArrangement = Arrangement.SpaceBetween // Spread text and buttons
-            ) {
-                Text(
-                    text = "Title: ${lesson.name}",
-                    style = MaterialTheme.typography.bodyLarge,
-                    modifier = Modifier.weight(1f)
-                )
-            }
-        }
-        Row(modifier = Modifier.align(Alignment.CenterHorizontally)) {
-            // Edit Button
-            Button(
-                onClick = {
-                    navController.navigate("editLesson/${lesson.id}")
-                },
-                colors = ButtonDefaults.buttonColors(containerColor = Color.Blue),
-                modifier = Modifier.padding(end = 8.dp) // Spacing between buttons
-            ) {
-                Text("Edit")
-            }
-
-            // Delete Button
-            Button(
-                onClick = {
-                    viewModel.deleteLesson(lesson.id,
-                        onSuccess = {
-                            Toast.makeText(
-                                context,
-                                "Successfully deleted",
-                                Toast.LENGTH_SHORT
-                            ).show()
-
-                        },
-                        onFailure = { error ->
-                            Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
-                        })
-                },
-                colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
-            ) {
-                Text("Delete")
             }
         }
     }

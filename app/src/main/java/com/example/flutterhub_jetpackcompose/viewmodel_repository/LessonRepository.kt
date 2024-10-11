@@ -8,6 +8,7 @@ import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.auth.userProfileChangeRequest
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
+import com.orhanobut.hawk.Hawk
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
@@ -16,6 +17,7 @@ class LessonRepository @Inject constructor() {
 
     private val firestore = FirebaseFirestore.getInstance()
     private val auth = FirebaseAuth.getInstance()
+    val difficulty = Hawk.get<String>("difficulty")
 
     suspend fun addLesson(
         lesson: LessonModel,
@@ -24,7 +26,7 @@ class LessonRepository @Inject constructor() {
     ) {
         try {
             val lessonDocRef =
-                firestore.collection("lessons") // Generate a document reference with an auto-ID
+                firestore.collection(difficulty) // Generate a document reference with an auto-ID
                     .document()
 
             val lessonWithID =
@@ -44,7 +46,7 @@ class LessonRepository @Inject constructor() {
     // Function to fetch all lessons from Firestore
     suspend fun getLessons(): List<LessonModel> {
         return try {
-            val snapshot = firestore.collection("lessons")
+            val snapshot = firestore.collection(difficulty)
                 .get()
                 .await()
 
@@ -63,7 +65,7 @@ class LessonRepository @Inject constructor() {
         onFailure: (String) -> Unit
     ) {
         try {
-            firestore.collection("lessons")
+            firestore.collection(difficulty)
                 .document(lesson.id)
                 .set(lesson)
                 .addOnCompleteListener {
@@ -80,7 +82,7 @@ class LessonRepository @Inject constructor() {
     //DELETE
     fun deleteLesson(id: String, onSuccess: () -> Unit, onFailure: (String) -> Unit) {
         try {
-            firestore.collection("lessons")
+            firestore.collection(difficulty)
                 .document(id)
                 .delete()
                 .addOnCompleteListener { task ->
