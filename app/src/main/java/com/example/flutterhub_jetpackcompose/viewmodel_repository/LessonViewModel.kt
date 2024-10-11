@@ -1,9 +1,6 @@
 package com.example.flutterhub_jetpackcompose.viewmodel_repository
 
-import android.net.Uri
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.flutterhub_jetpackcompose.models.LessonModel
@@ -30,32 +27,42 @@ class LessonViewModel @Inject constructor(
         }
     }
 
-    fun addNewLesson(name: String, desc: String, img: Uri) {
+    fun addNewLesson(
+        name: String,
+        desc: String,
+        onSuccess: () -> Unit,
+        onFailure: (String) -> Unit
+    ) {
         viewModelScope.launch {
-            val imgUrl = repository.uploadImageToFirebase(img)
-            if (imgUrl != null) {
-                val lesson = LessonModel(
-                    id = "", name = name, description = desc, imgUrl = imgUrl
-                )
+            val lesson = LessonModel(
+                id = "", name = name,
+                description = desc,
+            )
 
-                repository.addLesson(lesson)
-                loadLessons() //refresh the list
-            }
+            repository.addLesson(lesson,
+                onSuccess = {
+                    onSuccess()
+                    loadLessons() //refresh the list
+                }, onFailure = { errorMsg ->
+                    onFailure(errorMsg)
+                })
+
         }
     }
 
 
-    fun updateLesson(lesson: LessonModel) {
+    fun updateLesson(lesson: LessonModel, onSuccess: () -> Unit, onFailure: (String) -> Unit) {
         viewModelScope.launch {
-            repository.updateLesson(lesson)
+            repository.updateLesson(lesson, onSuccess, onFailure)
 
             loadLessons() //refresh list
         }
     }
 
-    fun deleteLesson(lessonID: String) {
+    fun deleteLesson(lessonID: String, onSuccess: () -> Unit, onFailure: (String) -> Unit) {
         viewModelScope.launch {
-            repository.deleteLesson(lessonID)
+            repository.deleteLesson(lessonID, onSuccess, onFailure)
+            loadLessons() //refresh
         }
     }
 
@@ -101,4 +108,10 @@ class LessonViewModel @Inject constructor(
             })
         }
     }
+
+    fun getLessonById(lessonId: String): LessonModel {
+        // This function returns the lesson by its ID.
+        return lessons.find { it.id == lessonId } ?: LessonModel()
+    }
+
 }

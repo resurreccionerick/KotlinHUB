@@ -11,23 +11,25 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.flutterhub_jetpackcompose.models.LessonModel
 import com.example.flutterhub_jetpackcompose.viewmodel_repository.LessonViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddLessonScreen(
+fun EditLessonScreen(
     navController: NavController,
     viewModel: LessonViewModel,
+    lessonModel: LessonModel,
     context: Context
 ) {
-    var title by remember { mutableStateOf("") }
-    var description by remember { mutableStateOf("") }
+    var title by remember { mutableStateOf(lessonModel.name) }
+    var description by remember { mutableStateOf(lessonModel.description) }
 
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(text = "Add Lesson") },
+                title = { Text(text = "Edit Lesson") },
                 navigationIcon = {
                     IconButton(onClick = {
                         navController.popBackStack()
@@ -67,11 +69,11 @@ fun AddLessonScreen(
 
                 Button(onClick = {
                     if (title.isNotEmpty() && description.isNotEmpty()) {
-                        viewModel.addNewLesson(
-                            title,
-                            description,
+                        val lesson = lessonModel.copy(name = title, description = description)
+                        viewModel.updateLesson(
+                            lesson,
                             onSuccess = {
-                                Toast.makeText(context, "Successfully added", Toast.LENGTH_SHORT)
+                                Toast.makeText(context, "Successfully Updated", Toast.LENGTH_SHORT)
                                     .show()
 
                                 navController.popBackStack()
@@ -84,7 +86,7 @@ fun AddLessonScreen(
                         Toast.makeText(context, "Please enter all fields", Toast.LENGTH_LONG).show()
                     }
 
-                }, modifier = Modifier.align(Alignment.End)) { Text("Add Lesson") }
+                }, modifier = Modifier.align(Alignment.End)) { Text("Update") }
             }
         }
     )

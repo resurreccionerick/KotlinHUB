@@ -17,18 +17,25 @@ class LessonRepository @Inject constructor() {
     private val firestore = FirebaseFirestore.getInstance()
     private val auth = FirebaseAuth.getInstance()
 
-    suspend fun addLesson(lesson: LessonModel) {
+    suspend fun addLesson(
+        lesson: LessonModel,
+        onSuccess: () -> Unit,
+        onFailure: (String) -> Unit
+    ) {
         try {
             val lessonDocRef =
                 firestore.collection("lessons") // Generate a document reference with an auto-ID
-                    .document(lesson.id)
+                    .document()
 
             val lessonWithID =
                 lesson.copy(id = lessonDocRef.id)  // Add the generated ID to the lesson model
 
             lessonDocRef.set(lessonWithID) // Upload the lesson with the auto-generated ID
                 .await()
+
+            onSuccess()
         } catch (e: Exception) {
+            onFailure(e.message.toString())
             Log.e("ADD LESSON ERROR: ", e.message.toString())
         }
     }
@@ -37,33 +44,54 @@ class LessonRepository @Inject constructor() {
     // Function to fetch all lessons from Firestore
     suspend fun getLessons(): List<LessonModel> {
         return try {
-            firestore.collection("lessons")
+            val snapshot = firestore.collection("lessons")
                 .get()
                 .await()
-                .toObjects(LessonModel::class.java)
+
+
+            snapshot.toObjects(LessonModel::class.java)
         } catch (e: Exception) {
+            Log.e("GET LESSON ERROR: ", e.message.toString())
             emptyList()
         }
     }
 
     //update
-    suspend fun updateLesson(lesson: LessonModel) {
+    fun updateLesson(
+        lesson: LessonModel,
+        onSuccess: () -> Unit,
+        onFailure: (String) -> Unit
+    ) {
         try {
             firestore.collection("lessons")
                 .document(lesson.id)
                 .set(lesson)
-                .await()
+                .addOnCompleteListener {
+                    onSuccess()
+                }.addOnFailureListener { error ->
+                    onFailure(error.message.toString())
+                }
         } catch (e: Exception) {
+            onFailure(e.message.toString())
             Log.e("UPDATE LESSON ERROR: ", e.message.toString())
         }
     }
 
     //DELETE
-    suspend fun deleteLesson(id: String) {
+    fun deleteLesson(id: String, onSuccess: () -> Unit, onFailure: (String) -> Unit) {
         try {
             firestore.collection("lessons")
                 .document(id)
                 .delete()
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        onSuccess()
+                    } else {
+                        onFailure("Failed to delete")
+                    }
+                }.addOnFailureListener { error ->
+                    onFailure(error.message.toString())
+                }
         } catch (e: Exception) {
             Log.e("DELETE LESSON ERROR: ", e.message.toString())
         }

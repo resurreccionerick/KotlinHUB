@@ -28,8 +28,8 @@ import com.example.flutterhub_jetpackcompose.viewmodel_repository.LessonViewMode
 @Composable
 fun LoginScreen(navController: NavController, viewModel: LessonViewModel, context: Context) {
 
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
+    var email by remember { mutableStateOf("esr@gmail.com") }
+    var password by remember { mutableStateOf("Test123!") }
     var isLoading by remember { mutableStateOf(false) }
 
 
