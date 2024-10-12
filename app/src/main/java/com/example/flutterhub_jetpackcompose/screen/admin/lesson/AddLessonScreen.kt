@@ -1,4 +1,4 @@
-package com.example.flutterhub_jetpackcompose.screen.admin
+package com.example.flutterhub_jetpackcompose.screen.admin.lesson
 
 import android.content.Context
 import android.widget.Toast
@@ -12,26 +12,24 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.flutterhub_jetpackcompose.models.LessonModel
 import com.example.flutterhub_jetpackcompose.viewmodel_repository.LessonViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EditLessonScreen(
+fun AddLessonScreen(
     navController: NavController,
     viewModel: LessonViewModel,
-    lessonModel: LessonModel,
     context: Context
 ) {
-    var title by rememberSaveable { mutableStateOf(lessonModel.name) }
-    var description by rememberSaveable { mutableStateOf(lessonModel.description) }
-    var link by rememberSaveable { mutableStateOf(lessonModel.link) }
+    var title by rememberSaveable { mutableStateOf("") }
+    var description by rememberSaveable { mutableStateOf("") }
+    var link by rememberSaveable { mutableStateOf("") }
 
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(text = "Edit Lesson") },
+                title = { Text(text = "Add Lesson") },
                 navigationIcon = {
                     IconButton(onClick = {
                         navController.popBackStack()
@@ -80,11 +78,12 @@ fun EditLessonScreen(
 
                 Button(onClick = {
                     if (title.isNotEmpty() && description.isNotEmpty() && link.isNotEmpty()) {
-                        val lesson = lessonModel.copy(name = title, description = description)
-                        viewModel.updateLesson(
-                            lesson,
+                        viewModel.addNewLesson(
+                            title,
+                            description,
+                            link,
                             onSuccess = {
-                                Toast.makeText(context, "Successfully Updated", Toast.LENGTH_SHORT)
+                                Toast.makeText(context, "Successfully added", Toast.LENGTH_SHORT)
                                     .show()
 
                                 navController.popBackStack()
@@ -97,7 +96,7 @@ fun EditLessonScreen(
                         Toast.makeText(context, "Please enter all fields", Toast.LENGTH_LONG).show()
                     }
 
-                }, modifier = Modifier.align(Alignment.End)) { Text("Update") }
+                }, modifier = Modifier.align(Alignment.End)) { Text("Add Lesson") }
             }
         }
     )

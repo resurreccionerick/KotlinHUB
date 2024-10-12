@@ -2,10 +2,11 @@ package com.example.flutterhub_jetpackcompose.viewmodel_repository
 
 import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.flutterhub_jetpackcompose.models.LessonModel
-import com.orhanobut.hawk.Hawk
+import com.example.flutterhub_jetpackcompose.models.QuizModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -16,11 +17,8 @@ class LessonViewModel @Inject constructor(
     private val repository: LessonRepository
 ) : ViewModel() {
 
+    val quizzes = mutableStateListOf<QuizModel>()
     val lessons = mutableStateListOf<LessonModel>()
-
-//    init {
-//        loadLessons()
-//    }
 
     fun refreshDifficulty() {
         repository.refreshDifficulty()
@@ -35,8 +33,13 @@ class LessonViewModel @Inject constructor(
         viewModelScope.launch {
             lessons.clear()
             lessons.addAll(repository.getLessons())
+        }
+    }
 
-            Log.d("Hawk Value in viewmodel", "Difficulty: ${getCurrentDifficulty()}")
+     fun loadQuizzes() {
+        viewModelScope.launch {
+            quizzes.clear()
+            quizzes.addAll(repository.getQuizzes())
         }
     }
 
@@ -126,6 +129,34 @@ class LessonViewModel @Inject constructor(
     fun getLessonById(lessonId: String): LessonModel {
         // This function returns the lesson by its ID.
         return lessons.find { it.id == lessonId } ?: LessonModel()
+    }
+
+
+    // ---------------------------------------------------- QUIZZES ---------------------------------------------------- //
+
+    fun addQuiz(
+        question: String,
+        difficulty: String,
+        choices: List<String>,
+        selectedAns: String,
+        onSuccess: () -> Unit, onFailure: (String) -> Unit
+    ) {
+        viewModelScope.launch {
+            val quiz = QuizModel(
+                question = question,
+                difficulty = difficulty,
+                choices = choices,
+                selectedAns = selectedAns
+            );
+            repository.addQuiz(
+                quiz,
+                onSuccess = {
+                    onSuccess()
+                },
+                onFailure = { errorMsg ->
+                    onFailure(errorMsg)
+                })
+        }
     }
 
 }

@@ -1,7 +1,9 @@
 package com.example.flutterhub_jetpackcompose.viewmodel_repository
 
 import android.util.Log
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import com.example.flutterhub_jetpackcompose.models.LessonModel
+import com.example.flutterhub_jetpackcompose.models.QuizModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.firestore.FirebaseFirestore
@@ -26,6 +28,110 @@ class LessonRepository @Inject constructor() {
     fun getDifficulty(): String {
         return difficulty
     }
+
+
+    // ---------------------------------------------------- USER PART ---------------------------------------------------- //
+    suspend fun userRegister(
+        name: String,
+        email: String,
+        pass: String,
+        onSuccess: () -> Unit, //callback if success
+        onFailure: (String) -> Unit
+    ) {
+        try {
+            val authResult = auth.createUserWithEmailAndPassword(email, pass).await()
+
+            // Get current user after registration
+            val user = authResult.user
+
+            // Check if user is not null, then update their profile with name
+            user?.let {
+                val profileUpdates = UserProfileChangeRequest.Builder()
+                    .setDisplayName(name)
+                    .build()
+
+                // Update the user's profile with name
+                it.updateProfile(profileUpdates).await()
+                Log.d("userRegister", "User profile updated with name: $name")
+
+                onSuccess()
+            } ?: run {
+                onFailure("User registration failed. Please try again.")
+            }
+        } catch (e: Exception) {
+            onFailure(e.message.toString())
+            Log.e("userRegister ERROR: ", e.message.toString())
+        }
+    }
+
+    fun userLogin(
+        email: String,
+        pass: String,
+        onSuccess: () -> Unit,
+        onFailure: (String) -> Unit
+    ) {
+        try {
+            auth.signInWithEmailAndPassword(email, pass)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        onSuccess()
+                        Log.e("USER LOGIN SUCCESS", "USER LOGIN SUCCESS")
+                    } else {
+                        onFailure("No account found")
+                    }
+                }.addOnFailureListener { fail ->
+                    onFailure("Error: " + fail.message.toString())
+                }
+        } catch (e: Exception) {
+            Log.e("userLogin ERROR: ", e.message.toString())
+        }
+    }
+
+
+    fun forgotPass(
+        email: String,
+        onSuccess: () -> Unit,  // Callback when the operation succeeds
+        onFailure: (String) -> Unit // Callback when the operation fails
+    ) {
+        try {
+            auth.sendPasswordResetEmail(email)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        onSuccess() // Call success callback
+                    }
+                }.addOnFailureListener { fail ->
+                    onFailure("Error: " + fail.message.toString())
+                }
+        } catch (e: Exception) {
+            onFailure(e.message.toString()) // Call failure callback on exception
+            Log.e("forgotPass ERROR: ", e.message.toString())
+        }
+    }
+
+    suspend fun addQuiz(
+        quizzes: QuizModel,
+        onSuccess: () -> Unit,
+        onFailure: (String) -> Unit
+    ) {
+        try {
+            val quizDocRef =
+                firestore.collection("quizzes") // Generate a document reference with an auto-ID
+                    .document()
+
+            val quizWithID =
+                quizzes.copy(id = quizDocRef.id) // Add the generated ID to the quiz model
+
+            quizDocRef.set(quizWithID).await()  // Upload the lesson with the auto-generated ID
+
+            onSuccess()
+
+        } catch (e: Exception) {
+            onFailure(e.message.toString())
+        }
+    }
+
+
+    // ---------------------------------------------------- LESSON ---------------------------------------------------- //
 
     suspend fun addLesson(
         lesson: LessonModel,
@@ -57,8 +163,6 @@ class LessonRepository @Inject constructor() {
     suspend fun getLessons(): List<LessonModel> {
         return try {
             val difficulty = getDifficulty()
-            Log.e("HAWK LESSON: ", difficulty)
-
             val snapshot = firestore.collection(difficulty)
                 .get()
                 .await()
@@ -116,93 +220,17 @@ class LessonRepository @Inject constructor() {
         }
     }
 
-//    suspend fun uploadImageToFirebase(img: Uri): String? {
-//        val storageRef =
-//            FirebaseStorage.getInstance().reference.child("images/${img.lastPathSegment}")
-//        return try {
-//            storageRef.putFile(img).await()
-//            storageRef.downloadUrl.await()
-//                .toString() // Return the download URL of the uploaded image
-//        } catch (e: Exception) {
-//            null
-//        }
-//    }
 
-    // ---------------------------------------------------- USER PART ---------------------------------------------------- //
-    suspend fun userRegister(
-        name: String,
-        email: String,
-        pass: String,
-        onSuccess: () -> Unit, //callback if success
-        onFailure: (String) -> Unit
-    ) {
-        try {
-            val authResult = auth.createUserWithEmailAndPassword(email, pass).await()
+    // ---------------------------------------------------- QUIZZES ---------------------------------------------------- //
 
-            // Get current user after registration
-            val user = authResult.user
+    suspend fun getQuizzes(): List<QuizModel> {
+        return try {
+            val snapshot = firestore.collection("quizzes").get().await()
 
-            // Check if user is not null, then update their profile with name
-            user?.let {
-                val profileUpdates = UserProfileChangeRequest.Builder()
-                    .setDisplayName(name)
-                    .build()
-
-                // Update the user's profile with name
-                it.updateProfile(profileUpdates).await()
-                Log.d("userRegister", "User profile updated with name: $name")
-
-                onSuccess()
-            } ?: run {
-                onFailure("User registration failed. Please try again.")
-            }
+            snapshot.toObjects(QuizModel::class.java)
         } catch (e: Exception) {
-            onFailure(e.message.toString())
-            Log.e("userRegister ERROR: ", e.message.toString())
-        }
-    }
-
-    suspend fun userLogin(
-        email: String,
-        pass: String,
-        onSuccess: () -> Unit,
-        onFailure: (String) -> Unit
-    ) {
-        try {
-            auth.signInWithEmailAndPassword(email, pass)
-                .addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        onSuccess()
-                        Log.e("USER LOGIN SUCCESS", "USER LOGIN SUCCESS")
-                    } else {
-                        onFailure("No account found")
-                    }
-                }.addOnFailureListener { fail ->
-                    onFailure("Error: " + fail.message.toString())
-                }
-        } catch (e: Exception) {
-            Log.e("userLogin ERROR: ", e.message.toString())
-        }
-    }
-
-
-    suspend fun forgotPass(
-        email: String,
-        onSuccess: () -> Unit,  // Callback when the operation succeeds
-        onFailure: (String) -> Unit // Callback when the operation fails
-    ) {
-        try {
-            auth.sendPasswordResetEmail(email)
-                .addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        onSuccess() // Call success callback
-                    }
-                }.addOnFailureListener { fail ->
-                    onFailure("Error: " + fail.message.toString())
-                }
-        } catch (e: Exception) {
-            onFailure(e.message.toString()) // Call failure callback on exception
-            Log.e("forgotPass ERROR: ", e.message.toString())
+            Log.e("getQuizzes ERROR: ", e.message.toString())
+            emptyList()
         }
     }
 

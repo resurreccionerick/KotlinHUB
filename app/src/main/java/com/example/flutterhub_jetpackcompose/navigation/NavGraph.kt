@@ -7,17 +7,19 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.example.flutterhub_jetpackcompose.screen.admin.AddLessonScreen
+import com.example.flutterhub_jetpackcompose.screen.admin.lesson.AddLessonScreen
+import com.example.flutterhub_jetpackcompose.screen.admin.assessment.AdminAssessmentScreen
 import com.example.flutterhub_jetpackcompose.screen.admin.AdminHomeScreen
-import com.example.flutterhub_jetpackcompose.screen.admin.BasicHomeScreen
+import com.example.flutterhub_jetpackcompose.screen.admin.quiz.AdminQuizHomeScreen
+import com.example.flutterhub_jetpackcompose.screen.admin.lesson.BasicHomeScreen
 
-import com.example.flutterhub_jetpackcompose.screen.admin.EditLessonScreen
-import com.example.flutterhub_jetpackcompose.screen.admin.IntermediateHomeScreen
+import com.example.flutterhub_jetpackcompose.screen.admin.lesson.EditLessonScreen
+import com.example.flutterhub_jetpackcompose.screen.admin.lesson.IntermediateHomeScreen
+import com.example.flutterhub_jetpackcompose.screen.admin.quiz.AdminAddQuizScreen
 import com.example.flutterhub_jetpackcompose.screen.login_register.ForgotPassScreen
 import com.example.flutterhub_jetpackcompose.screen.login_register.LoginScreen
 import com.example.flutterhub_jetpackcompose.screen.login_register.SignupScreen
 import com.example.flutterhub_jetpackcompose.viewmodel_repository.LessonViewModel
-import com.orhanobut.hawk.Hawk
 
 @Composable
 fun NavGraph(navController: NavHostController, viewModel: LessonViewModel, context: Context) {
@@ -46,6 +48,18 @@ fun NavGraph(navController: NavHostController, viewModel: LessonViewModel, conte
             IntermediateHomeScreen(navController, viewModel, context)
         }
 
+        composable("adminQuiz") {
+            AdminQuizHomeScreen(navController, viewModel, context)
+        }
+
+        composable("adminAddQuiz") {
+            AdminAddQuizScreen(navController, viewModel, context)
+        }
+
+        composable("adminAssessment") {
+            AdminAssessmentScreen(navController, viewModel, context)
+        }
+
         composable("addLesson") {
             AddLessonScreen(navController, viewModel, context)
         }
@@ -63,4 +77,5 @@ fun NavGraph(navController: NavHostController, viewModel: LessonViewModel, conte
 
     }
 }
+
 

@@ -1,4 +1,4 @@
-package com.example.flutterhub_jetpackcompose.screen
+package com.example.flutterhub_jetpackcompose.utils
 
 import android.content.Context
 import android.widget.Toast
@@ -21,21 +21,22 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.flutterhub_jetpackcompose.models.LessonModel
+import com.example.flutterhub_jetpackcompose.models.QuizModel
 import com.example.flutterhub_jetpackcompose.viewmodel_repository.LessonViewModel
 
 @Composable
-fun LessonCard(
+fun QuizCard(
     navController: NavController,
-    lesson: LessonModel,
+    quiz: QuizModel,
     viewModel: LessonViewModel,
     context: Context
 ) {
     Card(
-        shape = RoundedCornerShape(8.dp), // Rounded corners for the card
+        shape = RoundedCornerShape(15.dp), // Rounded corners for the card
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp), // Card padding
-        elevation = CardDefaults.cardElevation(4.dp) // Card elevation (shadow effect)
+        elevation = CardDefaults.cardElevation(10.dp) // Card elevation (shadow effect)
     ) {
         // Box to align content inside the card
         Box(
@@ -49,7 +50,7 @@ fun LessonCard(
                 horizontalArrangement = Arrangement.SpaceBetween // Spread text and buttons
             ) {
                 Text(
-                    text = "Title: ${lesson.name}",
+                    text = "Title: ${quiz.question}",
                     style = MaterialTheme.typography.bodyLarge,
                     modifier = Modifier.weight(1f)
                 )
@@ -59,7 +60,7 @@ fun LessonCard(
             // Edit Button
             Button(
                 onClick = {
-                    navController.navigate("editLesson/${lesson.id}")
+                    navController.navigate("editLesson/${quiz.id}")
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = Color.Blue),
                 modifier = Modifier.padding(end = 8.dp) // Spacing between buttons
@@ -70,7 +71,7 @@ fun LessonCard(
             // Delete Button
             Button(
                 onClick = {
-                    viewModel.deleteLesson(lesson.id,
+                    viewModel.deleteLesson(quiz.id,
                         onSuccess = {
                             Toast.makeText(
                                 context,
