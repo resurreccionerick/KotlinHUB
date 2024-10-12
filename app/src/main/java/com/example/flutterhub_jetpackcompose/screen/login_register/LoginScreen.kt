@@ -24,6 +24,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.flutterhub_jetpackcompose.viewmodel_repository.LessonViewModel
+import com.orhanobut.hawk.Hawk
 
 @Composable
 fun LoginScreen(navController: NavController, viewModel: LessonViewModel, context: Context) {
@@ -85,7 +86,6 @@ fun LoginScreen(navController: NavController, viewModel: LessonViewModel, contex
 
                 viewModel.userLogin(email, password,
                     onSuccess = {
-                        Toast.makeText(context, "LOGIN SUCCESS", Toast.LENGTH_SHORT).show()
                         navController.navigate("adminHome") //callback
                     },
                     onFailure = { errorMsg ->

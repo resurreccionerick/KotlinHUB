@@ -7,6 +7,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -22,8 +23,9 @@ fun EditLessonScreen(
     lessonModel: LessonModel,
     context: Context
 ) {
-    var title by remember { mutableStateOf(lessonModel.name) }
-    var description by remember { mutableStateOf(lessonModel.description) }
+    var title by rememberSaveable { mutableStateOf(lessonModel.name) }
+    var description by rememberSaveable { mutableStateOf(lessonModel.description) }
+    var link by rememberSaveable { mutableStateOf(lessonModel.link) }
 
 
     Scaffold(
@@ -65,10 +67,19 @@ fun EditLessonScreen(
                     modifier = Modifier.fillMaxWidth()
                 )
 
+                Spacer(modifier = Modifier.height(8.dp))
+
+                OutlinedTextField(
+                    value = link,
+                    onValueChange = { link = it },
+                    label = { Text("YouTube video link") },
+                    modifier = Modifier.fillMaxWidth()
+                )
+
                 Spacer(modifier = Modifier.height(32.dp))
 
                 Button(onClick = {
-                    if (title.isNotEmpty() && description.isNotEmpty()) {
+                    if (title.isNotEmpty() && description.isNotEmpty() && link.isNotEmpty()) {
                         val lesson = lessonModel.copy(name = title, description = description)
                         viewModel.updateLesson(
                             lesson,

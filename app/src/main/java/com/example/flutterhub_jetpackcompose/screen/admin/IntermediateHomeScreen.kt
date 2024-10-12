@@ -29,12 +29,17 @@ import com.example.flutterhub_jetpackcompose.viewmodel_repository.LessonViewMode
 import com.orhanobut.hawk.Hawk
 
 @Composable
-fun BasicHomeScreen(navController: NavController, viewModel: LessonViewModel, context: Context) {
+fun IntermediateHomeScreen(
+    navController: NavController,
+    viewModel: LessonViewModel,
+    context: Context
+) {
 
 
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(onClick = {
+                Hawk.put("difficulty", "intermediate")
                 navController.navigate("addLesson")
             }) {
                 Icon(Icons.Default.Add, contentDescription = "Add lesson")

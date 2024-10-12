@@ -4,6 +4,7 @@ data class LessonModel(
     val id: String = "",
     val name: String = "",
     val description: String = "",
+    val link: String = ""
 )
 
 //data class Category(

@@ -9,7 +9,11 @@ class MyApp : Application() {
 
     override fun onCreate() {
         super.onCreate()
+
+
         Hawk.init(this).build()
+
+
     }
 
 }

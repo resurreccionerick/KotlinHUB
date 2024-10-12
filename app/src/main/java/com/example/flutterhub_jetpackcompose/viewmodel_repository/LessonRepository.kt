@@ -1,13 +1,10 @@
 package com.example.flutterhub_jetpackcompose.viewmodel_repository
 
-import android.net.Uri
 import android.util.Log
 import com.example.flutterhub_jetpackcompose.models.LessonModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserProfileChangeRequest
-import com.google.firebase.auth.userProfileChangeRequest
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.storage.FirebaseStorage
 import com.orhanobut.hawk.Hawk
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
@@ -15,9 +12,20 @@ import javax.inject.Inject
 //The repository handles FireStore operations. Here’s an example for adding lessons to Firestore.
 class LessonRepository @Inject constructor() {
 
+    private var difficulty: String = Hawk.get("difficulty", "null")
     private val firestore = FirebaseFirestore.getInstance()
     private val auth = FirebaseAuth.getInstance()
-    val difficulty = Hawk.get<String>("difficulty")
+
+
+    fun refreshDifficulty() {
+        difficulty = Hawk.get("difficulty", "default")
+        Log.d("Hawk LessonRepository", "Difficulty refreshed to: $difficulty")
+    }
+
+
+    fun getDifficulty(): String {
+        return difficulty
+    }
 
     suspend fun addLesson(
         lesson: LessonModel,
@@ -25,6 +33,8 @@ class LessonRepository @Inject constructor() {
         onFailure: (String) -> Unit
     ) {
         try {
+            val difficulty = getDifficulty()
+
             val lessonDocRef =
                 firestore.collection(difficulty) // Generate a document reference with an auto-ID
                     .document()
@@ -46,6 +56,9 @@ class LessonRepository @Inject constructor() {
     // Function to fetch all lessons from Firestore
     suspend fun getLessons(): List<LessonModel> {
         return try {
+            val difficulty = getDifficulty()
+            Log.e("HAWK LESSON: ", difficulty)
+
             val snapshot = firestore.collection(difficulty)
                 .get()
                 .await()
@@ -65,6 +78,8 @@ class LessonRepository @Inject constructor() {
         onFailure: (String) -> Unit
     ) {
         try {
+            val difficulty = getDifficulty()
+
             firestore.collection(difficulty)
                 .document(lesson.id)
                 .set(lesson)
@@ -82,6 +97,8 @@ class LessonRepository @Inject constructor() {
     //DELETE
     fun deleteLesson(id: String, onSuccess: () -> Unit, onFailure: (String) -> Unit) {
         try {
+            val difficulty = getDifficulty()
+
             firestore.collection(difficulty)
                 .document(id)
                 .delete()
@@ -99,17 +116,17 @@ class LessonRepository @Inject constructor() {
         }
     }
 
-    suspend fun uploadImageToFirebase(img: Uri): String? {
-        val storageRef =
-            FirebaseStorage.getInstance().reference.child("images/${img.lastPathSegment}")
-        return try {
-            storageRef.putFile(img).await()
-            storageRef.downloadUrl.await()
-                .toString() // Return the download URL of the uploaded image
-        } catch (e: Exception) {
-            null
-        }
-    }
+//    suspend fun uploadImageToFirebase(img: Uri): String? {
+//        val storageRef =
+//            FirebaseStorage.getInstance().reference.child("images/${img.lastPathSegment}")
+//        return try {
+//            storageRef.putFile(img).await()
+//            storageRef.downloadUrl.await()
+//                .toString() // Return the download URL of the uploaded image
+//        } catch (e: Exception) {
+//            null
+//        }
+//    }
 
     // ---------------------------------------------------- USER PART ---------------------------------------------------- //
     suspend fun userRegister(

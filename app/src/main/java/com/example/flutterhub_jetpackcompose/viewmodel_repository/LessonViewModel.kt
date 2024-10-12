@@ -1,5 +1,6 @@
 package com.example.flutterhub_jetpackcompose.viewmodel_repository
 
+import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -17,27 +18,39 @@ class LessonViewModel @Inject constructor(
 
     val lessons = mutableStateListOf<LessonModel>()
 
-    init {
+//    init {
+//        loadLessons()
+//    }
+
+    fun refreshDifficulty() {
+        repository.refreshDifficulty()
         loadLessons()
+    }
+
+    private fun getCurrentDifficulty(): String {
+        return repository.getDifficulty()
     }
 
     private fun loadLessons() {
         viewModelScope.launch {
             lessons.clear()
             lessons.addAll(repository.getLessons())
+
+            Log.d("Hawk Value in viewmodel", "Difficulty: ${getCurrentDifficulty()}")
         }
     }
 
     fun addNewLesson(
         name: String,
         desc: String,
+        link: String,
         onSuccess: () -> Unit,
         onFailure: (String) -> Unit
     ) {
         viewModelScope.launch {
             val lesson = LessonModel(
                 id = "", name = name,
-                description = desc,
+                description = desc, link = link
             )
 
             repository.addLesson(lesson,

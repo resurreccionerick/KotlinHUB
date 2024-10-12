@@ -7,6 +7,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -20,8 +21,9 @@ fun AddLessonScreen(
     viewModel: LessonViewModel,
     context: Context
 ) {
-    var title by remember { mutableStateOf("") }
-    var description by remember { mutableStateOf("") }
+    var title by rememberSaveable { mutableStateOf("") }
+    var description by rememberSaveable { mutableStateOf("") }
+    var link by rememberSaveable { mutableStateOf("") }
 
 
     Scaffold(
@@ -63,13 +65,23 @@ fun AddLessonScreen(
                     modifier = Modifier.fillMaxWidth()
                 )
 
+                Spacer(modifier = Modifier.height(8.dp))
+
+                OutlinedTextField(
+                    value = link,
+                    onValueChange = { link = it },
+                    label = { Text("YouTube video link") },
+                    modifier = Modifier.fillMaxWidth()
+                )
+
                 Spacer(modifier = Modifier.height(32.dp))
 
                 Button(onClick = {
-                    if (title.isNotEmpty() && description.isNotEmpty()) {
+                    if (title.isNotEmpty() && description.isNotEmpty() && link.isNotEmpty()) {
                         viewModel.addNewLesson(
                             title,
                             description,
+                            link,
                             onSuccess = {
                                 Toast.makeText(context, "Successfully added", Toast.LENGTH_SHORT)
                                     .show()
