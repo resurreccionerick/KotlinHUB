@@ -7,6 +7,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.example.flutterhub_jetpackcompose.models.UserModel
 import com.example.flutterhub_jetpackcompose.screen.admin.lesson.AddLessonScreen
 import com.example.flutterhub_jetpackcompose.screen.admin.assessment.AdminAssessmentScreen
 import com.example.flutterhub_jetpackcompose.screen.admin.AdminHomeScreen
@@ -20,11 +21,26 @@ import com.example.flutterhub_jetpackcompose.screen.admin.quiz.AdminEditQuizScre
 import com.example.flutterhub_jetpackcompose.screen.login_register.ForgotPassScreen
 import com.example.flutterhub_jetpackcompose.screen.login_register.LoginScreen
 import com.example.flutterhub_jetpackcompose.screen.login_register.SignupScreen
+import com.example.flutterhub_jetpackcompose.utils.LessonDetailsScreen
 import com.example.flutterhub_jetpackcompose.viewmodel_repository.LessonViewModel
+import com.orhanobut.hawk.Hawk
 
 @Composable
 fun NavGraph(navController: NavHostController, viewModel: LessonViewModel, context: Context) {
-    NavHost(navController, startDestination = "login") {
+
+
+    val user: UserModel? = Hawk.get("user_details")
+
+    val startDestination = if (user != null && user.id.isNotEmpty()) {
+        "adminHome"
+    } else {
+        "login"
+    }
+
+    NavHost(
+        navController,
+        startDestination = startDestination
+    ) {
         composable("login") {
             LoginScreen(navController, viewModel, context)
         }
@@ -82,6 +98,16 @@ fun NavGraph(navController: NavHostController, viewModel: LessonViewModel, conte
             // Fetch the lesson by ID (if needed)
             val lesson = viewModel.getLessonById(lessonId)
             EditLessonScreen(navController, viewModel, lesson, context)
+        }
+
+        composable(
+            "lessonView/{lessonId}",
+            arguments = listOf(navArgument("lessonId") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val lessonId = backStackEntry.arguments?.getString("lessonId") ?: ""
+            // Fetch the lesson by ID (if needed)
+            val lesson = viewModel.getLessonById(lessonId)
+            LessonDetailsScreen(navController, context, lesson)
         }
 
 

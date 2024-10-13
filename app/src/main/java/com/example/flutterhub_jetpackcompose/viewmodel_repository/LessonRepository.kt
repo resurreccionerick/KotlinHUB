@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import com.example.flutterhub_jetpackcompose.models.LessonModel
 import com.example.flutterhub_jetpackcompose.models.QuizModel
+import com.example.flutterhub_jetpackcompose.models.UserModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.firestore.FirebaseFirestore
@@ -66,6 +67,7 @@ class LessonRepository @Inject constructor() {
             auth.signInWithEmailAndPassword(email, pass).addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     onSuccess()
+                    saveProfileDetails()
                     Log.e("USER LOGIN SUCCESS", "USER LOGIN SUCCESS")
                 } else {
                     onFailure("No account found")
@@ -75,6 +77,20 @@ class LessonRepository @Inject constructor() {
             }
         } catch (e: Exception) {
             Log.e("userLogin ERROR: ", e.message.toString())
+        }
+    }
+
+    private fun saveProfileDetails() { //save to hawk
+        val firebaseUser = auth.currentUser
+
+        if (firebaseUser != null) {
+            val user = UserModel(
+                id = firebaseUser.uid,
+                name = firebaseUser.displayName ?: "",
+                email = firebaseUser.email ?: ""
+            )
+
+            Hawk.put("user_details", user)
         }
     }
 
