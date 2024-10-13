@@ -34,6 +34,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 import androidx.navigation.NavHostController
+import com.example.flutterhub_jetpackcompose.models.QuizModel
 import com.example.flutterhub_jetpackcompose.utils.AnswerDropDown
 import com.example.flutterhub_jetpackcompose.utils.DifficultyDropDown
 import com.example.flutterhub_jetpackcompose.viewmodel_repository.LessonViewModel
@@ -41,20 +42,28 @@ import com.example.flutterhub_jetpackcompose.viewmodel_repository.LessonViewMode
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AdminAddQuizScreen(
+fun AdminEditQuizScreen(
     navController: NavHostController,
     viewModel: LessonViewModel,
+    quizModel: QuizModel,
     context: Context
 ) {
-    var question by rememberSaveable { mutableStateOf("") }
-    var difficulty by rememberSaveable { mutableStateOf("") }
-    var selectedAns by rememberSaveable { mutableStateOf("") }
-    var choices = remember { mutableStateListOf("", "", "", "") }
+    var question by rememberSaveable { mutableStateOf(quizModel.question) }
+    var difficulty by rememberSaveable { mutableStateOf(quizModel.difficulty) }
+    var selectedAns by rememberSaveable { mutableStateOf(quizModel.selectedAns) }
+    var choices = remember {
+        mutableStateListOf(
+            quizModel.choices[0],
+            quizModel.choices[1],
+            quizModel.choices[2],
+            quizModel.choices[2]
+        )
+    }
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Add Quiz") },
+                title = { Text("Update Quiz") },
                 navigationIcon = {
                     IconButton(onClick = {
                         navController.popBackStack()
@@ -106,9 +115,15 @@ fun AdminAddQuizScreen(
                     if (question.isNotEmpty() && difficulty.isNotBlank() && choices.all { it.isNotBlank() } &&
                         selectedAns.isNotBlank()
                     ) {
-                        viewModel.addQuiz(question, difficulty, choices, selectedAns,
+                        val quiz = quizModel.copy(
+                            question = question,
+                            difficulty = difficulty,
+                            choices = choices,
+                            selectedAns = selectedAns
+                        )
+                        viewModel.updateQuiz(quiz,
                             onSuccess = {
-                                Toast.makeText(context, "Quiz Added!", Toast.LENGTH_LONG).show()
+                                Toast.makeText(context, "Quiz Updated!", Toast.LENGTH_LONG).show()
                                 navController.popBackStack()
                             },
                             onFailure = { error ->
@@ -120,7 +135,7 @@ fun AdminAddQuizScreen(
                             .show()
                     }
                 }, modifier = Modifier.align(Alignment.End)) {
-                    Text("Add Quiz")
+                    Text("Update Quiz")
                 }
 
 
@@ -128,7 +143,4 @@ fun AdminAddQuizScreen(
         }
     )
 }
-
-
-
 

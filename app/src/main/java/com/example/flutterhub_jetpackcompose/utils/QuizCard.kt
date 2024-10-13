@@ -60,7 +60,7 @@ fun QuizCard(
             // Edit Button
             Button(
                 onClick = {
-                    navController.navigate("editLesson/${quiz.id}")
+                    navController.navigate("adminEditQuiz/${quiz.id}")
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = Color.Blue),
                 modifier = Modifier.padding(end = 8.dp) // Spacing between buttons
@@ -71,11 +71,13 @@ fun QuizCard(
             // Delete Button
             Button(
                 onClick = {
-                    viewModel.deleteLesson(quiz.id,
+                    viewModel.deleteQuiz(quiz.id,
                         onSuccess = {
+                            viewModel.quizzes
+
                             Toast.makeText(
                                 context,
-                                "Successfully deleted",
+                                "Quiz Successfully deleted",
                                 Toast.LENGTH_SHORT
                             ).show()
 

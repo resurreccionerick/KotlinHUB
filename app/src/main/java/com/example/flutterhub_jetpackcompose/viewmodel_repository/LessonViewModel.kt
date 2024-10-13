@@ -1,6 +1,8 @@
 package com.example.flutterhub_jetpackcompose.viewmodel_repository
 
 import android.util.Log
+import android.widget.Toast
+import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
@@ -36,7 +38,7 @@ class LessonViewModel @Inject constructor(
         }
     }
 
-     fun loadQuizzes() {
+    fun loadQuizzes() {
         viewModelScope.launch {
             quizzes.clear()
             quizzes.addAll(repository.getQuizzes())
@@ -152,11 +154,41 @@ class LessonViewModel @Inject constructor(
                 quiz,
                 onSuccess = {
                     onSuccess()
+                    loadQuizzes() //refresh
                 },
                 onFailure = { errorMsg ->
                     onFailure(errorMsg)
                 })
         }
     }
+
+
+    fun deleteQuiz(id: String, onSuccess: () -> Unit, onFailure: (String) -> Unit) {
+        viewModelScope.launch {
+            repository.deleteQuiz(id, onSuccess = {
+                onSuccess()
+                loadQuizzes() //refresh
+            }, onFailure = { errorMsg ->
+                onFailure(errorMsg)
+            })
+        }
+    }
+
+    fun getQuizByID(quizId: String): QuizModel {
+        // This function returns the quiz by its ID.
+        return quizzes.find { it.id == quizId } ?: QuizModel()
+    }
+
+    fun updateQuiz(quiz: QuizModel, onSuccess: () -> Unit, onFailure: (String) -> Unit) {
+        viewModelScope.launch {
+            repository.updateQuiz(quiz, onSuccess = {
+                onSuccess()
+                loadQuizzes() //refresh
+            }, onFailure = { errorMsg ->
+                onFailure(errorMsg)
+            })
+        }
+    }
+
 
 }

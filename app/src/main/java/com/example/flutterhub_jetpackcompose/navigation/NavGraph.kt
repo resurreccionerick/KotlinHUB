@@ -16,6 +16,7 @@ import com.example.flutterhub_jetpackcompose.screen.admin.lesson.BasicHomeScreen
 import com.example.flutterhub_jetpackcompose.screen.admin.lesson.EditLessonScreen
 import com.example.flutterhub_jetpackcompose.screen.admin.lesson.IntermediateHomeScreen
 import com.example.flutterhub_jetpackcompose.screen.admin.quiz.AdminAddQuizScreen
+import com.example.flutterhub_jetpackcompose.screen.admin.quiz.AdminEditQuizScreen
 import com.example.flutterhub_jetpackcompose.screen.login_register.ForgotPassScreen
 import com.example.flutterhub_jetpackcompose.screen.login_register.LoginScreen
 import com.example.flutterhub_jetpackcompose.screen.login_register.SignupScreen
@@ -54,6 +55,15 @@ fun NavGraph(navController: NavHostController, viewModel: LessonViewModel, conte
 
         composable("adminAddQuiz") {
             AdminAddQuizScreen(navController, viewModel, context)
+        }
+
+        composable(
+            "adminEditQuiz/{quizId}",
+            arguments = listOf(navArgument("quizId") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val quizID = backStackEntry.arguments?.getString("quizId") ?: ""
+            val quiz = viewModel.getQuizByID(quizID)
+            AdminEditQuizScreen(navController, viewModel, quiz, context)
         }
 
         composable("adminAssessment") {

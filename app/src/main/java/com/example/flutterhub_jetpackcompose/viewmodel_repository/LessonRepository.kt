@@ -32,10 +32,7 @@ class LessonRepository @Inject constructor() {
 
     // ---------------------------------------------------- USER PART ---------------------------------------------------- //
     suspend fun userRegister(
-        name: String,
-        email: String,
-        pass: String,
-        onSuccess: () -> Unit, //callback if success
+        name: String, email: String, pass: String, onSuccess: () -> Unit, //callback if success
         onFailure: (String) -> Unit
     ) {
         try {
@@ -46,9 +43,7 @@ class LessonRepository @Inject constructor() {
 
             // Check if user is not null, then update their profile with name
             user?.let {
-                val profileUpdates = UserProfileChangeRequest.Builder()
-                    .setDisplayName(name)
-                    .build()
+                val profileUpdates = UserProfileChangeRequest.Builder().setDisplayName(name).build()
 
                 // Update the user's profile with name
                 it.updateProfile(profileUpdates).await()
@@ -65,23 +60,19 @@ class LessonRepository @Inject constructor() {
     }
 
     fun userLogin(
-        email: String,
-        pass: String,
-        onSuccess: () -> Unit,
-        onFailure: (String) -> Unit
+        email: String, pass: String, onSuccess: () -> Unit, onFailure: (String) -> Unit
     ) {
         try {
-            auth.signInWithEmailAndPassword(email, pass)
-                .addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        onSuccess()
-                        Log.e("USER LOGIN SUCCESS", "USER LOGIN SUCCESS")
-                    } else {
-                        onFailure("No account found")
-                    }
-                }.addOnFailureListener { fail ->
-                    onFailure("Error: " + fail.message.toString())
+            auth.signInWithEmailAndPassword(email, pass).addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    onSuccess()
+                    Log.e("USER LOGIN SUCCESS", "USER LOGIN SUCCESS")
+                } else {
+                    onFailure("No account found")
                 }
+            }.addOnFailureListener { fail ->
+                onFailure("Error: " + fail.message.toString())
+            }
         } catch (e: Exception) {
             Log.e("userLogin ERROR: ", e.message.toString())
         }
@@ -89,44 +80,20 @@ class LessonRepository @Inject constructor() {
 
 
     fun forgotPass(
-        email: String,
-        onSuccess: () -> Unit,  // Callback when the operation succeeds
+        email: String, onSuccess: () -> Unit,  // Callback when the operation succeeds
         onFailure: (String) -> Unit // Callback when the operation fails
     ) {
         try {
-            auth.sendPasswordResetEmail(email)
-                .addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        onSuccess() // Call success callback
-                    }
-                }.addOnFailureListener { fail ->
-                    onFailure("Error: " + fail.message.toString())
+            auth.sendPasswordResetEmail(email).addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    onSuccess() // Call success callback
                 }
+            }.addOnFailureListener { fail ->
+                onFailure("Error: " + fail.message.toString())
+            }
         } catch (e: Exception) {
             onFailure(e.message.toString()) // Call failure callback on exception
             Log.e("forgotPass ERROR: ", e.message.toString())
-        }
-    }
-
-    suspend fun addQuiz(
-        quizzes: QuizModel,
-        onSuccess: () -> Unit,
-        onFailure: (String) -> Unit
-    ) {
-        try {
-            val quizDocRef =
-                firestore.collection("quizzes") // Generate a document reference with an auto-ID
-                    .document()
-
-            val quizWithID =
-                quizzes.copy(id = quizDocRef.id) // Add the generated ID to the quiz model
-
-            quizDocRef.set(quizWithID).await()  // Upload the lesson with the auto-generated ID
-
-            onSuccess()
-
-        } catch (e: Exception) {
-            onFailure(e.message.toString())
         }
     }
 
@@ -134,9 +101,7 @@ class LessonRepository @Inject constructor() {
     // ---------------------------------------------------- LESSON ---------------------------------------------------- //
 
     suspend fun addLesson(
-        lesson: LessonModel,
-        onSuccess: () -> Unit,
-        onFailure: (String) -> Unit
+        lesson: LessonModel, onSuccess: () -> Unit, onFailure: (String) -> Unit
     ) {
         try {
             val difficulty = getDifficulty()
@@ -163,9 +128,7 @@ class LessonRepository @Inject constructor() {
     suspend fun getLessons(): List<LessonModel> {
         return try {
             val difficulty = getDifficulty()
-            val snapshot = firestore.collection(difficulty)
-                .get()
-                .await()
+            val snapshot = firestore.collection(difficulty).get().await()
 
 
             snapshot.toObjects(LessonModel::class.java)
@@ -177,21 +140,16 @@ class LessonRepository @Inject constructor() {
 
     //update
     fun updateLesson(
-        lesson: LessonModel,
-        onSuccess: () -> Unit,
-        onFailure: (String) -> Unit
+        lesson: LessonModel, onSuccess: () -> Unit, onFailure: (String) -> Unit
     ) {
         try {
             val difficulty = getDifficulty()
 
-            firestore.collection(difficulty)
-                .document(lesson.id)
-                .set(lesson)
-                .addOnCompleteListener {
-                    onSuccess()
-                }.addOnFailureListener { error ->
-                    onFailure(error.message.toString())
-                }
+            firestore.collection(difficulty).document(lesson.id).set(lesson).addOnCompleteListener {
+                onSuccess()
+            }.addOnFailureListener { error ->
+                onFailure(error.message.toString())
+            }
         } catch (e: Exception) {
             onFailure(e.message.toString())
             Log.e("UPDATE LESSON ERROR: ", e.message.toString())
@@ -203,18 +161,15 @@ class LessonRepository @Inject constructor() {
         try {
             val difficulty = getDifficulty()
 
-            firestore.collection(difficulty)
-                .document(id)
-                .delete()
-                .addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        onSuccess()
-                    } else {
-                        onFailure("Failed to delete")
-                    }
-                }.addOnFailureListener { error ->
-                    onFailure(error.message.toString())
+            firestore.collection(difficulty).document(id).delete().addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    onSuccess()
+                } else {
+                    onFailure("Failed to delete")
                 }
+            }.addOnFailureListener { error ->
+                onFailure(error.message.toString())
+            }
         } catch (e: Exception) {
             Log.e("DELETE LESSON ERROR: ", e.message.toString())
         }
@@ -222,6 +177,27 @@ class LessonRepository @Inject constructor() {
 
 
     // ---------------------------------------------------- QUIZZES ---------------------------------------------------- //
+
+
+    suspend fun addQuiz(
+        quizzes: QuizModel, onSuccess: () -> Unit, onFailure: (String) -> Unit
+    ) {
+        try {
+            val quizDocRef =
+                firestore.collection("quizzes") // Generate a document reference with an auto-ID
+                    .document()
+
+            val quizWithID =
+                quizzes.copy(id = quizDocRef.id) // Add the generated ID to the quiz model
+
+            quizDocRef.set(quizWithID).await()  // Upload the lesson with the auto-generated ID
+
+            onSuccess()
+
+        } catch (e: Exception) {
+            onFailure(e.message.toString())
+        }
+    }
 
     suspend fun getQuizzes(): List<QuizModel> {
         return try {
@@ -231,6 +207,37 @@ class LessonRepository @Inject constructor() {
         } catch (e: Exception) {
             Log.e("getQuizzes ERROR: ", e.message.toString())
             emptyList()
+        }
+    }
+
+    suspend fun deleteQuiz(id: String, onSuccess: () -> Unit, onFailure: (String) -> Unit) {
+        try {
+            firestore.collection("quizzes").document(id).delete().addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    onSuccess()
+
+                } else {
+                    onFailure("Failed to delete this quiz")
+                }
+            }
+        } catch (e: Exception) {
+            onFailure(e.message.toString())
+        }
+    }
+
+    fun updateQuiz(quiz: QuizModel, onSuccess: () -> Unit, onFailure: (String) -> Unit) {
+        try {
+
+            firestore.collection("quizzes").document(quiz.id).set(quiz)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        onSuccess()
+                    } else {
+                        onFailure("Failed to update quiz")
+                    }
+                }
+        } catch (e: Exception) {
+            onFailure(e.message.toString())
         }
     }
 
