@@ -68,7 +68,6 @@ class LessonRepository @Inject constructor() {
                 if (task.isSuccessful) {
                     onSuccess()
                     saveProfileDetails()
-                    Log.e("USER LOGIN SUCCESS", "USER LOGIN SUCCESS")
                 } else {
                     onFailure("No account found")
                 }
@@ -91,6 +90,12 @@ class LessonRepository @Inject constructor() {
             )
 
             Hawk.put("user_details", user)
+
+            if (firebaseUser.email.equals("esr@gmail.com")) {
+                Hawk.put("role", "admin")
+            } else {
+                Hawk.put("role", "user")
+            }
         }
     }
 

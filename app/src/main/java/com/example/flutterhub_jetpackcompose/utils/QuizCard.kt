@@ -20,9 +20,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.flutterhub_jetpackcompose.models.LessonModel
+
 import com.example.flutterhub_jetpackcompose.models.QuizModel
 import com.example.flutterhub_jetpackcompose.viewmodel_repository.LessonViewModel
+import com.orhanobut.hawk.Hawk
 
 @Composable
 fun QuizCard(
@@ -57,38 +58,41 @@ fun QuizCard(
             }
         }
         Row(modifier = Modifier.align(Alignment.CenterHorizontally)) {
-            // Edit Button
-            Button(
-                onClick = {
-                    navController.navigate("adminEditQuiz/${quiz.id}")
-                },
-                colors = ButtonDefaults.buttonColors(containerColor = Color.Blue),
-                modifier = Modifier.padding(end = 8.dp) // Spacing between buttons
-            ) {
-                Text("Edit")
-            }
 
-            // Delete Button
-            Button(
-                onClick = {
-                    viewModel.deleteQuiz(quiz.id,
-                        onSuccess = {
-                            viewModel.quizzes
+            if (Hawk.get<Boolean?>("role").equals("admin")) {
+                // Edit Button
+                Button(
+                    onClick = {
+                        navController.navigate("adminEditQuiz/${quiz.id}")
+                    },
+                    colors = ButtonDefaults.buttonColors(containerColor = Color.Blue),
+                    modifier = Modifier.padding(end = 8.dp) // Spacing between buttons
+                ) {
+                    Text("Edit")
+                }
 
-                            Toast.makeText(
-                                context,
-                                "Quiz Successfully deleted",
-                                Toast.LENGTH_SHORT
-                            ).show()
+                // Delete Button
+                Button(
+                    onClick = {
+                        viewModel.deleteQuiz(quiz.id,
+                            onSuccess = {
+                                viewModel.quizzes
 
-                        },
-                        onFailure = { error ->
-                            Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
-                        })
-                },
-                colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
-            ) {
-                Text("Delete")
+                                Toast.makeText(
+                                    context,
+                                    "Quiz Successfully deleted",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+
+                            },
+                            onFailure = { error ->
+                                Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
+                            })
+                    },
+                    colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
+                ) {
+                    Text("Delete")
+                }
             }
         }
     }

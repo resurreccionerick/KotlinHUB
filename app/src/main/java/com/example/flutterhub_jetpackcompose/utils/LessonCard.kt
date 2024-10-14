@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.flutterhub_jetpackcompose.models.LessonModel
 import com.example.flutterhub_jetpackcompose.viewmodel_repository.LessonViewModel
+import com.orhanobut.hawk.Hawk
 
 @Composable
 fun LessonCard(
@@ -59,36 +60,39 @@ fun LessonCard(
             }
         }
         Row(modifier = Modifier.align(Alignment.CenterHorizontally)) {
-            // Edit Button
-            Button(
-                onClick = {
-                    navController.navigate("editLesson/${lesson.id}")
-                },
-                colors = ButtonDefaults.buttonColors(containerColor = Color.Blue),
-                modifier = Modifier.padding(end = 8.dp) // Spacing between buttons
-            ) {
-                Text("Edit")
-            }
 
-            // Delete Button
-            Button(
-                onClick = {
-                    viewModel.deleteLesson(lesson.id,
-                        onSuccess = {
-                            Toast.makeText(
-                                context,
-                                "Successfully deleted",
-                                Toast.LENGTH_SHORT
-                            ).show()
+            if (Hawk.get<Boolean?>("role").equals("admin")) {
+                // Edit Button
+                Button(
+                    onClick = {
+                        navController.navigate("editLesson/${lesson.id}")
+                    },
+                    colors = ButtonDefaults.buttonColors(containerColor = Color.Blue),
+                    modifier = Modifier.padding(end = 8.dp) // Spacing between buttons
+                ) {
+                    Text("Edit")
+                }
 
-                        },
-                        onFailure = { error ->
-                            Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
-                        })
-                },
-                colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
-            ) {
-                Text("Delete")
+                // Delete Button
+                Button(
+                    onClick = {
+                        viewModel.deleteLesson(lesson.id,
+                            onSuccess = {
+                                Toast.makeText(
+                                    context,
+                                    "Successfully deleted",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+
+                            },
+                            onFailure = { error ->
+                                Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
+                            })
+                    },
+                    colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
+                ) {
+                    Text("Delete")
+                }
             }
         }
     }

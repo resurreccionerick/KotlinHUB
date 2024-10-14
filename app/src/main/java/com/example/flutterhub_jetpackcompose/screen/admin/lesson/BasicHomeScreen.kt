@@ -21,10 +21,12 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.flutterhub_jetpackcompose.utils.LessonCard
 import com.example.flutterhub_jetpackcompose.viewmodel_repository.LessonViewModel
+import com.orhanobut.hawk.Hawk
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BasicHomeScreen(navController: NavController, viewModel: LessonViewModel, context: Context) {
+
 
 
     Scaffold(
@@ -42,12 +44,15 @@ fun BasicHomeScreen(navController: NavController, viewModel: LessonViewModel, co
         },
 
         floatingActionButton = {
-            FloatingActionButton(onClick = {
-                navController.navigate("addLesson")
-            }) {
-                Icon(Icons.Default.Add, contentDescription = "Add lesson")
+            if(Hawk.get<Boolean?>("role").equals("admin")){
+                FloatingActionButton(onClick = {
+                    navController.navigate("addLesson")
+                }) {
+                    Icon(Icons.Default.Add, contentDescription = "Add lesson")
+                }
             }
         }
+
     ) { paddingValues ->
         Column(
             modifier = Modifier

@@ -1,10 +1,15 @@
 package com.example.flutterhub_jetpackcompose.screen.admin
 
 import android.content.Context
+import android.graphics.Color
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.paint
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.flutterhub_jetpackcompose.R
@@ -24,59 +29,74 @@ fun AdminHomeScreen(navController: NavController, viewModel: LessonViewModel, co
             )
         },
         content = { paddingValues ->
-            Column(
+            Box(
                 modifier = Modifier
-                    .padding(paddingValues)
                     .fillMaxSize()
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                // First Row
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(16.dp)
-                ) {
-                    ImageCard(
-                        label = "Basic",
-                        imageRes = R.drawable.basic,
-                        onClick = {
-                            Hawk.put("difficulty", "basic")
-                            viewModel.refreshDifficulty()
-                            navController.navigate("adminBasic") },
-                        modifier = Modifier.weight(1f)
+                    .paint(
+                        // Replace with your image id
+                        painterResource(id = R.drawable.bg),
+                        contentScale = ContentScale.FillBounds
                     )
-                    ImageCard(
-                        label = "Intermediate",
-                        imageRes = R.drawable.muscle,
-                        onClick = {
-                            Hawk.put("difficulty", "intermediate")
-                            viewModel.refreshDifficulty()
-                            navController.navigate("adminIntermediate") },
-                        modifier = Modifier.weight(1f)
-                    )
-                }
 
-                // Second Row
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                Column(
+                    modifier = Modifier
+                        .padding(paddingValues)
+                        .fillMaxSize()
+                        .padding(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    ImageCard(
-                        label = "Quiz",
-                        imageRes = R.drawable.quiz,
-                        onClick = {
-                            viewModel.loadQuizzes()
-                            navController.navigate("adminQuiz") },
-                        modifier = Modifier.weight(1f)
-                    )
-                    ImageCard(
-                        label = "Code Runner",
-                        imageRes = R.drawable.developer,
-                        onClick = { navController.navigate("adminAssessment") },
-                        modifier = Modifier.weight(1f)
-                    )
+                    // First Row
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+                        ImageCard(
+                            label = "Basic",
+                            imageRes = R.drawable.basic,
+                            onClick = {
+                                Hawk.put("difficulty", "basic")
+                                viewModel.refreshDifficulty()
+                                navController.navigate("adminBasic")
+                            },
+                            modifier = Modifier.weight(1f)
+                        )
+                        ImageCard(
+                            label = "Intermediate",
+                            imageRes = R.drawable.muscle,
+                            onClick = {
+                                Hawk.put("difficulty", "intermediate")
+                                viewModel.refreshDifficulty()
+                                navController.navigate("adminIntermediate")
+                            },
+                            modifier = Modifier.weight(1f)
+                        )
+                    }
+
+                    // Second Row
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+                        ImageCard(
+                            label = "Quiz",
+                            imageRes = R.drawable.quiz,
+                            onClick = {
+                                viewModel.loadQuizzes()
+                                navController.navigate("adminQuiz")
+                            },
+                            modifier = Modifier.weight(1f)
+                        )
+                        ImageCard(
+                            label = "Code Runner",
+                            imageRes = R.drawable.developer,
+                            onClick = { navController.navigate("adminAssessment") },
+                            modifier = Modifier.weight(1f)
+                        )
+                    }
                 }
             }
+
         }
     )
 }
