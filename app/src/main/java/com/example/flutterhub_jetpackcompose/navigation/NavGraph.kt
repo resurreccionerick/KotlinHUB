@@ -8,6 +8,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.flutterhub_jetpackcompose.models.UserModel
+import com.example.flutterhub_jetpackcompose.screen.User.UserQuizScreen
 import com.example.flutterhub_jetpackcompose.screen.admin.lesson.AddLessonScreen
 import com.example.flutterhub_jetpackcompose.screen.admin.assessment.AdminAssessmentScreen
 import com.example.flutterhub_jetpackcompose.screen.admin.AdminHomeScreen
@@ -71,6 +72,10 @@ fun NavGraph(navController: NavHostController, viewModel: LessonViewModel, conte
 
         composable("adminAddQuiz") {
             AdminAddQuizScreen(navController, viewModel, context)
+        }
+
+        composable("takeQuiz") {
+            UserQuizScreen(navController, viewModel, context)
         }
 
         composable(

@@ -27,21 +27,11 @@ class LessonViewModel @Inject constructor(
         loadLessons()
     }
 
-    private fun getCurrentDifficulty(): String {
-        return repository.getDifficulty()
-    }
 
     private fun loadLessons() {
         viewModelScope.launch {
             lessons.clear()
             lessons.addAll(repository.getLessons())
-        }
-    }
-
-    fun loadQuizzes() {
-        viewModelScope.launch {
-            quizzes.clear()
-            quizzes.addAll(repository.getQuizzes())
         }
     }
 
@@ -122,6 +112,7 @@ class LessonViewModel @Inject constructor(
         viewModelScope.launch {
             repository.forgotPass(email, onSuccess = {
                 onSuccess()
+
             }, onFailure = { errorMsg ->
                 onFailure(errorMsg)
             })
@@ -136,9 +127,16 @@ class LessonViewModel @Inject constructor(
 
     // ---------------------------------------------------- QUIZZES ---------------------------------------------------- //
 
+    fun loadQuizzes() {
+        viewModelScope.launch {
+            quizzes.clear()
+            quizzes.addAll(repository.getQuizzes())
+
+        }
+    }
+
     fun addQuiz(
         question: String,
-        difficulty: String,
         choices: List<String>,
         selectedAns: String,
         onSuccess: () -> Unit, onFailure: (String) -> Unit
@@ -146,7 +144,6 @@ class LessonViewModel @Inject constructor(
         viewModelScope.launch {
             val quiz = QuizModel(
                 question = question,
-                difficulty = difficulty,
                 choices = choices,
                 selectedAns = selectedAns
             );
@@ -154,7 +151,7 @@ class LessonViewModel @Inject constructor(
                 quiz,
                 onSuccess = {
                     onSuccess()
-                    loadQuizzes() //refresh
+                    loadQuizzes() // refresh
                 },
                 onFailure = { errorMsg ->
                     onFailure(errorMsg)
@@ -167,7 +164,7 @@ class LessonViewModel @Inject constructor(
         viewModelScope.launch {
             repository.deleteQuiz(id, onSuccess = {
                 onSuccess()
-                loadQuizzes() //refresh
+                loadQuizzes() // refresh
             }, onFailure = { errorMsg ->
                 onFailure(errorMsg)
             })
@@ -179,16 +176,15 @@ class LessonViewModel @Inject constructor(
         return quizzes.find { it.id == quizId } ?: QuizModel()
     }
 
+
     fun updateQuiz(quiz: QuizModel, onSuccess: () -> Unit, onFailure: (String) -> Unit) {
         viewModelScope.launch {
             repository.updateQuiz(quiz, onSuccess = {
                 onSuccess()
-                loadQuizzes() //refresh
+                loadQuizzes() // refresh
             }, onFailure = { errorMsg ->
                 onFailure(errorMsg)
             })
         }
     }
-
-
 }

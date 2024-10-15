@@ -1,6 +1,7 @@
 package com.example.flutterhub_jetpackcompose.screen.admin.quiz
 
 import android.content.Context
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -9,6 +10,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.EditOff
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -46,13 +48,22 @@ fun AdminQuizHomeScreen(
             )
         },
 
+
         floatingActionButton = {
+//            FloatingActionButton(onClick = {
+//                navController.navigate("adminAddQuiz")
+//            }) {
+//                Icon(Icons.Default.Add, contentDescription = "Add Quiz")
+//            }
+
             FloatingActionButton(onClick = {
-                navController.navigate("adminAddQuiz")
+                navController.navigate("takeQuiz")
             }) {
-                Icon(Icons.Default.Add, contentDescription = "Add Quiz")
+                Icon(Icons.Default.EditOff, contentDescription = "Add Quiz")
             }
         }
+
+
     ) { paddingValues ->
         Column(
             modifier = Modifier

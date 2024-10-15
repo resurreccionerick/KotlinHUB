@@ -49,7 +49,7 @@ fun AdminEditQuizScreen(
     context: Context
 ) {
     var question by rememberSaveable { mutableStateOf(quizModel.question) }
-    var difficulty by rememberSaveable { mutableStateOf(quizModel.difficulty) }
+    // var difficulty by rememberSaveable { mutableStateOf(quizModel.difficulty) }
     var selectedAns by rememberSaveable { mutableStateOf(quizModel.selectedAns) }
     var choices = remember {
         mutableStateListOf(
@@ -88,7 +88,7 @@ fun AdminEditQuizScreen(
                 Spacer(modifier = Modifier.height(8.dp))
 
                 // Dropdown to select difficulty
-                DifficultyDropDown(selectedDifficulty = difficulty) { difficulty = it }
+                // DifficultyDropDown(selectedDifficulty = difficulty) { difficulty = it }
 
                 Spacer(modifier = Modifier.height(8.dp))
 
@@ -107,17 +107,17 @@ fun AdminEditQuizScreen(
                 Spacer(modifier = Modifier.height(8.dp))
 
                 // Dropdown to select the correct answer
-                AnswerDropDown(selectedAns) { selectedAns = it }
+                // AnswerDropDown(selectedAns) { selectedAns = it }
 
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Button(onClick = {
-                    if (question.isNotEmpty() && difficulty.isNotBlank() && choices.all { it.isNotBlank() } &&
-                        selectedAns.isNotBlank()
+                    if (question.isNotEmpty() && choices.all { it.isNotBlank() } &&
+                        selectedAns != null
                     ) {
                         val quiz = quizModel.copy(
                             question = question,
-                            difficulty = difficulty,
+                            //difficulty = difficulty,
                             choices = choices,
                             selectedAns = selectedAns
                         )

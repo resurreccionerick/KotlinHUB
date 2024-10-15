@@ -220,18 +220,19 @@ class LessonRepository @Inject constructor() {
         }
     }
 
-    suspend fun getQuizzes(): List<QuizModel> {
+    suspend fun getQuizzes(
+    ): List<QuizModel> {
         return try {
             val snapshot = firestore.collection("quizzes").get().await()
+            snapshot.toObjects(QuizModel::class.java) // Get the quiz list
 
-            snapshot.toObjects(QuizModel::class.java)
         } catch (e: Exception) {
             Log.e("getQuizzes ERROR: ", e.message.toString())
             emptyList()
         }
     }
 
-    suspend fun deleteQuiz(id: String, onSuccess: () -> Unit, onFailure: (String) -> Unit) {
+    fun deleteQuiz(id: String, onSuccess: () -> Unit, onFailure: (String) -> Unit) {
         try {
             firestore.collection("quizzes").document(id).delete().addOnCompleteListener { task ->
                 if (task.isSuccessful) {

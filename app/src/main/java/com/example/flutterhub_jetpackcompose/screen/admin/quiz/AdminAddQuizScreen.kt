@@ -47,7 +47,7 @@ fun AdminAddQuizScreen(
     context: Context
 ) {
     var question by rememberSaveable { mutableStateOf("") }
-    var difficulty by rememberSaveable { mutableStateOf("") }
+    //var difficulty by rememberSaveable { mutableStateOf("") }
     var selectedAns by rememberSaveable { mutableStateOf("") }
     var choices = remember { mutableStateListOf("", "", "", "") }
 
@@ -79,7 +79,7 @@ fun AdminAddQuizScreen(
                 Spacer(modifier = Modifier.height(8.dp))
 
                 // Dropdown to select difficulty
-                DifficultyDropDown(selectedDifficulty = difficulty) { difficulty = it }
+//                DifficultyDropDown(selectedDifficulty = difficulty) { difficulty = it }
 
                 Spacer(modifier = Modifier.height(8.dp))
 
@@ -103,10 +103,10 @@ fun AdminAddQuizScreen(
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Button(onClick = {
-                    if (question.isNotEmpty() && difficulty.isNotBlank() && choices.all { it.isNotBlank() } &&
+                    if (question.isNotEmpty() && choices.all { it.isNotBlank() } &&
                         selectedAns.isNotBlank()
                     ) {
-                        viewModel.addQuiz(question, difficulty, choices, selectedAns,
+                        viewModel.addQuiz(question, choices, selectedAns,
                             onSuccess = {
                                 Toast.makeText(context, "Quiz Added!", Toast.LENGTH_LONG).show()
                                 navController.popBackStack()
