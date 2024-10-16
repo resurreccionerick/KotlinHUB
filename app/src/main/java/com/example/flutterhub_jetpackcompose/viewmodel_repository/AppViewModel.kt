@@ -1,10 +1,7 @@
 package com.example.flutterhub_jetpackcompose.viewmodel_repository
 
-import android.util.Log
-import android.widget.Toast
-import androidx.compose.material3.contentColorFor
+
 import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.flutterhub_jetpackcompose.models.LessonModel
@@ -15,16 +12,22 @@ import javax.inject.Inject
 
 //The ViewModel acts as the bridge between the Repository and the UI. It fetches the data and holds the UI state.
 @HiltViewModel
-class LessonViewModel @Inject constructor(
+class AppViewModel @Inject constructor(
     private val repository: LessonRepository
 ) : ViewModel() {
 
     val quizzes = mutableStateListOf<QuizModel>()
     val lessons = mutableStateListOf<LessonModel>()
 
-    fun refreshDifficulty() {
+    fun refreshLessonDifficulty() {
         repository.refreshDifficulty()
         loadLessons()
+    }
+
+
+    fun refreshQuizDifficulty(){
+        repository.refreshDifficulty()
+        loadQuizzes()
     }
 
 

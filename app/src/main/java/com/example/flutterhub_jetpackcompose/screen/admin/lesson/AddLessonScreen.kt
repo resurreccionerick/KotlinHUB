@@ -12,13 +12,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.flutterhub_jetpackcompose.viewmodel_repository.LessonViewModel
+import com.example.flutterhub_jetpackcompose.viewmodel_repository.AppViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddLessonScreen(
     navController: NavController,
-    viewModel: LessonViewModel,
+    viewModel: AppViewModel,
     context: Context
 ) {
     var title by rememberSaveable { mutableStateOf("") }

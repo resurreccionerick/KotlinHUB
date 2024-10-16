@@ -13,13 +13,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.flutterhub_jetpackcompose.models.LessonModel
-import com.example.flutterhub_jetpackcompose.viewmodel_repository.LessonViewModel
+import com.example.flutterhub_jetpackcompose.viewmodel_repository.AppViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditLessonScreen(
     navController: NavController,
-    viewModel: LessonViewModel,
+    viewModel: AppViewModel,
     lessonModel: LessonModel,
     context: Context
 ) {

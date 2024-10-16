@@ -19,12 +19,12 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.flutterhub_jetpackcompose.R
 import com.example.flutterhub_jetpackcompose.utils.ImageCard
-import com.example.flutterhub_jetpackcompose.viewmodel_repository.LessonViewModel
+import com.example.flutterhub_jetpackcompose.viewmodel_repository.AppViewModel
 import com.orhanobut.hawk.Hawk
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AdminHomeScreen(navController: NavController, viewModel: LessonViewModel, context: Context) {
+fun AdminHomeScreen(navController: NavController, viewModel: AppViewModel, context: Context) {
 
     var expanded by remember { mutableStateOf(false) }
 
@@ -57,6 +57,12 @@ fun AdminHomeScreen(navController: NavController, viewModel: LessonViewModel, co
 
 
                 },
+//                colors = TopAppBarDefaults.topAppBarColors(
+//                    containerColor = MaterialTheme.colorScheme.primary,
+//                    titleContentColor = MaterialTheme.colorScheme.onPrimary,
+//                    navigationIconContentColor = MaterialTheme.colorScheme.onPrimary,
+//                    actionIconContentColor = MaterialTheme.colorScheme.onSecondary
+//                ),
                 modifier = Modifier.fillMaxWidth()
             )
         },
@@ -85,20 +91,20 @@ fun AdminHomeScreen(navController: NavController, viewModel: LessonViewModel, co
                     ) {
                         ImageCard(
                             label = "Basic",
-                            imageRes = R.drawable.basic,
+                            imageRes = R.drawable.easy_colored,
                             onClick = {
                                 Hawk.put("difficulty", "basic")
-                                viewModel.refreshDifficulty()
+                                viewModel.refreshLessonDifficulty()
                                 navController.navigate("adminBasic")
                             },
                             modifier = Modifier.weight(1f)
                         )
                         ImageCard(
                             label = "Intermediate",
-                            imageRes = R.drawable.muscle,
+                            imageRes = R.drawable.muscle_colored,
                             onClick = {
                                 Hawk.put("difficulty", "intermediate")
-                                viewModel.refreshDifficulty()
+                                viewModel.refreshLessonDifficulty()
                                 navController.navigate("adminIntermediate")
                             },
                             modifier = Modifier.weight(1f)
@@ -115,7 +121,7 @@ fun AdminHomeScreen(navController: NavController, viewModel: LessonViewModel, co
                             imageRes = R.drawable.quiz,
                             onClick = {
                                 viewModel.loadQuizzes()
-                                navController.navigate("adminQuiz")
+                                navController.navigate("difficultyQuiz")
                             },
                             modifier = Modifier.weight(1f)
                         )

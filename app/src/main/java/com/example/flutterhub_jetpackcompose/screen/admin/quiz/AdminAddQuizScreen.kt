@@ -2,7 +2,6 @@ package com.example.flutterhub_jetpackcompose.screen.admin.quiz
 
 import android.content.Context
 import android.widget.Toast
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,10 +10,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.Button
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -35,14 +31,14 @@ import androidx.compose.ui.unit.dp
 
 import androidx.navigation.NavHostController
 import com.example.flutterhub_jetpackcompose.utils.AnswerDropDown
-import com.example.flutterhub_jetpackcompose.viewmodel_repository.LessonViewModel
+import com.example.flutterhub_jetpackcompose.viewmodel_repository.AppViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AdminAddQuizScreen(
     navController: NavHostController,
-    viewModel: LessonViewModel,
+    viewModel: AppViewModel,
     context: Context
 ) {
     var question by rememberSaveable { mutableStateOf("") }

@@ -26,7 +26,7 @@ class LessonRepository @Inject constructor() {
     }
 
 
-    fun getDifficulty(): String {
+    private fun getDifficulty(): String {
         return difficulty
     }
 
@@ -220,8 +220,9 @@ class LessonRepository @Inject constructor() {
         quizzes: QuizModel, onSuccess: () -> Unit, onFailure: (String) -> Unit
     ) {
         try {
+            val difficulty = getDifficulty()
             val quizDocRef =
-                firestore.collection("quizzes") // Generate a document reference with an auto-ID
+                firestore.collection("quizzes_$difficulty") // Generate a document reference with an auto-ID
                     .document()
 
             val quizWithID =
@@ -239,7 +240,9 @@ class LessonRepository @Inject constructor() {
     suspend fun getQuizzes(
     ): List<QuizModel> {
         return try {
-            val snapshot = firestore.collection("quizzes").get().await()
+            val difficulty = getDifficulty()
+
+            val snapshot = firestore.collection("quizzes_$difficulty").get().await()
             snapshot.toObjects(QuizModel::class.java) // Get the quiz list
 
         } catch (e: Exception) {
@@ -250,14 +253,17 @@ class LessonRepository @Inject constructor() {
 
     fun deleteQuiz(id: String, onSuccess: () -> Unit, onFailure: (String) -> Unit) {
         try {
-            firestore.collection("quizzes").document(id).delete().addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    onSuccess()
+            val difficulty = getDifficulty()
 
-                } else {
-                    onFailure("Failed to delete this quiz")
+            firestore.collection("quizzes_$difficulty").document(id).delete()
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        onSuccess()
+
+                    } else {
+                        onFailure("Failed to delete this quiz")
+                    }
                 }
-            }
         } catch (e: Exception) {
             onFailure(e.message.toString())
         }
@@ -265,8 +271,9 @@ class LessonRepository @Inject constructor() {
 
     fun updateQuiz(quiz: QuizModel, onSuccess: () -> Unit, onFailure: (String) -> Unit) {
         try {
+            val difficulty = getDifficulty()
 
-            firestore.collection("quizzes").document(quiz.id).set(quiz)
+            firestore.collection("quizzes_$difficulty").document(quiz.id).set(quiz)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         onSuccess()

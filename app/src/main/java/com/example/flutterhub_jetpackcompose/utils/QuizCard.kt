@@ -22,14 +22,14 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 
 import com.example.flutterhub_jetpackcompose.models.QuizModel
-import com.example.flutterhub_jetpackcompose.viewmodel_repository.LessonViewModel
+import com.example.flutterhub_jetpackcompose.viewmodel_repository.AppViewModel
 import com.orhanobut.hawk.Hawk
 
 @Composable
 fun QuizCard(
     navController: NavController,
     quiz: QuizModel,
-    viewModel: LessonViewModel,
+    viewModel: AppViewModel,
     context: Context
 ) {
     Card(

@@ -12,22 +12,23 @@ import com.example.flutterhub_jetpackcompose.screen.User.UserQuizScreen
 import com.example.flutterhub_jetpackcompose.screen.admin.lesson.AddLessonScreen
 import com.example.flutterhub_jetpackcompose.screen.admin.assessment.AdminAssessmentScreen
 import com.example.flutterhub_jetpackcompose.screen.admin.AdminHomeScreen
-import com.example.flutterhub_jetpackcompose.screen.admin.quiz.AdminQuizHomeScreen
 import com.example.flutterhub_jetpackcompose.screen.admin.lesson.BasicHomeScreen
-
 import com.example.flutterhub_jetpackcompose.screen.admin.lesson.EditLessonScreen
 import com.example.flutterhub_jetpackcompose.screen.admin.lesson.IntermediateHomeScreen
 import com.example.flutterhub_jetpackcompose.screen.admin.quiz.AdminAddQuizScreen
 import com.example.flutterhub_jetpackcompose.screen.admin.quiz.AdminEditQuizScreen
+import com.example.flutterhub_jetpackcompose.screen.admin.quiz.BasicQuizHomeScreen
+import com.example.flutterhub_jetpackcompose.screen.admin.quiz.IntermediateQuizHomeScreen
+import com.example.flutterhub_jetpackcompose.screen.admin.quiz.QuizDifficultyScreen
 import com.example.flutterhub_jetpackcompose.screen.login_register.ForgotPassScreen
 import com.example.flutterhub_jetpackcompose.screen.login_register.LoginScreen
 import com.example.flutterhub_jetpackcompose.screen.login_register.SignupScreen
 import com.example.flutterhub_jetpackcompose.utils.LessonDetailsScreen
-import com.example.flutterhub_jetpackcompose.viewmodel_repository.LessonViewModel
+import com.example.flutterhub_jetpackcompose.viewmodel_repository.AppViewModel
 import com.orhanobut.hawk.Hawk
 
 @Composable
-fun NavGraph(navController: NavHostController, viewModel: LessonViewModel, context: Context) {
+fun NavGraph(navController: NavHostController, viewModel: AppViewModel, context: Context) {
 
 
     val user: UserModel? = Hawk.get("user_details")
@@ -62,12 +63,20 @@ fun NavGraph(navController: NavHostController, viewModel: LessonViewModel, conte
             BasicHomeScreen(navController, viewModel, context)
         }
 
+        composable("difficultyQuiz") {
+            QuizDifficultyScreen(navController, viewModel, context)
+        }
+
         composable("adminIntermediate") {
             IntermediateHomeScreen(navController, viewModel, context)
         }
 
-        composable("adminQuiz") {
-            AdminQuizHomeScreen(navController, viewModel, context)
+        composable("basicQuiz") {
+            BasicQuizHomeScreen(navController, viewModel, context)
+        }
+
+        composable("intermediateQuiz") {
+            IntermediateQuizHomeScreen(navController, viewModel, context)
         }
 
         composable("adminAddQuiz") {

@@ -21,14 +21,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.flutterhub_jetpackcompose.models.LessonModel
-import com.example.flutterhub_jetpackcompose.viewmodel_repository.LessonViewModel
+import com.example.flutterhub_jetpackcompose.viewmodel_repository.AppViewModel
 import com.orhanobut.hawk.Hawk
 
 @Composable
 fun LessonCard(
     navController: NavController,
     lesson: LessonModel,
-    viewModel: LessonViewModel,
+    viewModel: AppViewModel,
     context: Context
 ) {
     Card(

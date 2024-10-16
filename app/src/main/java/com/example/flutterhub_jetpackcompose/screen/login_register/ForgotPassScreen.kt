@@ -20,10 +20,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.flutterhub_jetpackcompose.viewmodel_repository.LessonViewModel
+import com.example.flutterhub_jetpackcompose.viewmodel_repository.AppViewModel
 
 @Composable
-fun ForgotPassScreen(navController: NavController, viewModel: LessonViewModel, context: Context) {
+fun ForgotPassScreen(navController: NavController, viewModel: AppViewModel, context: Context) {
 
     var email by rememberSaveable { mutableStateOf("") }
 

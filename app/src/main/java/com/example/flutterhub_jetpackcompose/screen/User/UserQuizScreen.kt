@@ -1,12 +1,9 @@
 package com.example.flutterhub_jetpackcompose.screen.User
 
 import android.content.Context
-import android.graphics.Paint.Align
 import android.widget.Toast
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -20,13 +17,13 @@ import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 
 import com.example.flutterhub_jetpackcompose.models.QuizModel
-import com.example.flutterhub_jetpackcompose.viewmodel_repository.LessonViewModel
+import com.example.flutterhub_jetpackcompose.viewmodel_repository.AppViewModel
 
 
 @Composable
 fun UserQuizScreen(
     navController: NavController,
-    viewModel: LessonViewModel,
+    viewModel: AppViewModel,
     context: Context
 ) {
     var quizzes by remember { mutableStateOf<List<QuizModel>>(emptyList()) }

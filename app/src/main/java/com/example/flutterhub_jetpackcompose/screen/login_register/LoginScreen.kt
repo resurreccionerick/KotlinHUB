@@ -23,11 +23,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.flutterhub_jetpackcompose.viewmodel_repository.LessonViewModel
-import com.orhanobut.hawk.Hawk
+import com.example.flutterhub_jetpackcompose.viewmodel_repository.AppViewModel
 
 @Composable
-fun LoginScreen(navController: NavController, viewModel: LessonViewModel, context: Context) {
+fun LoginScreen(navController: NavController, viewModel: AppViewModel, context: Context) {
 
     var email by remember { mutableStateOf("esr@gmail.com") }
     var password by remember { mutableStateOf("Test123!") }
