@@ -20,6 +20,7 @@ import androidx.compose.ui.Modifier
 @Composable
 fun AnswerDropDown(
     selectedAns: String,
+    choices: List<String>,
     onAnswerSelected: (String) -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
@@ -42,7 +43,7 @@ fun AnswerDropDown(
         DropdownMenu(expanded = expanded,
             onDismissRequest = { expanded = false })
         {
-            answerOption.forEach { answer ->
+            choices.forEach { answer ->
                 DropdownMenuItem(
                     text = { Text(answer) },
                     onClick = {

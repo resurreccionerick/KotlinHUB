@@ -5,5 +5,5 @@ data class QuizModel(
     val question: String = "",
    // val difficulty: String = "",
     val choices: List<String> = emptyList(),
-    val selectedAns: Int  //correct ans
+    val selectedAns: String = ""  //correct ans
 )

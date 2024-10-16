@@ -35,7 +35,6 @@ import androidx.compose.ui.unit.dp
 
 import androidx.navigation.NavHostController
 import com.example.flutterhub_jetpackcompose.utils.AnswerDropDown
-import com.example.flutterhub_jetpackcompose.utils.DifficultyDropDown
 import com.example.flutterhub_jetpackcompose.viewmodel_repository.LessonViewModel
 
 
@@ -98,7 +97,9 @@ fun AdminAddQuizScreen(
                 Spacer(modifier = Modifier.height(8.dp))
 
                 // Dropdown to select the correct answer
-                AnswerDropDown(selectedAns) { selectedAns = it }
+                AnswerDropDown(selectedAns = selectedAns,
+                    choices = choices.filter { it.isNotBlank() },
+                    onAnswerSelected = { selectedAns = it })
 
                 Spacer(modifier = Modifier.height(16.dp))
 
