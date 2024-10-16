@@ -109,7 +109,7 @@ fun UserQuizScreen(
                             selectedAnswer = choice
                         }
                     },
-                    enabled = answered // Disable after answering
+                    enabled = !answered // Disable after answering
 
                 )
                 Spacer(modifier = Modifier.width(8.dp))

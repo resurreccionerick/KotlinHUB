@@ -76,6 +76,22 @@ class LessonRepository @Inject constructor() {
             }
         } catch (e: Exception) {
             Log.e("userLogin ERROR: ", e.message.toString())
+            onFailure(e.message.toString())
+        }
+    }
+
+    fun userLogout(onSuccess: () -> Unit, onFailure: (String) -> Unit) {
+        try {
+            auth.signOut()
+            auth.addAuthStateListener { firebaseAuth ->
+                if (firebaseAuth.currentUser == null) {
+                    onSuccess()
+                }
+            }
+
+        } catch (e: Exception) {
+            onFailure(e.message.toString())
+            Log.e("userLogout ERROR: ", e.message.toString())
         }
     }
 

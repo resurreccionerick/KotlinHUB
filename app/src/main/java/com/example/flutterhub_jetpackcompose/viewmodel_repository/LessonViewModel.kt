@@ -106,6 +106,16 @@ class LessonViewModel @Inject constructor(
         }
     }
 
+    fun userLogout(onSuccess: () -> Unit, onFailure: (String) -> Unit) {
+        viewModelScope.launch {
+            repository.userLogout(onSuccess = {
+                onSuccess()
+            }, onFailure = { errorMsg ->
+                onFailure(errorMsg)
+            })
+        }
+    }
+
     fun forgotPass(
         email: String, onSuccess: () -> Unit, onFailure: (String) -> Unit
     ) {

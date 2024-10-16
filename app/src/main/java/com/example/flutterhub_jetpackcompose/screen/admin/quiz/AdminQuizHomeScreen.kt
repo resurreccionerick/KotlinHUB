@@ -50,17 +50,17 @@ fun AdminQuizHomeScreen(
 
 
         floatingActionButton = {
-//            FloatingActionButton(onClick = {
-//                navController.navigate("adminAddQuiz")
-//            }) {
-//                Icon(Icons.Default.Add, contentDescription = "Add Quiz")
-//            }
-
             FloatingActionButton(onClick = {
-                navController.navigate("takeQuiz")
+                navController.navigate("adminAddQuiz")
             }) {
-                Icon(Icons.Default.EditOff, contentDescription = "Add Quiz")
+                Icon(Icons.Default.Add, contentDescription = "Add Quiz")
             }
+
+//            FloatingActionButton(onClick = {
+//                navController.navigate("takeQuiz")
+//            }) {
+//                Icon(Icons.Default.EditOff, contentDescription = "Add Quiz")
+//            }
         }
 
 

@@ -1,11 +1,16 @@
 package com.example.flutterhub_jetpackcompose.screen.admin
 
 import android.content.Context
-import android.graphics.Color
-import androidx.compose.foundation.background
+import android.widget.Toast
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.paint
 import androidx.compose.ui.layout.ContentScale
@@ -21,10 +26,37 @@ import com.orhanobut.hawk.Hawk
 @Composable
 fun AdminHomeScreen(navController: NavController, viewModel: LessonViewModel, context: Context) {
 
+    var expanded by remember { mutableStateOf(false) }
+
     Scaffold(
         topBar = {
             TopAppBar(
                 title = { Text("Admin Home Screen") },
+                actions = {
+                    IconButton(onClick = { expanded = !expanded }) {
+                        Icon(
+                            imageVector = Icons.Default.MoreVert, contentDescription = "More",
+                        )
+                        DropdownMenu(
+                            expanded = expanded,
+                            onDismissRequest = { expanded = false }) {
+                            DropdownMenuItem(text = { Text("Logout") }, onClick = {
+                                viewModel.userLogout(onSuccess = {
+                                    Hawk.deleteAll()
+                                    navController.navigate("login"){
+                                        popUpTo(0) // Clears the entire back stack
+                                        launchSingleTop = true // Avoids multiple instances of the same destination
+                                    }
+                                }, onFailure = { msg ->
+                                    Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+                                })
+                                expanded = false
+                            })
+                        }
+                    }
+
+
+                },
                 modifier = Modifier.fillMaxWidth()
             )
         },
