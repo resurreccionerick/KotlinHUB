@@ -1,4 +1,4 @@
-package com.example.flutterhub_jetpackcompose.screen.User
+package com.example.flutterhub_jetpackcompose.screen.user
 
 import android.content.Context
 import android.widget.Toast

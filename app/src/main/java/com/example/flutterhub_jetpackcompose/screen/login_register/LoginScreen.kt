@@ -28,6 +28,8 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.flutterhub_jetpackcompose.viewmodel.AppViewModel
+import com.google.firebase.auth.FirebaseAuth
+import com.orhanobut.hawk.Hawk
 
 @Composable
 fun LoginScreen(navController: NavController, viewModel: AppViewModel, context: Context) {
@@ -102,7 +104,22 @@ fun LoginScreen(navController: NavController, viewModel: AppViewModel, context: 
                     viewModel.userLogin(email, password,
                         onSuccess = {
                             isLoading = false
-                            navController.navigate("adminHome") //callback
+
+//                            // Get the current user from Firebase
+//                            val currentUser = FirebaseAuth.getInstance().currentUser
+//                            val userEmail = currentUser?.email
+//
+//                            // Check if the email belongs to the admin or a regular user
+//                            if (userEmail == "esr@gmail.com") {
+//                                navController.navigate("adminHome") {
+//                                    popUpTo(0) // Clear the back stack
+//                                }
+//                            } else {
+                                navController.navigate("userHome")
+//                                {
+//                                    popUpTo(0) // Clear the back stack
+//                                }
+//                            }
                         },
                         onFailure = { errorMsg ->
                             isLoading = false
@@ -114,6 +131,7 @@ fun LoginScreen(navController: NavController, viewModel: AppViewModel, context: 
             }, modifier = Modifier.align(Alignment.CenterHorizontally)) {
                 Text("Sign In")
             }
+
         }
     }
 }

@@ -35,7 +35,6 @@ fun WebView(navController: NavController, context: Context) {
     var title by rememberSaveable { mutableStateOf("") }
 
     LaunchedEffect(Unit) {
-        Toast.makeText(context, "SA LAUNCH", Toast.LENGTH_SHORT).show()
         link = Hawk.get("link")
         title = Hawk.get("title")
     }

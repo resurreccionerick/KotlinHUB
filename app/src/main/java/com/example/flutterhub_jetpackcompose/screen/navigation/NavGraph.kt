@@ -8,7 +8,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.flutterhub_jetpackcompose.data.models.UserModel
-import com.example.flutterhub_jetpackcompose.screen.User.UserQuizScreen
+import com.example.flutterhub_jetpackcompose.screen.user.UserQuizScreen
 import com.example.flutterhub_jetpackcompose.screen.admin.lesson.AddLessonScreen
 import com.example.flutterhub_jetpackcompose.screen.admin.assessment.AdminAssessmentScreen
 import com.example.flutterhub_jetpackcompose.screen.admin.AdminHomeScreen
@@ -25,6 +25,8 @@ import com.example.flutterhub_jetpackcompose.screen.login_register.LoginScreen
 import com.example.flutterhub_jetpackcompose.screen.login_register.SignupScreen
 import com.example.flutterhub_jetpackcompose.screen.components.LessonDetailsScreen
 import com.example.flutterhub_jetpackcompose.screen.components.WebView
+import com.example.flutterhub_jetpackcompose.screen.user.quiz.SettingsScreen
+import com.example.flutterhub_jetpackcompose.screen.user.quiz.UserHomeScreen
 import com.example.flutterhub_jetpackcompose.viewmodel.AppViewModel
 import com.orhanobut.hawk.Hawk
 
@@ -35,7 +37,15 @@ fun NavGraph(navController: NavHostController, viewModel: AppViewModel, context:
     val user: UserModel? = Hawk.get("user_details")
 
     val startDestination = if (user != null && user.id.isNotEmpty()) {
-        "adminHome"
+        if (Hawk.get<String?>("role").equals(
+                "admin"
+            )
+        ) {
+            "adminHome"
+        } else {
+            "userHome"
+        }
+
     } else {
         "login"
     }
@@ -58,6 +68,14 @@ fun NavGraph(navController: NavHostController, viewModel: AppViewModel, context:
 
         composable("adminHome") {
             AdminHomeScreen(navController, viewModel, context)
+        }
+
+        composable("userHome") {
+            UserHomeScreen(navController, viewModel, context)
+        }
+
+        composable("userSettings") {
+            SettingsScreen(navController, viewModel, context)
         }
 
         composable("adminBasic") {
