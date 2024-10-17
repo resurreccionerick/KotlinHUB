@@ -1,11 +1,12 @@
-package com.example.flutterhub_jetpackcompose.viewmodel_repository
+package com.example.flutterhub_jetpackcompose.viewmodel
 
 
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.flutterhub_jetpackcompose.models.LessonModel
-import com.example.flutterhub_jetpackcompose.models.QuizModel
+import com.example.flutterhub_jetpackcompose.data.models.LessonModel
+import com.example.flutterhub_jetpackcompose.data.models.QuizModel
+import com.example.flutterhub_jetpackcompose.data.repository.LessonRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject

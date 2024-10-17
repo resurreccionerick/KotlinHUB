@@ -12,8 +12,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.flutterhub_jetpackcompose.models.LessonModel
-import com.example.flutterhub_jetpackcompose.viewmodel_repository.AppViewModel
+import com.example.flutterhub_jetpackcompose.data.models.LessonModel
+import com.example.flutterhub_jetpackcompose.viewmodel.AppViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

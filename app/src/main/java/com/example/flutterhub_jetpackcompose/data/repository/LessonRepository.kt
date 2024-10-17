@@ -1,10 +1,9 @@
-package com.example.flutterhub_jetpackcompose.viewmodel_repository
+package com.example.flutterhub_jetpackcompose.data.repository
 
 import android.util.Log
-import androidx.compose.runtime.snapshots.SnapshotStateList
-import com.example.flutterhub_jetpackcompose.models.LessonModel
-import com.example.flutterhub_jetpackcompose.models.QuizModel
-import com.example.flutterhub_jetpackcompose.models.UserModel
+import com.example.flutterhub_jetpackcompose.data.models.LessonModel
+import com.example.flutterhub_jetpackcompose.data.models.QuizModel
+import com.example.flutterhub_jetpackcompose.data.models.UserModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.firestore.FirebaseFirestore

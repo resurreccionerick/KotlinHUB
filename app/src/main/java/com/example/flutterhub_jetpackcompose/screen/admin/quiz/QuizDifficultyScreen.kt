@@ -20,8 +20,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.flutterhub_jetpackcompose.R
-import com.example.flutterhub_jetpackcompose.utils.ImageCard
-import com.example.flutterhub_jetpackcompose.viewmodel_repository.AppViewModel
+import com.example.flutterhub_jetpackcompose.screen.components.ImageCard
+import com.example.flutterhub_jetpackcompose.viewmodel.AppViewModel
 import com.orhanobut.hawk.Hawk
 
 @OptIn(ExperimentalMaterial3Api::class)

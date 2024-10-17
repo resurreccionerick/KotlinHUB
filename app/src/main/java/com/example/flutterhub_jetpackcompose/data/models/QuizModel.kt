@@ -1,4 +1,4 @@
-package com.example.flutterhub_jetpackcompose.models
+package com.example.flutterhub_jetpackcompose.data.models
 
 data class QuizModel(
     val id: String = "",

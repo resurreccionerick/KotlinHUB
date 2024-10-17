@@ -34,9 +34,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.flutterhub_jetpackcompose.R
-import com.example.flutterhub_jetpackcompose.utils.ImageCard
-import com.example.flutterhub_jetpackcompose.utils.ImageRowCard
-import com.example.flutterhub_jetpackcompose.viewmodel_repository.AppViewModel
+import com.example.flutterhub_jetpackcompose.screen.components.ImageCard
+import com.example.flutterhub_jetpackcompose.screen.components.ImageRowCard
+import com.example.flutterhub_jetpackcompose.viewmodel.AppViewModel
 import com.orhanobut.hawk.Hawk
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -134,55 +134,55 @@ fun AdminHomeScreen(navController: NavController, viewModel: AppViewModel, conte
                     )
                 }
 
-                Text("Other Topics: ", color = Color.Black, fontWeight = FontWeight.Bold)
+                if (!Hawk.get<String?>("role").equals("admin")) {
+                    Text("Other Topics: ", color = Color.Black, fontWeight = FontWeight.Bold)
 
-                Box(
-                    modifier = Modifier
-                        .weight(1f)
-                        .verticalScroll(rememberScrollState())
-                        .padding(8.dp)
-                ) {
-
-                    Column(
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    Box(
+                        modifier = Modifier
+                            .weight(1f)
+                            .verticalScroll(rememberScrollState())
+                            .padding(8.dp)
                     ) {
 
-                        ImageRowCard(
-                            label = "Install Android Studio",
-                            imageRes = R.drawable.developer,
-                            onClick = {
-                                Toast.makeText(
-                                    context,
-                                    "  clicked",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            },
-                        )
+                        Column(
+                            verticalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+
+                            ImageRowCard(
+                                label = "Install Android Studio",
+                                imageRes = R.drawable.developer,
+                                onClick = {
+                                    Hawk.put("title", "Install Android Studio")
+                                    Hawk.put("link", "https://developer.android.com/studio/install")
+                                    navController.navigate("webView")
+                                },
+                            )
 
 
-                        ImageRowCard(
-                            label = "Install Android Studio",
-                            imageRes = R.drawable.developer,
-                            onClick = {
-                                Toast.makeText(
-                                    context,
-                                    "  clicked",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            },
-                        )
+                            ImageRowCard(
+                                label = "Install Android Studio",
+                                imageRes = R.drawable.developer,
+                                onClick = {
+                                    Toast.makeText(
+                                        context,
+                                        "  clicked",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                },
+                            )
 
-                        ImageRowCard(
-                            label = "Install Android Studio",
-                            imageRes = R.drawable.developer,
-                            onClick = {
-                                Toast.makeText(
-                                    context,
-                                    "  clicked",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            },
-                        )
+                            ImageRowCard(
+                                label = "Install Android Studio",
+                                imageRes = R.drawable.developer,
+                                onClick = {
+                                    Toast.makeText(
+                                        context,
+                                        "  clicked",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                },
+                            )
+                        }
                     }
                 }
             }

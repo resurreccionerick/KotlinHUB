@@ -1,4 +1,4 @@
-package com.example.flutterhub_jetpackcompose.utils
+package com.example.flutterhub_jetpackcompose.screen.components
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
@@ -23,7 +23,7 @@ fun BottomNavigationBar(navController: NavHostController) {
 
     NavigationBar(
         containerColor = Color.White,
-        tonalElevation = 5.dp
+        tonalElevation = 5.dp,
     ) {
         items.forEach { screen ->
             NavigationBarItem(
@@ -47,7 +47,7 @@ fun BottomNavigationBar(navController: NavHostController) {
 
 
 sealed class Screen(val route: String, val label: String, val icon: ImageVector) {
-    object Home : Screen("adminHome", "Home", Icons.Default.Home)
-    object Settings : Screen("adminBasic", "Settings", Icons.Default.Settings)
+    data object Home : Screen("adminHome", "Home", Icons.Default.Home)
+    data object Settings : Screen("adminBasic", "Settings", Icons.Default.Settings)
 }
 

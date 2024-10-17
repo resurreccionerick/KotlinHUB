@@ -1,4 +1,4 @@
-package com.example.flutterhub_jetpackcompose.utils
+package com.example.flutterhub_jetpackcompose.screen.components
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth

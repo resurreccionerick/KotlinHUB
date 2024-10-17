@@ -1,4 +1,4 @@
-package com.example.flutterhub_jetpackcompose.utils
+package com.example.flutterhub_jetpackcompose.screen.components
 
 import android.content.Context
 import android.widget.Toast
@@ -20,24 +20,26 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-
-import com.example.flutterhub_jetpackcompose.models.QuizModel
-import com.example.flutterhub_jetpackcompose.viewmodel_repository.AppViewModel
+import com.example.flutterhub_jetpackcompose.data.models.LessonModel
+import com.example.flutterhub_jetpackcompose.viewmodel.AppViewModel
 import com.orhanobut.hawk.Hawk
 
 @Composable
-fun QuizCard(
+fun LessonCard(
     navController: NavController,
-    quiz: QuizModel,
+    lesson: LessonModel,
     viewModel: AppViewModel,
     context: Context
 ) {
     Card(
-        shape = RoundedCornerShape(15.dp), // Rounded corners for the card
+        onClick = {
+            navController.navigate("lessonView/${lesson.id}")
+        },
+        shape = RoundedCornerShape(8.dp), // Rounded corners for the card
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp), // Card padding
-        elevation = CardDefaults.cardElevation(10.dp) // Card elevation (shadow effect)
+        elevation = CardDefaults.cardElevation(4.dp) // Card elevation (shadow effect)
     ) {
         // Box to align content inside the card
         Box(
@@ -51,7 +53,7 @@ fun QuizCard(
                 horizontalArrangement = Arrangement.SpaceBetween // Spread text and buttons
             ) {
                 Text(
-                    text = "Title: ${quiz.question}",
+                    text = "Title: ${lesson.name}",
                     style = MaterialTheme.typography.bodyLarge,
                     modifier = Modifier.weight(1f)
                 )
@@ -63,7 +65,7 @@ fun QuizCard(
                 // Edit Button
                 Button(
                     onClick = {
-                        navController.navigate("adminEditQuiz/${quiz.id}")
+                        navController.navigate("editLesson/${lesson.id}")
                     },
                     colors = ButtonDefaults.buttonColors(containerColor = Color.Blue),
                     modifier = Modifier.padding(end = 8.dp) // Spacing between buttons
@@ -74,13 +76,11 @@ fun QuizCard(
                 // Delete Button
                 Button(
                     onClick = {
-                        viewModel.deleteQuiz(quiz.id,
+                        viewModel.deleteLesson(lesson.id,
                             onSuccess = {
-                                viewModel.quizzes
-
                                 Toast.makeText(
                                     context,
-                                    "Quiz Successfully deleted",
+                                    "Successfully deleted",
                                     Toast.LENGTH_SHORT
                                 ).show()
 

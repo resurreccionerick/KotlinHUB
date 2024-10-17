@@ -26,7 +26,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.flutterhub_jetpackcompose.viewmodel_repository.AppViewModel
+import com.example.flutterhub_jetpackcompose.viewmodel.AppViewModel
 
 @Composable
 fun SignupScreen(navController: NavController, viewModel: AppViewModel, context: Context) {

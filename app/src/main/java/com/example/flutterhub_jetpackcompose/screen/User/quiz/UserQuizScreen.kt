@@ -16,8 +16,8 @@ import androidx.navigation.NavController
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 
-import com.example.flutterhub_jetpackcompose.models.QuizModel
-import com.example.flutterhub_jetpackcompose.viewmodel_repository.AppViewModel
+import com.example.flutterhub_jetpackcompose.data.models.QuizModel
+import com.example.flutterhub_jetpackcompose.viewmodel.AppViewModel
 
 
 @Composable

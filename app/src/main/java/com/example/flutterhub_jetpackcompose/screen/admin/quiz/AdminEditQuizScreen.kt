@@ -30,9 +30,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 import androidx.navigation.NavHostController
-import com.example.flutterhub_jetpackcompose.models.QuizModel
-import com.example.flutterhub_jetpackcompose.utils.AnswerDropDown
-import com.example.flutterhub_jetpackcompose.viewmodel_repository.AppViewModel
+import com.example.flutterhub_jetpackcompose.data.models.QuizModel
+import com.example.flutterhub_jetpackcompose.screen.components.AnswerDropDown
+import com.example.flutterhub_jetpackcompose.viewmodel.AppViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)

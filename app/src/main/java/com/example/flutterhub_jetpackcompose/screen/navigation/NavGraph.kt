@@ -1,4 +1,4 @@
-package com.example.flutterhub_jetpackcompose.navigation
+package com.example.flutterhub_jetpackcompose.screen.navigation
 
 import android.content.Context
 import androidx.compose.runtime.Composable
@@ -7,7 +7,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.example.flutterhub_jetpackcompose.models.UserModel
+import com.example.flutterhub_jetpackcompose.data.models.UserModel
 import com.example.flutterhub_jetpackcompose.screen.User.UserQuizScreen
 import com.example.flutterhub_jetpackcompose.screen.admin.lesson.AddLessonScreen
 import com.example.flutterhub_jetpackcompose.screen.admin.assessment.AdminAssessmentScreen
@@ -23,8 +23,9 @@ import com.example.flutterhub_jetpackcompose.screen.admin.quiz.QuizDifficultyScr
 import com.example.flutterhub_jetpackcompose.screen.login_register.ForgotPassScreen
 import com.example.flutterhub_jetpackcompose.screen.login_register.LoginScreen
 import com.example.flutterhub_jetpackcompose.screen.login_register.SignupScreen
-import com.example.flutterhub_jetpackcompose.utils.LessonDetailsScreen
-import com.example.flutterhub_jetpackcompose.viewmodel_repository.AppViewModel
+import com.example.flutterhub_jetpackcompose.screen.components.LessonDetailsScreen
+import com.example.flutterhub_jetpackcompose.screen.components.WebView
+import com.example.flutterhub_jetpackcompose.viewmodel.AppViewModel
 import com.orhanobut.hawk.Hawk
 
 @Composable
@@ -122,6 +123,10 @@ fun NavGraph(navController: NavHostController, viewModel: AppViewModel, context:
             // Fetch the lesson by ID (if needed)
             val lesson = viewModel.getLessonById(lessonId)
             LessonDetailsScreen(navController, context, lesson)
+        }
+
+        composable("webView") {
+            WebView(navController, context)
         }
 
 
