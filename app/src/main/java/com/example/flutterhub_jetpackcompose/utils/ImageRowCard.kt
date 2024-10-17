@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -26,7 +27,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun ImageCard(
+fun ImageRowCard(
     label: String,
     imageRes: Int,
     onClick: () -> Unit,
@@ -34,8 +35,7 @@ fun ImageCard(
 ) {
     Card(
         modifier = modifier
-            .padding(8.dp)
-            .height(170.dp)
+            .height(100.dp)
             .clickable {
                 onClick()
             },
@@ -44,18 +44,20 @@ fun ImageCard(
         ),
         elevation = CardDefaults.cardElevation(4.dp) // Card elevation (shadow effect)
     ) {
-        Column(
+        Row(
             modifier = Modifier
-                .fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+                .fillMaxSize()
+                .padding(26.dp, 0.dp, 0.dp, 0.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Start,
         ) {
             Image(
                 painter = painterResource(id = imageRes),
                 contentDescription = null,
                 modifier = Modifier
-                    .size(80.dp)
+                    .size(50.dp)
                     .clip(CircleShape)
+                    .padding(0.dp, 0.dp, 16.dp, 0.dp)
             )
             Spacer(modifier = Modifier.height(16.dp))
             Text(text = label, fontWeight = FontWeight.Bold)
