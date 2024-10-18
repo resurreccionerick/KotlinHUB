@@ -58,7 +58,7 @@ fun QuizDifficultyScreen(
                 {
                     ImageCard(
                         label = "Basic",
-                        imageRes = R.drawable.basic,
+                        imageRes = R.drawable.basic, 300,
                         onClick = {
                             Hawk.put("difficulty", "basic")
                             viewModel.refreshQuizDifficulty()
@@ -70,7 +70,7 @@ fun QuizDifficultyScreen(
 
                     ImageCard(
                         label = "Intermediate",
-                        imageRes = R.drawable.muscle,
+                        imageRes = R.drawable.muscle, 300,
                         onClick = {
                             Hawk.put("difficulty", "intermediate")
                             viewModel.refreshQuizDifficulty()

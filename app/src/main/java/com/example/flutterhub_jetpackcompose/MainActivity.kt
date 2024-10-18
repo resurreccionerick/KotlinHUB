@@ -38,11 +38,9 @@ class MainActivity : ComponentActivity() {
                 NavGraph(navController, viewModel, this@MainActivity)
             } else {
                 if (!Hawk.get<String?>("role").equals("admin")) {
-                    if (currentRoute != "webView") {
-                     //   Toast.makeText(this, "SA if", Toast.LENGTH_SHORT).show()
+                    if (currentRoute == "userHome" || currentRoute == "userSettings") {
                         Scaffold(bottomBar = {
                             BottomNavigationBar(navController)
-
                         }
                         )
                         { padding ->

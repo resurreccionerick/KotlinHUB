@@ -6,8 +6,11 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -32,129 +35,121 @@ import com.orhanobut.hawk.Hawk
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UserHomeScreen(navController: NavController, viewModel: AppViewModel, context: Context) {
-    Scaffold(topBar = {
-        TopAppBar(
-            title = { Text("What would you like to learn today?") },
-            colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = MaterialTheme.colorScheme.primary,
-                titleContentColor = MaterialTheme.colorScheme.onPrimary,
-                navigationIconContentColor = MaterialTheme.colorScheme.onPrimary,
-                actionIconContentColor = MaterialTheme.colorScheme.onSecondary
-            ),
-            modifier = Modifier.fillMaxWidth()
-        )
-    }, content = { paddingValues ->
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues),
-//                .paint(
-//                    // Replace with your image id
-//                    painterResource(id = R.drawable.bg), contentScale = ContentScale.FillBounds
-//                )
-
-        ) {
-            Column(
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text("What would you like to learn today?") },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    titleContentColor = MaterialTheme.colorScheme.onPrimary,
+                    navigationIconContentColor = MaterialTheme.colorScheme.onPrimary,
+                    actionIconContentColor = MaterialTheme.colorScheme.onSecondary
+                ),
+                modifier = Modifier.fillMaxWidth()
+            )
+        },
+        content = { paddingValues ->
+            Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+                    .padding(paddingValues)
             ) {
-                // First Row
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(16.dp)
-                ) {
-                    ImageCard(
-                        label = "Basic", imageRes = R.drawable.easy_colored, onClick = {
-                            Hawk.put("difficulty", "basic")
-                            viewModel.refreshLessonDifficulty()
-                            navController.navigate("adminBasic")
-                        }, modifier = Modifier.weight(1f)
-                    )
-                    ImageCard(
-                        label = "Intermediate",
-                        imageRes = R.drawable.muscle_colored,
-                        onClick = {
-                            Hawk.put("difficulty", "intermediate")
-                            viewModel.refreshLessonDifficulty()
-                            navController.navigate("adminIntermediate")
-                        },
-                        modifier = Modifier.weight(1f)
-                    )
-                }
-
-                // Second Row
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(16.dp)
-                ) {
-                    ImageCard(
-                        label = "Quiz", imageRes = R.drawable.quiz, onClick = {
-                            viewModel.loadQuizzes()
-                            navController.navigate("difficultyQuiz")
-                        }, modifier = Modifier.weight(1f)
-                    )
-                    ImageCard(
-                        label = "Code Runner",
-                        imageRes = R.drawable.developer,
-                        onClick = { navController.navigate("adminAssessment") },
-                        modifier = Modifier.weight(1f)
-                    )
-                }
-
-
-                Text("Other Topics: ", color = Color.Black, fontWeight = FontWeight.Bold)
-
-                Box(
+                Column(
                     modifier = Modifier
-                        .weight(1f)
-                        .verticalScroll(rememberScrollState())
-                        .padding(8.dp)
+                        .fillMaxSize()
+                        .padding(16.dp)
                 ) {
-
-                    Column(
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    Row(
+                        modifier = Modifier.weight(2f)
                     ) {
+                        Column(
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(end = 8.dp),
+                            verticalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            ImageRowCard(
+                                label = "Basic", imageRes = R.drawable.easy_colored, onClick = {
+                                    Hawk.put("difficulty", "basic")
+                                    viewModel.refreshLessonDifficulty()
+                                    navController.navigate("adminBasic")
+                                }, modifier = Modifier.weight(1f)
+                            )
 
-                        ImageRowCard(
-                            label = "Install Android Studio",
+                            ImageRowCard(
+                                label = "Intermediate",
+                                imageRes = R.drawable.muscle_colored,
+                                onClick = {
+                                    Hawk.put("difficulty", "intermediate")
+                                    viewModel.refreshLessonDifficulty()
+                                    navController.navigate("adminIntermediate")
+                                }, modifier = Modifier.weight(1f)
+                            )
+
+                            ImageRowCard(
+                                label = "Quiz", imageRes = R.drawable.quiz, onClick = {
+                                    viewModel.loadQuizzes()
+                                    navController.navigate("difficultyQuiz")
+                                }, modifier = Modifier.weight(1f)
+                            )
+                        }
+
+                        ImageCard(
+                            label = "Code Runner",
                             imageRes = R.drawable.developer,
-                            onClick = {
-                                Hawk.put("title", "Install Android Studio")
-                                Hawk.put("link", "https://developer.android.com/studio/install")
-                                navController.navigate("webView")
-                            },
+                            imgHeight = 450,
+                            onClick = { navController.navigate("adminAssessment") },
+                            modifier = Modifier.weight(1f)
                         )
+                    }
+
+                    Spacer(modifier = Modifier.height(50.dp))
+
+                    Text("Other Topics: ", color = Color.Black, fontWeight = FontWeight.Bold)
+
+                    Box(
+                        modifier = Modifier
+                            .fillMaxHeight(0.5f) // Constraint the height
+                            .verticalScroll(rememberScrollState())
+                            .padding(8.dp)
+                            .weight(1f)
+                    ) {
+                        Column(
+                            verticalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            ImageRowCard(
+                                label = "Latest Kotlin News",
+                                imageRes = R.drawable.newspaper,
+                                onClick = {
+                                    Hawk.put("title", "")
+                                    Hawk.put("link", "https://blog.jetbrains.com/kotlin/")
+                                }
+                            )
+
+                            ImageRowCard(
+                                label = "Kotlin Forum",
+                                imageRes = R.drawable.chat,
+                                onClick = {
+                                    Hawk.put("title", "")
+                                    Hawk.put("link", "https://discuss.kotlinlang.org/")
+                                }
+                            )
+
+                            ImageRowCard(
+                                label = "Install Android Studio",
+                                imageRes = R.drawable.android,
+                                onClick = {
+                                    Hawk.put("title", "")
+                                    Hawk.put("link", "https://developer.android.com/studio/install")
+                                    navController.navigate("webView")
+                                }
+                            )
 
 
-                        ImageRowCard(
-                            label = "Install Android Studio",
-                            imageRes = R.drawable.developer,
-                            onClick = {
-                                Toast.makeText(
-                                    context,
-                                    "  clicked",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            },
-                        )
-
-                        ImageRowCard(
-                            label = "Install Android Studio",
-                            imageRes = R.drawable.developer,
-                            onClick = {
-                                Toast.makeText(
-                                    context,
-                                    "  clicked",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            },
-                        )
+                        }
                     }
                 }
             }
         }
-
-    })
+    )
 }

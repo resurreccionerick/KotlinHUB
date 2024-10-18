@@ -27,13 +27,14 @@ import androidx.compose.ui.unit.dp
 fun ImageCard(
     label: String,
     imageRes: Int,
+    imgHeight: Int,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Card(
         modifier = modifier
-            .padding(8.dp)
-            .height(170.dp)
+            .padding(8.dp, 0.dp, 0.dp, 0.dp)
+            .height(imgHeight.dp)
             .clickable {
                 onClick()
             },
@@ -52,7 +53,7 @@ fun ImageCard(
                 painter = painterResource(id = imageRes),
                 contentDescription = null,
                 modifier = Modifier
-                    .size(80.dp)
+                    .size(100.dp)
                     .clip(CircleShape)
             )
             Spacer(modifier = Modifier.height(16.dp))

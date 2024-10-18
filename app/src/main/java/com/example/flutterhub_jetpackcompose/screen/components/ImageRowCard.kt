@@ -52,7 +52,7 @@ fun ImageRowCard(
                 painter = painterResource(id = imageRes),
                 contentDescription = null,
                 modifier = Modifier
-                    .size(50.dp)
+                    .size(60.dp)
                     .clip(CircleShape)
                     .padding(0.dp, 0.dp, 16.dp, 0.dp)
             )

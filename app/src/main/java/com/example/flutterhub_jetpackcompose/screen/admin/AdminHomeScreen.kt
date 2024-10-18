@@ -91,10 +91,15 @@ fun AdminHomeScreen(navController: NavController, viewModel: AppViewModel, conte
 //                )
 
         ) {
+
+            Box() {}
+
+
+
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(16.dp),
+                    .padding(8.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 // First Row
@@ -103,7 +108,7 @@ fun AdminHomeScreen(navController: NavController, viewModel: AppViewModel, conte
                     horizontalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     ImageCard(
-                        label = "Basic", imageRes = R.drawable.easy_colored, onClick = {
+                        label = "Basic", imageRes = R.drawable.easy_colored, 300, onClick = {
                             Hawk.put("difficulty", "basic")
                             viewModel.refreshLessonDifficulty()
                             navController.navigate("adminBasic")
@@ -112,6 +117,7 @@ fun AdminHomeScreen(navController: NavController, viewModel: AppViewModel, conte
                     ImageCard(
                         label = "Intermediate",
                         imageRes = R.drawable.muscle_colored,
+                        300,
                         onClick = {
                             Hawk.put("difficulty", "intermediate")
                             viewModel.refreshLessonDifficulty()
@@ -127,14 +133,14 @@ fun AdminHomeScreen(navController: NavController, viewModel: AppViewModel, conte
                     horizontalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     ImageCard(
-                        label = "Quiz", imageRes = R.drawable.quiz, onClick = {
+                        label = "Quiz", imageRes = R.drawable.quiz, 300, onClick = {
                             viewModel.loadQuizzes()
                             navController.navigate("difficultyQuiz")
                         }, modifier = Modifier.weight(1f)
                     )
                     ImageCard(
                         label = "Code Runner",
-                        imageRes = R.drawable.developer,
+                        imageRes = R.drawable.developer, 300,
                         onClick = { navController.navigate("adminAssessment") },
                         modifier = Modifier.weight(1f)
                     )
