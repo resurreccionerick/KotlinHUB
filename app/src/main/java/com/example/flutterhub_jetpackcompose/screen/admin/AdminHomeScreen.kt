@@ -51,8 +51,8 @@ fun AdminHomeScreen(navController: NavController, viewModel: AppViewModel, conte
 //    }
 
 
-    Scaffold(topBar = {
-        TopAppBar(title = { Text("Admin Home Screen") }, actions = {
+    Scaffold(
+        topBar = { TopAppBar(title = { Text("Admin Home Screen") }, actions = {
             IconButton(onClick = { expanded = !expanded }) {
                 Icon(
                     imageVector = Icons.Default.MoreVert, contentDescription = "More",

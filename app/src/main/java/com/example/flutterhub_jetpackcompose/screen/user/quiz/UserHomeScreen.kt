@@ -38,7 +38,7 @@ fun UserHomeScreen(navController: NavController, viewModel: AppViewModel, contex
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("What would you like to learn today?") },
+                title = { Text("KotlinHub") },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primary,
                     titleContentColor = MaterialTheme.colorScheme.onPrimary,
@@ -49,16 +49,25 @@ fun UserHomeScreen(navController: NavController, viewModel: AppViewModel, contex
             )
         },
         content = { paddingValues ->
+
             Box(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(paddingValues)
             ) {
+
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(16.dp)
                 ) {
+                    Text(
+                        "What would you like to learn today?",
+                        color = Color.Black,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.padding(bottom = 16.dp, top = 8.dp)
+                    )
+
                     Row(
                         modifier = Modifier.weight(2f)
                     ) {
@@ -117,35 +126,35 @@ fun UserHomeScreen(navController: NavController, viewModel: AppViewModel, contex
                         Column(
                             verticalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
-                            ImageRowCard(
-                                label = "Latest Kotlin News",
-                                imageRes = R.drawable.newspaper,
-                                onClick = {
-                                    Hawk.put("title", "")
-                                    Hawk.put("link", "https://blog.jetbrains.com/kotlin/")
-                                }
-                            )
-
-                            ImageRowCard(
-                                label = "Kotlin Forum",
-                                imageRes = R.drawable.chat,
-                                onClick = {
-                                    Hawk.put("title", "")
-                                    Hawk.put("link", "https://discuss.kotlinlang.org/")
-                                }
-                            )
-
-                            ImageRowCard(
-                                label = "Install Android Studio",
-                                imageRes = R.drawable.android,
-                                onClick = {
-                                    Hawk.put("title", "")
-                                    Hawk.put("link", "https://developer.android.com/studio/install")
-                                    navController.navigate("webView")
-                                }
-                            )
-
-
+//                            ImageRowCard(
+//                                label = "Latest Kotlin News",
+//                                imageRes = R.drawable.newspaper,
+//                                onClick = {
+//                                    Hawk.put("title", "")
+//                                    Hawk.put("link", "https://blog.jetbrains.com/kotlin/")
+//                                }
+//                            )
+//
+//                            ImageRowCard(
+//                                label = "Kotlin Forum",
+//                                imageRes = R.drawable.chat,
+//                                onClick = {
+//                                    Hawk.put("title", "")
+//                                    Hawk.put("link", "https://discuss.kotlinlang.org/")
+//                                }
+//                            )
+//
+//                            ImageRowCard(
+//                                label = "Install Android Studio",
+//                                imageRes = R.drawable.android,
+//                                onClick = {
+//                                    Hawk.put("title", "")
+//                                    Hawk.put("link", "https://developer.android.com/studio/install")
+//                                    navController.navigate("webView")
+//                                }
+//                            )
+//
+//
                         }
                     }
                 }

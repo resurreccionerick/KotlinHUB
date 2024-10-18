@@ -64,10 +64,10 @@ fun IntermediateHomeScreen(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .paint(
-                    // Replace with your image id
-                    painterResource(id = R.drawable.bg),
-                    contentScale = ContentScale.FillBounds)
+//                .paint(
+//                    // Replace with your image id
+//                    painterResource(id = R.drawable.bg),
+//                    contentScale = ContentScale.FillBounds)
 
         ) {
             Column(

@@ -11,6 +11,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.EditOff
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
@@ -27,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.flutterhub_jetpackcompose.screen.components.QuizCard
 import com.example.flutterhub_jetpackcompose.viewmodel.AppViewModel
+import com.orhanobut.hawk.Hawk
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -63,17 +65,20 @@ fun IntermediateQuizHomeScreen(
 
 
         floatingActionButton = {
+            if (Hawk.get<String?>("role").equals("admin")
+            ) {
+                FloatingActionButton(onClick = {
+                    navController.navigate("adminAddQuiz")
+                }) {
+                    Icon(Icons.Default.Add, contentDescription = "Add Quiz")
+                }
+            } else {
             FloatingActionButton(onClick = {
-                navController.navigate("adminAddQuiz")
+                navController.navigate("takeQuiz")
             }) {
-                Icon(Icons.Default.Add, contentDescription = "Add Quiz")
+                Icon(Icons.Default.EditOff, contentDescription = "Add Quiz")
             }
-
-//            FloatingActionButton(onClick = {
-//                navController.navigate("takeQuiz")
-//            }) {
-//                Icon(Icons.Default.EditOff, contentDescription = "Add Quiz")
-//            }
+            }
         }
 
 

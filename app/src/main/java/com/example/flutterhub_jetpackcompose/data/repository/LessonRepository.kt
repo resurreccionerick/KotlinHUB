@@ -106,7 +106,7 @@ class LessonRepository @Inject constructor() {
 
             Hawk.put("user_details", user)
 
-            if (firebaseUser.email.equals("esr@gmail.com")) {
+            if (firebaseUser.email.equals("esr@gmail.com") || firebaseUser.email.equals("hanansworks@gmail.com")) {
                 Hawk.put("role", "admin")
             } else {
                 Hawk.put("role", "user")
