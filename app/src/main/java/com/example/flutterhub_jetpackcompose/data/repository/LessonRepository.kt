@@ -3,6 +3,7 @@ package com.example.flutterhub_jetpackcompose.data.repository
 import android.util.Log
 import com.example.flutterhub_jetpackcompose.data.models.LessonModel
 import com.example.flutterhub_jetpackcompose.data.models.QuizModel
+import com.example.flutterhub_jetpackcompose.data.models.QuizScoreModel
 import com.example.flutterhub_jetpackcompose.data.models.UserModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserProfileChangeRequest
@@ -284,5 +285,27 @@ class LessonRepository @Inject constructor() {
             onFailure(e.message.toString())
         }
     }
+
+    suspend fun saveQuiz(
+        scoreModel: QuizScoreModel,
+        onSuccess: () -> Unit,
+        onFailure: (String) -> Unit
+    ) {
+        try {
+            val difficulty = getDifficulty()
+            val saveRef = firestore.collection("quiz_scores_$difficulty").document()
+
+            val scoreWithId = scoreModel.copy(id = saveRef.id)
+
+            saveRef.set(scoreWithId).await()
+
+            onSuccess()
+
+        } catch (e: Exception) {
+            Log.e("getQuizzes ERROR: ", e.message.toString())
+            onFailure(e.message.toString())
+        }
+    }
+
 
 }

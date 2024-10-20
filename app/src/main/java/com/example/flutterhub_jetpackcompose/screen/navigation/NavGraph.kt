@@ -7,11 +7,11 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.example.flutterhub_jetpackcompose.data.models.QuizScoreModel
 import com.example.flutterhub_jetpackcompose.data.models.UserModel
-import com.example.flutterhub_jetpackcompose.screen.user.UserQuizScreen
-import com.example.flutterhub_jetpackcompose.screen.admin.lesson.AddLessonScreen
-import com.example.flutterhub_jetpackcompose.screen.admin.assessment.AdminAssessmentScreen
 import com.example.flutterhub_jetpackcompose.screen.admin.AdminHomeScreen
+import com.example.flutterhub_jetpackcompose.screen.admin.assessment.AdminAssessmentScreen
+import com.example.flutterhub_jetpackcompose.screen.admin.lesson.AddLessonScreen
 import com.example.flutterhub_jetpackcompose.screen.admin.lesson.BasicHomeScreen
 import com.example.flutterhub_jetpackcompose.screen.admin.lesson.EditLessonScreen
 import com.example.flutterhub_jetpackcompose.screen.admin.lesson.IntermediateHomeScreen
@@ -20,11 +20,12 @@ import com.example.flutterhub_jetpackcompose.screen.admin.quiz.AdminEditQuizScre
 import com.example.flutterhub_jetpackcompose.screen.admin.quiz.BasicQuizHomeScreen
 import com.example.flutterhub_jetpackcompose.screen.admin.quiz.IntermediateQuizHomeScreen
 import com.example.flutterhub_jetpackcompose.screen.admin.quiz.QuizDifficultyScreen
+import com.example.flutterhub_jetpackcompose.screen.components.LessonDetailsScreen
+import com.example.flutterhub_jetpackcompose.screen.components.WebView
 import com.example.flutterhub_jetpackcompose.screen.login_register.ForgotPassScreen
 import com.example.flutterhub_jetpackcompose.screen.login_register.LoginScreen
 import com.example.flutterhub_jetpackcompose.screen.login_register.SignupScreen
-import com.example.flutterhub_jetpackcompose.screen.components.LessonDetailsScreen
-import com.example.flutterhub_jetpackcompose.screen.components.WebView
+import com.example.flutterhub_jetpackcompose.screen.user.UserQuizScreen
 import com.example.flutterhub_jetpackcompose.screen.user.quiz.SettingsScreen
 import com.example.flutterhub_jetpackcompose.screen.user.quiz.UserHomeScreen
 import com.example.flutterhub_jetpackcompose.viewmodel.AppViewModel
@@ -102,9 +103,22 @@ fun NavGraph(navController: NavHostController, viewModel: AppViewModel, context:
             AdminAddQuizScreen(navController, viewModel, context)
         }
 
+
         composable("takeQuiz") {
-            UserQuizScreen(navController, viewModel, context)
+            val scoreModel = QuizScoreModel()
+
+            UserQuizScreen(navController, viewModel, scoreModel, context)
         }
+//        composable(
+//            "takeQuiz/{quizId}",
+//            arguments = listOf(navArgument("quizId") { type = NavType.StringType })
+//        ) { backStackEntry ->
+//            val quizID = backStackEntry.arguments?.getString("quizId") ?: ""
+//            val quiz = viewModel.getQuizByID(quizID)
+//            val scoreModel = QuizScoreModel()
+//
+//            UserQuizScreen(navController, viewModel, quiz, scoreModel, context)
+//        }
 
         composable(
             "adminEditQuiz/{quizId}",

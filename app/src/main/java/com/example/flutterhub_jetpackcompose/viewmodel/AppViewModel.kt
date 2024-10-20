@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.flutterhub_jetpackcompose.data.models.LessonModel
 import com.example.flutterhub_jetpackcompose.data.models.QuizModel
+import com.example.flutterhub_jetpackcompose.data.models.QuizScoreModel
 import com.example.flutterhub_jetpackcompose.data.repository.LessonRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -26,7 +27,7 @@ class AppViewModel @Inject constructor(
     }
 
 
-    fun refreshQuizDifficulty(){
+    fun refreshQuizDifficulty() {
         repository.refreshDifficulty()
         loadQuizzes()
     }
@@ -145,9 +146,24 @@ class AppViewModel @Inject constructor(
         viewModelScope.launch {
             quizzes.clear()
             quizzes.addAll(repository.getQuizzes())
-
         }
     }
+
+    fun saveQuizScore(
+        scoreModel: QuizScoreModel,
+        onSuccess: () -> Unit,
+        onFailure: (String) -> Unit
+    ) {
+        viewModelScope.launch {
+            repository.saveQuiz(scoreModel,
+                onSuccess = {
+                    onSuccess()
+                }, onFailure = { errorMsg ->
+                    onFailure(errorMsg)
+                })
+        }
+    }
+
 
     fun addQuiz(
         question: String,
