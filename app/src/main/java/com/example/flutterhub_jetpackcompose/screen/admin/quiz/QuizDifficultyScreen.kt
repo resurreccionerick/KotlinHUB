@@ -61,9 +61,12 @@ fun QuizDifficultyScreen(
                         imageRes = R.drawable.basic, 300,
                         onClick = {
                             Hawk.put("difficulty", "basic")
-                            viewModel.refreshQuizDifficulty()
+                            if (viewModel.quizzes.isEmpty()) { // Call refresh only if needed
+                                viewModel.refreshQuizDifficulty()
+                            }
                             navController.navigate("basicQuiz")
                         }
+
                     )
 
                     Spacer(modifier = Modifier.height(16.dp))

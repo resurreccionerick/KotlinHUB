@@ -50,7 +50,7 @@ fun BasicQuizHomeScreen(
 
     LaunchedEffect(Unit) {
         viewModel.refreshQuizDifficulty()
-        viewModel.loadQuizzes()
+        viewModel.loadQuizzes()// Ensure it runs only once
     }
 
     if (viewModel.quizzes.isEmpty()) {

@@ -20,6 +20,8 @@ class AppViewModel @Inject constructor(
 
     val quizzes = mutableStateListOf<QuizModel>()
     val lessons = mutableStateListOf<LessonModel>()
+    private var isLoadingQuizzes = false
+    private var isLoadingLesson = false
 
     fun refreshLessonDifficulty() {
         repository.refreshDifficulty()
@@ -34,6 +36,8 @@ class AppViewModel @Inject constructor(
 
 
     private fun loadLessons() {
+        if (isLoadingLesson) return
+
         viewModelScope.launch {
             lessons.clear()
             lessons.addAll(repository.getLessons())
@@ -143,11 +147,15 @@ class AppViewModel @Inject constructor(
     // ---------------------------------------------------- QUIZZES ---------------------------------------------------- //
 
     fun loadQuizzes() {
+        if (isLoadingQuizzes) return
+
         viewModelScope.launch {
+            val newQuizzes = repository.getQuizzes()
             quizzes.clear()
-            quizzes.addAll(repository.getQuizzes())
+            quizzes.addAll(newQuizzes)
         }
     }
+
 
     fun saveQuizScore(
         scoreModel: QuizScoreModel,
