@@ -2,6 +2,7 @@ package com.example.flutterhub_jetpackcompose.screen.user
 
 import android.content.Context
 import android.widget.Toast
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,6 +21,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -33,6 +35,7 @@ import androidx.navigation.NavController
 import com.example.flutterhub_jetpackcompose.data.models.QuizModel
 import com.example.flutterhub_jetpackcompose.data.models.QuizScoreModel
 import com.example.flutterhub_jetpackcompose.data.models.UserModel
+import com.example.flutterhub_jetpackcompose.screen.components.AnswerDescription
 import com.example.flutterhub_jetpackcompose.viewmodel.AppViewModel
 import com.orhanobut.hawk.Hawk
 
@@ -45,11 +48,13 @@ fun UserQuizScreen(
     context: Context
 ) {
     var quizzes by remember { mutableStateOf<List<QuizModel>>(emptyList()) }
-    var currentIndex by remember { mutableStateOf(0) }
+    var currentIndex by remember { mutableIntStateOf(0) }
     var selectedAnswer by remember { mutableStateOf("") }
-    var score by remember { mutableStateOf(0) }
+    var score by remember { mutableIntStateOf(0) }
     var showResult by remember { mutableStateOf(false) }
     var answered by remember { mutableStateOf(false) } // Track if answer is submitted
+    var showDesc by remember { mutableStateOf(false) }
+    var isCorrect by remember { mutableStateOf(false) }
 
     // Load quizzes when the screen opens
     LaunchedEffect(Unit) {
@@ -167,15 +172,27 @@ fun UserQuizScreen(
                 if (!answered) {
                     // Check if answer is selected
                     if (selectedAnswer.isNotEmpty()) {
-                        val isCorrect = selectedAnswer == currentQuiz.selectedAns
-                        if (isCorrect) score++
+                        isCorrect = selectedAnswer == currentQuiz.selectedAns
+                        showDesc = isCorrect
+
+                        if (isCorrect) {
+                            score++
+                        }
 
                         // Show toast feedback
-                        Toast.makeText(
-                            context,
-                            if (isCorrect) "Correct! ${currentQuiz.selectedAns}" else "Wrong! ${currentQuiz.selectedAns}",
-                            Toast.LENGTH_SHORT
-                        ).show()
+//                        if (isCorrect) {
+//                            Toast.makeText(
+//                                context,
+//                                "Correct! ${currentQuiz.selectedAns}",
+//                                Toast.LENGTH_SHORT
+//                            ).show()
+//                        } else {
+//                            Toast.makeText(
+//                                context,
+//                                "Wrong! ${currentQuiz.selectedAns}",
+//                                Toast.LENGTH_SHORT
+//                            ).show()
+//                        }
 
                         answered = true // Mark as answered
                     } else {
@@ -201,14 +218,25 @@ fun UserQuizScreen(
                 } else {
                     Color(0xFF2196F3)
                 }
-
-
             )
-        ) {
+        )
+        {
             Text(
                 text = if (answered) "Next" else "Submit",
                 color = Color.White
             )
+        }
+
+        Spacer(modifier = Modifier.height(32.dp))
+
+        Box(modifier = Modifier.padding(start = 16.dp, end = 16.dp)) {
+            if (answered) {
+                if(isCorrect){
+                    AnswerDescription(isCorrect,currentQuiz.correctDesc)
+                }else{
+                    AnswerDescription(isCorrect,currentQuiz.wrongDesc)
+                }
+            }
         }
     }
 }

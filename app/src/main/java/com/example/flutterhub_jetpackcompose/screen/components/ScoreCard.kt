@@ -2,7 +2,9 @@ package com.example.flutterhub_jetpackcompose.screen.components
 
 import android.content.Context
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
@@ -53,10 +55,12 @@ fun ScoreCard(
                     color = Color.Black,
                     modifier = Modifier
                         .weight(2f)
-                        .align(Alignment.CenterVertically),
+                        .align(Alignment.CenterVertically)
+                        .padding(8.dp),
                     textAlign = TextAlign.Start,
                 )
 
+                Spacer(modifier = Modifier.height(16.dp))
 
                 Text(
                     text = score.score + " Points",
@@ -64,7 +68,7 @@ fun ScoreCard(
                     modifier = Modifier
                         .weight(1f)
                         .align(Alignment.CenterVertically)
-                        .padding(5.dp),
+                        .padding(8.dp),
                     color = Color.Blue,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.End

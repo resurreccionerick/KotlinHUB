@@ -44,6 +44,8 @@ fun AdminEditQuizScreen(
     context: Context
 ) {
     var question by rememberSaveable { mutableStateOf(quizModel.question) }
+    var correctDesc by rememberSaveable { mutableStateOf(quizModel.correctDesc) }
+    var wrongDesc by rememberSaveable { mutableStateOf(quizModel.wrongDesc) }
     // var difficulty by rememberSaveable { mutableStateOf(quizModel.difficulty) }
     var selectedAns by rememberSaveable { mutableStateOf(quizModel.selectedAns) }
     var choices = remember {
@@ -71,7 +73,7 @@ fun AdminEditQuizScreen(
                 modifier = Modifier
                     .padding(paddingValues)
                     .fillMaxSize()
-                    .padding(16.dp)
+                    .padding(bottom = 16.dp, start = 16.dp, end = 16.dp)
             ) {
                 OutlinedTextField(
                     value = question,
@@ -79,8 +81,6 @@ fun AdminEditQuizScreen(
                     label = { Text("Question") },
                     modifier = Modifier.fillMaxWidth()
                 )
-
-                Spacer(modifier = Modifier.height(8.dp))
 
                 // Dropdown to select difficulty
                 // DifficultyDropDown(selectedDifficulty = difficulty) { difficulty = it }
@@ -101,24 +101,41 @@ fun AdminEditQuizScreen(
 
                 Spacer(modifier = Modifier.height(8.dp))
 
+
                 // Dropdown to select the correct answer
                 AnswerDropDown(selectedAns = quizModel.selectedAns,
                     choices = choices.filter { it.isNotBlank() },
                     onAnswerSelected = { selectedAns = it })
 
+                Spacer(modifier = Modifier.height(8.dp))
 
+                OutlinedTextField(value = correctDesc,
+                    onValueChange = { correctDesc = it },
+                    label = { Text("Correct Answer Description") },
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                OutlinedTextField(value = wrongDesc,
+                    onValueChange = { wrongDesc = it },
+                    label = { Text("Wrong Answer Description") },
+                    modifier = Modifier.fillMaxWidth()
+                )
 
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Button(onClick = {
-                    if (question.isNotEmpty() && choices.all { it.isNotBlank() } &&
+                    if (correctDesc.isNotEmpty() && wrongDesc.isNotEmpty() && question.isNotEmpty() && choices.all { it.isNotBlank() } &&
                         selectedAns != null
                     ) {
                         val quiz = quizModel.copy(
                             question = question,
                             //difficulty = difficulty,
                             choices = choices,
-                            selectedAns = selectedAns
+                            selectedAns = selectedAns,
+                            correctDesc = correctDesc,
+                            wrongDesc = wrongDesc,
                         )
                         viewModel.updateQuiz(quiz,
                             onSuccess = {

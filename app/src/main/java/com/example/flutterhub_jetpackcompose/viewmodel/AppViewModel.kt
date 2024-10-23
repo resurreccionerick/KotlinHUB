@@ -183,13 +183,17 @@ class AppViewModel @Inject constructor(
         question: String,
         choices: List<String>,
         selectedAns: String,
+        correctDesc: String,
+        wrongDesc: String,
         onSuccess: () -> Unit, onFailure: (String) -> Unit
     ) {
         viewModelScope.launch {
             val quiz = QuizModel(
                 question = question,
                 choices = choices,
-                selectedAns = selectedAns
+                selectedAns = selectedAns,
+                correctDesc = correctDesc,
+                wrongDesc = wrongDesc
             );
             repository.addQuiz(
                 quiz,
