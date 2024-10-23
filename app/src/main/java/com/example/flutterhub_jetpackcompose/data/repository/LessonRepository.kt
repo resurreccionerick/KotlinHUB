@@ -308,4 +308,20 @@ class LessonRepository @Inject constructor() {
     }
 
 
+    // ---------------------------------------------------- SCORES ---------------------------------------------------- //
+
+
+    suspend fun getScores(): List<QuizScoreModel> {
+        return try {
+            val difficulty = getDifficulty()
+            val basicScoreSnapshots = firestore.collection("quiz_scores_$difficulty").get().await()
+            val scoreList = basicScoreSnapshots.toObjects(QuizScoreModel::class.java)
+
+            scoreList.sortedByDescending { it.score }
+            //basicScoreSnapshots.toObjects(QuizScoreModel::class.java)
+        } catch (e: Exception) {
+            Log.e("GET getBasicScores ERROR: ", e.message.toString())
+            emptyList()
+        }
+    }
 }

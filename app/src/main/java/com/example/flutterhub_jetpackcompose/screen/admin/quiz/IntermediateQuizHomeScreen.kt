@@ -16,6 +16,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -62,32 +63,48 @@ fun IntermediateQuizHomeScreen(
         }
     }
 
-    Scaffold(topBar = {
-        TopAppBar(title = { Text(text = "Intermediate Quizzes") }, navigationIcon = {
-            IconButton(onClick = {
-                navController.popBackStack()
-            }) {
-                Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Back")
-            }
-        })
-    },
+    Scaffold(
+        topBar = {
+            TopAppBar(title = { Text(text = "Intermediate Quizzes") }, navigationIcon = {
+                IconButton(onClick = {
+                    navController.popBackStack()
+                }) {
+                    Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Back")
+                }
+            })
+        },
 
 
         floatingActionButton = {
-            if (Hawk.get<String?>("role").equals("admin")) {
-                FloatingActionButton(onClick = {
-                    navController.navigate("adminAddQuiz")
-                }) {
-                    Icon(Icons.Default.Add, contentDescription = "Add Quiz")
-                }
-            }
-//            else {
+            Column() {
+                if (!Hawk.get<Boolean?>("role").equals("admin")) {
 //                FloatingActionButton(onClick = {
 //                    navController.navigate("takeQuiz/${viewModel.quizzes}")
 //                }) {
-//                    Icon(Icons.Default.EditOff, contentDescription = "Add Quiz")
+//                    Icon(Icons.Default.Quiz, contentDescription = "Add Quiz")
 //                }
-//            }
+                } else {
+                    FloatingActionButton(
+                        modifier = Modifier.padding(bottom = 16.dp),
+                        onClick = {
+                            Hawk.put("difficulty", "intermediate")
+                            viewModel.refreshLeaderboardsDifficulty()
+                            navController.navigate("scoreBasicQuiz")
+                        }) {
+                        Icon(
+                            Icons.Default.Star,
+                            contentDescription = "Leaderboard",
+                            tint = Color.Blue
+                        )
+                    }
+
+                    FloatingActionButton(onClick = {
+                        navController.navigate("adminAddQuiz")
+                    }) {
+                        Icon(Icons.Default.Add, contentDescription = "Add Quiz")
+                    }
+                }
+            }
         }
 
 

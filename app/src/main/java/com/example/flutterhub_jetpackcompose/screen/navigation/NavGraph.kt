@@ -26,6 +26,7 @@ import com.example.flutterhub_jetpackcompose.screen.login_register.ForgotPassScr
 import com.example.flutterhub_jetpackcompose.screen.login_register.LoginScreen
 import com.example.flutterhub_jetpackcompose.screen.login_register.SignupScreen
 import com.example.flutterhub_jetpackcompose.screen.user.UserQuizScreen
+import com.example.flutterhub_jetpackcompose.screen.user.quiz.LeaderboardScreen
 import com.example.flutterhub_jetpackcompose.screen.user.quiz.SettingsScreen
 import com.example.flutterhub_jetpackcompose.screen.user.quiz.UserHomeScreen
 import com.example.flutterhub_jetpackcompose.viewmodel.AppViewModel
@@ -52,8 +53,7 @@ fun NavGraph(navController: NavHostController, viewModel: AppViewModel, context:
     }
 
     NavHost(
-        navController,
-        startDestination = startDestination
+        navController, startDestination = startDestination
     ) {
         composable("login") {
             LoginScreen(navController, viewModel, context)
@@ -109,16 +109,6 @@ fun NavGraph(navController: NavHostController, viewModel: AppViewModel, context:
 
             UserQuizScreen(navController, viewModel, scoreModel, context)
         }
-//        composable(
-//            "takeQuiz/{quizId}",
-//            arguments = listOf(navArgument("quizId") { type = NavType.StringType })
-//        ) { backStackEntry ->
-//            val quizID = backStackEntry.arguments?.getString("quizId") ?: ""
-//            val quiz = viewModel.getQuizByID(quizID)
-//            val scoreModel = QuizScoreModel()
-//
-//            UserQuizScreen(navController, viewModel, quiz, scoreModel, context)
-//        }
 
         composable(
             "adminEditQuiz/{quizId}",
@@ -161,6 +151,9 @@ fun NavGraph(navController: NavHostController, viewModel: AppViewModel, context:
             WebView(navController, context)
         }
 
+        composable("scoreBasicQuiz") {
+            LeaderboardScreen(navController, viewModel, context)
+        }
 
     }
 }

@@ -16,6 +16,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -43,9 +44,7 @@ import com.orhanobut.hawk.Hawk
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BasicQuizHomeScreen(
-    navController: NavHostController,
-    viewModel: AppViewModel,
-    context: Context
+    navController: NavHostController, viewModel: AppViewModel, context: Context
 ) {
 
     LaunchedEffect(Unit) {
@@ -64,34 +63,47 @@ fun BasicQuizHomeScreen(
         }
     }
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text(text = "Basic Quizzes") },
-                navigationIcon = {
-                    IconButton(onClick = {
-                        navController.popBackStack()
-                    }) {
-                        Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Back")
-                    }
-                }
-            )
-        },
+    Scaffold(topBar = {
+        TopAppBar(title = { Text(text = "Basic Quizzes") }, navigationIcon = {
+            IconButton(onClick = {
+                navController.popBackStack()
+            }) {
+                Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Back")
+            }
+        })
+    },
 
         floatingActionButton = {
-            if (!Hawk.get<Boolean?>("role").equals("admin")) {
+            Column() {
+                if (!Hawk.get<Boolean?>("role").equals("admin")) {
 //                FloatingActionButton(onClick = {
 //                    navController.navigate("takeQuiz/${viewModel.quizzes}")
 //                }) {
 //                    Icon(Icons.Default.Quiz, contentDescription = "Add Quiz")
 //                }
-            } else {
-                FloatingActionButton(onClick = {
-                    navController.navigate("adminAddQuiz")
-                }) {
-                    Icon(Icons.Default.Add, contentDescription = "Add Quiz")
+                } else {
+                    FloatingActionButton(
+                        modifier = Modifier.padding(bottom = 16.dp),
+                        onClick = {
+                            Hawk.put("difficulty", "basic")
+                            viewModel.refreshLeaderboardsDifficulty()
+                            navController.navigate("scoreBasicQuiz")
+                        }) {
+                        Icon(
+                            Icons.Default.Star,
+                            contentDescription = "Leaderboard",
+                            tint = Color.Blue
+                        )
+                    }
+
+                    FloatingActionButton(onClick = {
+                        navController.navigate("adminAddQuiz")
+                    }) {
+                        Icon(Icons.Default.Add, contentDescription = "Add Quiz")
+                    }
                 }
             }
+
         }
 
 
@@ -114,8 +126,7 @@ fun BasicQuizHomeScreen(
                 Card(
                     onClick = {
                         navController.navigate("takeQuiz")
-                    },
-                    shape = RoundedCornerShape(15.dp), // Rounded corners for the card
+                    }, shape = RoundedCornerShape(15.dp), // Rounded corners for the card
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(150.dp)
