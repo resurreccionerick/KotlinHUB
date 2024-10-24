@@ -21,7 +21,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.flutterhub_jetpackcompose.data.models.AssessmentModel
-import com.example.flutterhub_jetpackcompose.data.models.LessonModel
 import com.example.flutterhub_jetpackcompose.viewmodel.AppViewModel
 import com.orhanobut.hawk.Hawk
 
@@ -34,7 +33,7 @@ fun AssessmentCard(
 ) {
     Card(
         onClick = {
-            //  navController.navigate("lessonView/${lesson.id}")
+            navController.navigate("assessmentView/${assessmentModel.id}")
         },
         shape = RoundedCornerShape(8.dp), // Rounded corners for the card
         modifier = Modifier

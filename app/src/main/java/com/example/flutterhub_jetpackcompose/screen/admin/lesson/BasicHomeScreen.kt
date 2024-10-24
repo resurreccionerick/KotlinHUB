@@ -27,8 +27,6 @@ import com.orhanobut.hawk.Hawk
 @Composable
 fun BasicHomeScreen(navController: NavController, viewModel: AppViewModel, context: Context) {
 
-
-
     Scaffold(
         topBar = {
             TopAppBar(

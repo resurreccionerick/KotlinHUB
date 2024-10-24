@@ -364,15 +364,22 @@ class LessonRepository @Inject constructor() {
     }
 
 
-    suspend fun getAssessment(): List<AssessmentModel> {
+    suspend fun getAssessment(
+    ): List<AssessmentModel> {
         return try {
             val snapshot = firestore.collection("assessment").get().await()
-            snapshot.toObjects(AssessmentModel::class.java)
+            val assessmentList = snapshot.toObjects(AssessmentModel::class.java)
+
+            // Log the data
+            Log.d("getAssessment", "Data: $assessmentList")
+
+            assessmentList
         } catch (e: Exception) {
             Log.e("getAssessment ERROR: ", e.message.toString())
             emptyList()
         }
     }
+
 
     fun deleteAssessment(id: String, onSuccess: () -> Unit, onFailure: (String) -> Unit) {
         try {

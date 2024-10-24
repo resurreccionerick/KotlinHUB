@@ -46,11 +46,6 @@ fun AdminHomeScreen(navController: NavController, viewModel: AppViewModel, conte
 
     var expanded by remember { mutableStateOf(false) }
 
-//    LaunchedEffect(Unit) {
-//        Toast.makeText(context, "SA admin LAUNCH", Toast.LENGTH_SHORT).show()
-//    }
-
-
     Scaffold(
         topBar = {
             TopAppBar(title = { Text("Admin Home Screen") }, actions = {

@@ -22,15 +22,16 @@ import com.example.flutterhub_jetpackcompose.screen.admin.quiz.AdminEditQuizScre
 import com.example.flutterhub_jetpackcompose.screen.admin.quiz.BasicQuizHomeScreen
 import com.example.flutterhub_jetpackcompose.screen.admin.quiz.IntermediateQuizHomeScreen
 import com.example.flutterhub_jetpackcompose.screen.admin.quiz.QuizDifficultyScreen
+import com.example.flutterhub_jetpackcompose.screen.components.AssessmentDetailsScreen
 import com.example.flutterhub_jetpackcompose.screen.components.LessonDetailsScreen
 import com.example.flutterhub_jetpackcompose.screen.components.WebView
 import com.example.flutterhub_jetpackcompose.screen.login_register.ForgotPassScreen
 import com.example.flutterhub_jetpackcompose.screen.login_register.LoginScreen
 import com.example.flutterhub_jetpackcompose.screen.login_register.SignupScreen
+import com.example.flutterhub_jetpackcompose.screen.user.UserHomeScreen
 import com.example.flutterhub_jetpackcompose.screen.user.UserQuizScreen
 import com.example.flutterhub_jetpackcompose.screen.user.quiz.LeaderboardScreen
 import com.example.flutterhub_jetpackcompose.screen.user.quiz.SettingsScreen
-import com.example.flutterhub_jetpackcompose.screen.user.quiz.UserHomeScreen
 import com.example.flutterhub_jetpackcompose.viewmodel.AppViewModel
 import com.orhanobut.hawk.Hawk
 
@@ -169,6 +170,18 @@ fun NavGraph(navController: NavHostController, viewModel: AppViewModel, context:
             val assessment = viewModel.getAssessmentById(id)
             EditAssessmentScreen(navController, viewModel, assessment, context)
         }
+
+        composable(
+            "assessmentView/{assessmentId}",
+            arguments = listOf(navArgument("assessmentId") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val id = backStackEntry.arguments?.getString("assessmentId") ?: ""
+            // Fetch the lesson by ID (if needed)
+            val assessment = viewModel.getAssessmentById(id)
+            AssessmentDetailsScreen(navController, viewModel, context, assessment)
+        }
+
+
     }
 }
 

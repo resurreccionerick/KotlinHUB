@@ -1,10 +1,6 @@
-package com.example.flutterhub_jetpackcompose.screen.user.quiz
+package com.example.flutterhub_jetpackcompose.screen.user
 
-import android.content.ActivityNotFoundException
 import android.content.Context
-import android.content.Intent
-import android.net.Uri
-import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -28,8 +24,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContentProviderCompat.requireContext
-import androidx.core.content.ContextCompat.startActivity
 import androidx.navigation.NavController
 import com.example.flutterhub_jetpackcompose.R
 import com.example.flutterhub_jetpackcompose.screen.components.ImageCard
@@ -40,6 +34,7 @@ import com.orhanobut.hawk.Hawk
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UserHomeScreen(navController: NavController, viewModel: AppViewModel, context: Context) {
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -113,19 +108,8 @@ fun UserHomeScreen(navController: NavController, viewModel: AppViewModel, contex
                             imageRes = R.drawable.developer,
                             imgHeight = 450,
                             onClick = {
-//                                Hawk.put("title", "Code Runner")
-//                                Hawk.put("link", "https://www.jdoodle.com/compile-kotlin-online")
-                                navController.navigate("assessmentScreen")
-
-//                                val url = "https://play.kotlinlang.org/"
-//                                val intent = Intent(Intent.ACTION_VIEW)
-//                                intent.data = Uri.parse(url)
-
-//                                if (intent.resolveActivity(context.packageManager) != null) {
-//                                    context.startActivity(intent)  // Launch browser with the URL
-//                                } else {
-//                                    Toast.makeText(context, "No browser found to open this link", Toast.LENGTH_SHORT).show()
-//                                }
+                                viewModel.loadAssessment()
+                                navController.navigate("assessmentHome")
                             },
                             modifier = Modifier.weight(1f)
                         )
