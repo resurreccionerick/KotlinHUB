@@ -52,102 +52,106 @@ fun AdminHomeScreen(navController: NavController, viewModel: AppViewModel, conte
 
 
     Scaffold(
-        topBar = { TopAppBar(title = { Text("Admin Home Screen") }, actions = {
-            IconButton(onClick = { expanded = !expanded }) {
-                Icon(
-                    imageVector = Icons.Default.MoreVert, contentDescription = "More",
-                )
-                DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
-                    DropdownMenuItem(text = { Text("Logout") }, onClick = {
-                        viewModel.userLogout(onSuccess = {
-                            Hawk.deleteAll()
-                            navController.navigate("login") {
-                                popUpTo(0) // Clears the entire back stack
-                                launchSingleTop =
-                                    true // Avoids multiple instances of the same destination
-                            }
-                        }, onFailure = { msg ->
-                            Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+        topBar = {
+            TopAppBar(title = { Text("Admin Home Screen") }, actions = {
+                IconButton(onClick = { expanded = !expanded }) {
+                    Icon(
+                        imageVector = Icons.Default.MoreVert, contentDescription = "More",
+                    )
+                    DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+                        DropdownMenuItem(text = { Text("Logout") }, onClick = {
+                            viewModel.userLogout(onSuccess = {
+                                Hawk.deleteAll()
+                                navController.navigate("login") {
+                                    popUpTo(0) // Clears the entire back stack
+                                    launchSingleTop =
+                                        true // Avoids multiple instances of the same destination
+                                }
+                            }, onFailure = { msg ->
+                                Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+                            })
+                            expanded = false
                         })
-                        expanded = false
-                    })
+                    }
                 }
-            }
-        }, colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = MaterialTheme.colorScheme.primary,
-            titleContentColor = MaterialTheme.colorScheme.onPrimary,
-            navigationIconContentColor = MaterialTheme.colorScheme.onPrimary,
-            actionIconContentColor = MaterialTheme.colorScheme.onSecondary
-        ), modifier = Modifier.fillMaxWidth()
-        )
-    }, content = { paddingValues ->
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues),
+            }, colors = TopAppBarDefaults.topAppBarColors(
+                containerColor = MaterialTheme.colorScheme.primary,
+                titleContentColor = MaterialTheme.colorScheme.onPrimary,
+                navigationIconContentColor = MaterialTheme.colorScheme.onPrimary,
+                actionIconContentColor = MaterialTheme.colorScheme.onSecondary
+            ), modifier = Modifier.fillMaxWidth()
+            )
+        }, content = { paddingValues ->
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues),
 //                .paint(
 //                    // Replace with your image id
 //                    painterResource(id = R.drawable.bg), contentScale = ContentScale.FillBounds
 //                )
 
-        ) {
-
-            Box() {}
-
-
-
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(8.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                // First Row
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(16.dp)
-                ) {
-                    ImageCard(
-                        label = "Basic", imageRes = R.drawable.easy_colored, 300, onClick = {
-                            Hawk.put("difficulty", "basic")
-                            viewModel.refreshLessonDifficulty()
-                            navController.navigate("adminBasic")
-                        }, modifier = Modifier.weight(1f)
-                    )
-                    ImageCard(
-                        label = "Intermediate",
-                        imageRes = R.drawable.muscle_colored,
-                        300,
-                        onClick = {
-                            Hawk.put("difficulty", "intermediate")
-                            viewModel.refreshLessonDifficulty()
-                            navController.navigate("adminIntermediate")
-                        },
-                        modifier = Modifier.weight(1f)
-                    )
-                }
 
-                // Second Row
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(16.dp)
-                ) {
-                    ImageCard(
-                        label = "Quiz", imageRes = R.drawable.quiz, 300, onClick = {
-                            viewModel.loadQuizzes()
-                            navController.navigate("difficultyQuiz")
-                        }, modifier = Modifier.weight(1f)
-                    )
-                    ImageCard(
-                        label = "Code Runner",
-                        imageRes = R.drawable.developer, 300,
-                        onClick = { navController.navigate("assessmentHome") },
-                        modifier = Modifier.weight(1f)
-                    )
-                }
+                Box() {}
 
+
+
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(8.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    // First Row
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+                        ImageCard(
+                            label = "Basic", imageRes = R.drawable.easy_colored, 300, onClick = {
+                                Hawk.put("difficulty", "basic")
+                                viewModel.refreshLessonDifficulty()
+                                navController.navigate("adminBasic")
+                            }, modifier = Modifier.weight(1f)
+                        )
+                        ImageCard(
+                            label = "Intermediate",
+                            imageRes = R.drawable.muscle_colored,
+                            300,
+                            onClick = {
+                                Hawk.put("difficulty", "intermediate")
+                                viewModel.refreshLessonDifficulty()
+                                navController.navigate("adminIntermediate")
+                            },
+                            modifier = Modifier.weight(1f)
+                        )
+                    }
+
+                    // Second Row
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+                        ImageCard(
+                            label = "Quiz", imageRes = R.drawable.quiz, 300, onClick = {
+                                viewModel.loadQuizzes()
+                                navController.navigate("difficultyQuiz")
+                            }, modifier = Modifier.weight(1f)
+                        )
+                        ImageCard(
+                            label = "Code Runner",
+                            imageRes = R.drawable.developer, 300,
+                            onClick = {
+                                viewModel.loadAssessment()
+                                navController.navigate("assessmentHome")
+                            },
+                            modifier = Modifier.weight(1f)
+                        )
+                    }
+
+                }
             }
-        }
 
-    })
+        })
 }

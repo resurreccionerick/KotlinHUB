@@ -343,4 +343,50 @@ class LessonRepository @Inject constructor() {
             onFailure(e.message.toString())
         }
     }
+
+    fun updateAssessment(
+        assessmentModel: AssessmentModel,
+        onSuccess: () -> Unit,
+        onFailure: (String) -> Unit
+    ) {
+        try {
+            firestore.collection("assessment").document(assessmentModel.id).set(assessmentModel)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        onSuccess()
+                    } else {
+                        onFailure("Something went wrong")
+                    }
+                }
+        } catch (e: Exception) {
+            onFailure(e.message.toString())
+        }
+    }
+
+
+    suspend fun getAssessment(): List<AssessmentModel> {
+        return try {
+            val snapshot = firestore.collection("assessment").get().await()
+            snapshot.toObjects(AssessmentModel::class.java)
+        } catch (e: Exception) {
+            Log.e("getAssessment ERROR: ", e.message.toString())
+            emptyList()
+        }
+    }
+
+    fun deleteAssessment(id: String, onSuccess: () -> Unit, onFailure: (String) -> Unit) {
+        try {
+            firestore.collection("assessment").document(id).delete().addOnCompleteListener { task ->
+                if (task.isSuccessful()) {
+                    onSuccess()
+                } else {
+                    onFailure("Something went wrong.")
+                }
+            }.addOnFailureListener { msg ->
+                onFailure(msg.message.toString())
+            }
+        } catch (e: Exception) {
+            Log.e("DELETE ASSESSMENT ERROR: ", e.message.toString())
+        }
+    }
 }

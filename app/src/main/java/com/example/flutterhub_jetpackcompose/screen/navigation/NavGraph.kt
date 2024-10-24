@@ -12,6 +12,7 @@ import com.example.flutterhub_jetpackcompose.data.models.UserModel
 import com.example.flutterhub_jetpackcompose.screen.admin.AdminHomeScreen
 import com.example.flutterhub_jetpackcompose.screen.admin.assessment.AddAssessmentScreen
 import com.example.flutterhub_jetpackcompose.screen.admin.assessment.AssessmentScreen
+import com.example.flutterhub_jetpackcompose.screen.admin.assessment.EditAssessmentScreen
 import com.example.flutterhub_jetpackcompose.screen.admin.lesson.AddLessonScreen
 import com.example.flutterhub_jetpackcompose.screen.admin.lesson.BasicHomeScreen
 import com.example.flutterhub_jetpackcompose.screen.admin.lesson.EditLessonScreen
@@ -157,6 +158,16 @@ fun NavGraph(navController: NavHostController, viewModel: AppViewModel, context:
 
         composable("AddAssessment") {
             AddAssessmentScreen(navController, viewModel, context)
+        }
+
+        composable(
+            "editAssessment/{assessmentId}",
+            arguments = listOf(navArgument("assessmentId") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val id = backStackEntry.arguments?.getString("assessmentId") ?: ""
+            // Fetch the lesson by ID (if needed)
+            val assessment = viewModel.getAssessmentById(id)
+            EditAssessmentScreen(navController, viewModel, assessment, context)
         }
     }
 }

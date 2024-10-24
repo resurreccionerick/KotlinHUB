@@ -238,7 +238,7 @@ class AppViewModel @Inject constructor(
     }
 
     // ---------------------------------------------------- SCORES ---------------------------------------------------- //
-    fun loadLeaderboards() {
+    private fun loadLeaderboards() {
         if (isLoading) return
 
         viewModelScope.launch {
@@ -263,4 +263,45 @@ class AppViewModel @Inject constructor(
         }
     }
 
+    fun loadAssessment() {
+        if (isLoading) return
+
+        viewModelScope.launch {
+            val _assessment = repository.getAssessment()
+
+            assessment.clear()
+            assessment.addAll(_assessment)
+        }
+    }
+
+    fun getAssessmentById(assessmentId: String): AssessmentModel {
+        // This function returns the lesson by its ID.
+        return assessment.find { it.id == assessmentId } ?: AssessmentModel()
+    }
+
+    fun updateAssessment(
+        assessment: AssessmentModel,
+        onSuccess: () -> Boolean,
+        onFailure: (String) -> Unit
+    ) {
+        viewModelScope.launch {
+            repository.updateAssessment(assessment, onSuccess = {
+                onSuccess()
+                loadAssessment()
+            }, onFailure = { msg ->
+                onFailure(msg)
+            })
+        }
+    }
+
+    fun deleteAssessment(id: String, onSuccess: () -> Unit, onFailure: (String) -> Unit) {
+        viewModelScope.launch {
+            repository.deleteAssessment(id, onSuccess = {
+                onSuccess()
+                loadAssessment()
+            }, onFailure = { msg ->
+                onFailure(msg)
+            })
+        }
+    }
 }
