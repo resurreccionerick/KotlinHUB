@@ -368,12 +368,9 @@ class LessonRepository @Inject constructor() {
     ): List<AssessmentModel> {
         return try {
             val snapshot = firestore.collection("assessment").get().await()
-            val assessmentList = snapshot.toObjects(AssessmentModel::class.java)
+            snapshot.toObjects(AssessmentModel::class.java)
 
-            // Log the data
-            Log.d("getAssessment", "Data: $assessmentList")
 
-            assessmentList
         } catch (e: Exception) {
             Log.e("getAssessment ERROR: ", e.message.toString())
             emptyList()
@@ -395,5 +392,29 @@ class LessonRepository @Inject constructor() {
         } catch (e: Exception) {
             Log.e("DELETE ASSESSMENT ERROR: ", e.message.toString())
         }
+    }
+
+    fun saveAssessmentLink(
+        assessmentId: String,
+        authId: String,
+        link: String,
+        onSuccess: () -> Unit,
+        onFailure: (String) -> Unit
+    ) {
+        val linkData = hashMapOf(
+            authId to link
+        )
+
+        firestore.collection("assessment").document(assessmentId).collection("links")
+            .document(authId).set(linkData)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    onSuccess()
+                } else {
+                    onFailure("Something went wrong.")
+                }
+            }.addOnFailureListener { msg ->
+                onFailure(msg.message.toString())
+            }
     }
 }

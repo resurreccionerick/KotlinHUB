@@ -304,4 +304,22 @@ class AppViewModel @Inject constructor(
             })
         }
     }
+
+    // ---------------------------------------------------- SAVE ASSESSMENT LINK ---------------------------------------------------- //
+    fun saveAssessmentLink(
+        assessmentModel: AssessmentModel,
+        authID: String,
+        link: String,
+        onSuccess: () -> Unit,
+        onFailure: (String) -> Unit
+    ) {
+        viewModelScope.launch {
+            repository.saveAssessmentLink(assessmentModel.id, authID, link,
+                onSuccess = {
+                    onSuccess()
+                }, onFailure = { msg ->
+                    onFailure(msg)
+                })
+        }
+    }
 }

@@ -3,6 +3,8 @@ package com.example.flutterhub_jetpackcompose.screen.components
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.util.Patterns
+import android.webkit.URLUtil.isValidUrl
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -46,6 +48,7 @@ import com.example.flutterhub_jetpackcompose.viewmodel.AppViewModel
 @Composable
 fun AssessmentDetailsScreen(
     navController: NavController,
+    userID: String,
     viewModel: AppViewModel,
     context: Context,
     assessmentModel: AssessmentModel,
@@ -145,6 +148,30 @@ fun AssessmentDetailsScreen(
                             .padding(top = 8.dp),
                         onClick = {
 
+                            if (isKotlinLangUrl(link)) {
+                                viewModel.saveAssessmentLink(
+                                    assessmentModel,
+                                    userID,
+                                    link,
+                                    onSuccess = {
+                                        Toast.makeText(
+                                            context,
+                                            "Successfully Submitted",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                        navController.popBackStack()
+
+                                    },
+                                    onFailure = { msg ->
+                                        Toast.makeText(
+                                            context,
+                                            msg,
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    })
+                            } else {
+                                Toast.makeText(context, "Invalid Link", Toast.LENGTH_SHORT).show()
+                            }
                         },
                     ) {
                         Text("Submit")
@@ -173,3 +200,7 @@ fun openTheLink(context: Context, s: String) {
     }
 }
 
+fun isKotlinLangUrl(url: String): Boolean {
+    // Check if the URL is valid and starts with the specified domain
+    return Patterns.WEB_URL.matcher(url).matches() && url.contains("kotl", ignoreCase = true)
+}
