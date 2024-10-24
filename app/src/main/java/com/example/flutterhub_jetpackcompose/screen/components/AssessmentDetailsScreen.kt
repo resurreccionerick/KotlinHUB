@@ -183,7 +183,7 @@ fun AssessmentDetailsScreen(
 }
 
 
-fun openTheLink(context: Context, s: String) {
+public fun openTheLink(context: Context, s: String) {
     val url = "https://play.kotlinlang.org/"
     val intent = Intent(Intent.ACTION_VIEW)
     intent.data = Uri.parse(url)

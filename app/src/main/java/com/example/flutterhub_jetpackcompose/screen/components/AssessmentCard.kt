@@ -65,7 +65,7 @@ fun AssessmentCard(
             if (Hawk.get<Boolean?>("role").equals("admin")) {
                 Button(
                     onClick = {
-
+                        navController.navigate("assessmentTrack")
                     },
                     colors = ButtonDefaults.buttonColors(containerColor = Color.Magenta.copy(alpha = 0.5f)),
                     modifier = Modifier.padding(8.dp)

@@ -1,6 +1,7 @@
 package com.example.flutterhub_jetpackcompose.data.repository
 
 import android.util.Log
+import com.example.flutterhub_jetpackcompose.data.models.AssessmentLink
 import com.example.flutterhub_jetpackcompose.data.models.AssessmentModel
 import com.example.flutterhub_jetpackcompose.data.models.LessonModel
 import com.example.flutterhub_jetpackcompose.data.models.QuizModel
@@ -368,11 +369,47 @@ class LessonRepository @Inject constructor() {
     ): List<AssessmentModel> {
         return try {
             val snapshot = firestore.collection("assessment").get().await()
-            snapshot.toObjects(AssessmentModel::class.java)
+            val assessments = snapshot.toObjects(AssessmentModel::class.java)
 
+            // Fetch links for each assessment
+            assessments.map { assessment ->
+                val links =
+                    getLinksForAssessment(assessment.id) // Fetch links for the specific assessment
+                assessment.copy(links = links) // Update the assessment with the fetched links
+            }
 
         } catch (e: Exception) {
             Log.e("getAssessment ERROR: ", e.message.toString())
+            emptyList()
+        }
+    }
+
+    private suspend fun getLinksForAssessment(assessmentId: String): List<AssessmentLink> {
+        return try {
+            // Fetch the snapshot of the "links" subcollection for the given assessmentId
+            val linksSnapshot = firestore.collection("assessment")
+                .document(assessmentId)
+                .collection("links")
+                .get() // Get all documents in the "links" collection
+                .await() // Await the result (this is a suspend function)
+
+            // Map over the documents in the snapshot to create a list of AssessmentLink objects
+            linksSnapshot.documents.flatMap { document ->
+                // Get all fields in the document
+                document.data?.mapNotNull { (fieldName, linkValue) ->
+                    // Log the field name and link value
+                    Log.d("AssessmentLink", "Field Name: $fieldName, Link Value: $linkValue")
+
+                    // Create an AssessmentLink object if the link value is not null
+                    linkValue?.let { link ->
+                        AssessmentLink(field = fieldName, link = link.toString())
+                    }
+                } ?: emptyList() // If data is null, return an empty list
+            }
+        } catch (e: Exception) {
+            // Log any errors that occur during the fetch process
+            Log.e("getLinksForAssessment ERROR: ", e.message.toString())
+            // Return an empty list if an error occurs
             emptyList()
         }
     }

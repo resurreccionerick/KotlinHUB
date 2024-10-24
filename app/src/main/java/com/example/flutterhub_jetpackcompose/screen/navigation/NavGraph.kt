@@ -13,6 +13,7 @@ import com.example.flutterhub_jetpackcompose.screen.admin.AdminHomeScreen
 import com.example.flutterhub_jetpackcompose.screen.admin.assessment.AddAssessmentScreen
 import com.example.flutterhub_jetpackcompose.screen.admin.assessment.AssessmentScreen
 import com.example.flutterhub_jetpackcompose.screen.admin.assessment.EditAssessmentScreen
+import com.example.flutterhub_jetpackcompose.screen.admin.assessment.TrackAssessmentScreen
 import com.example.flutterhub_jetpackcompose.screen.admin.lesson.AddLessonScreen
 import com.example.flutterhub_jetpackcompose.screen.admin.lesson.BasicHomeScreen
 import com.example.flutterhub_jetpackcompose.screen.admin.lesson.EditLessonScreen
@@ -30,7 +31,7 @@ import com.example.flutterhub_jetpackcompose.screen.login_register.LoginScreen
 import com.example.flutterhub_jetpackcompose.screen.login_register.SignupScreen
 import com.example.flutterhub_jetpackcompose.screen.user.UserHomeScreen
 import com.example.flutterhub_jetpackcompose.screen.user.UserQuizScreen
-import com.example.flutterhub_jetpackcompose.screen.user.quiz.LeaderboardScreen
+import com.example.flutterhub_jetpackcompose.screen.components.LeaderboardScreen
 import com.example.flutterhub_jetpackcompose.screen.user.quiz.SettingsScreen
 import com.example.flutterhub_jetpackcompose.viewmodel.AppViewModel
 import com.orhanobut.hawk.Hawk
@@ -58,6 +59,8 @@ fun NavGraph(navController: NavHostController, viewModel: AppViewModel, context:
     NavHost(
         navController, startDestination = startDestination
     ) {
+
+        // ---------------------------------------------------- LOGIN/REGISTER ---------------------------------------------------- //
         composable("login") {
             LoginScreen(navController, viewModel, context)
         }
@@ -69,6 +72,9 @@ fun NavGraph(navController: NavHostController, viewModel: AppViewModel, context:
         composable("forgotPassword") {
             ForgotPassScreen(navController, viewModel, context)
         }
+
+
+        // ---------------------------------------------------- HOME ---------------------------------------------------- //
 
         composable("adminHome") {
             AdminHomeScreen(navController, viewModel, context)
@@ -86,13 +92,17 @@ fun NavGraph(navController: NavHostController, viewModel: AppViewModel, context:
             BasicHomeScreen(navController, viewModel, context)
         }
 
-        composable("difficultyQuiz") {
-            QuizDifficultyScreen(navController, viewModel, context)
-        }
 
         composable("adminIntermediate") {
             IntermediateHomeScreen(navController, viewModel, context)
         }
+
+
+        // ---------------------------------------------------- QUIZ ---------------------------------------------------- //
+        composable("difficultyQuiz") {
+            QuizDifficultyScreen(navController, viewModel, context)
+        }
+
 
         composable("basicQuiz") {
             BasicQuizHomeScreen(navController, viewModel, context)
@@ -122,6 +132,8 @@ fun NavGraph(navController: NavHostController, viewModel: AppViewModel, context:
             AdminEditQuizScreen(navController, viewModel, quiz, context)
         }
 
+        // ---------------------------------------------------- LESSON ---------------------------------------------------- //
+
         composable("addLesson") {
             AddLessonScreen(navController, viewModel, context)
         }
@@ -146,13 +158,19 @@ fun NavGraph(navController: NavHostController, viewModel: AppViewModel, context:
             LessonDetailsScreen(navController, context, lesson)
         }
 
+        // ---------------------------------------------------- WEB VIEW ---------------------------------------------------- //
         composable("webView") {
             WebView(navController, context)
         }
+
+
+        // ---------------------------------------------------- SCORE ---------------------------------------------------- //
         composable("scoreBasicQuiz") {
             LeaderboardScreen(navController, viewModel, context)
         }
 
+
+        // ---------------------------------------------------- ASSESSMENT ---------------------------------------------------- //
         composable("assessmentHome") {
             AssessmentScreen(navController, viewModel, context)
         }
@@ -181,8 +199,12 @@ fun NavGraph(navController: NavHostController, viewModel: AppViewModel, context:
             AssessmentDetailsScreen(navController, user!!.name, viewModel, context, assessment)
         }
 
-
+        composable("assessmentTrack") {
+            TrackAssessmentScreen(navController, viewModel, context)
+        }
     }
 }
+
+
 
 
