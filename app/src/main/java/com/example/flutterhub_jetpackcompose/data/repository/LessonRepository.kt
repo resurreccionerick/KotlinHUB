@@ -1,6 +1,7 @@
 package com.example.flutterhub_jetpackcompose.data.repository
 
 import android.util.Log
+import com.example.flutterhub_jetpackcompose.data.models.AssessmentModel
 import com.example.flutterhub_jetpackcompose.data.models.LessonModel
 import com.example.flutterhub_jetpackcompose.data.models.QuizModel
 import com.example.flutterhub_jetpackcompose.data.models.QuizScoreModel
@@ -322,6 +323,24 @@ class LessonRepository @Inject constructor() {
         } catch (e: Exception) {
             Log.e("GET getBasicScores ERROR: ", e.message.toString())
             emptyList()
+        }
+    }
+
+    // ---------------------------------------------------- ASSESSMENT ---------------------------------------------------- //
+
+    suspend fun addAssessment(
+        assessmentModel: AssessmentModel,
+        onSuccess: () -> Unit,
+        onFailure: (String) -> Unit
+    ) {
+        try {
+            val assessmentRef = firestore.collection("assessment").document()
+            val assessmentWithID = assessmentModel.copy(id = assessmentRef.id)
+
+            assessmentRef.set(assessmentWithID).await()
+            onSuccess()
+        } catch (e: Exception) {
+            onFailure(e.message.toString())
         }
     }
 }

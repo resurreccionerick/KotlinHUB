@@ -1,6 +1,9 @@
 package com.example.flutterhub_jetpackcompose.screen.user.quiz
 
+import android.content.ActivityNotFoundException
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -25,6 +28,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.core.content.ContextCompat.startActivity
 import androidx.navigation.NavController
 import com.example.flutterhub_jetpackcompose.R
 import com.example.flutterhub_jetpackcompose.screen.components.ImageCard
@@ -107,7 +112,21 @@ fun UserHomeScreen(navController: NavController, viewModel: AppViewModel, contex
                             label = "Code Runner",
                             imageRes = R.drawable.developer,
                             imgHeight = 450,
-                            onClick = { navController.navigate("adminAssessment") },
+                            onClick = {
+//                                Hawk.put("title", "Code Runner")
+//                                Hawk.put("link", "https://www.jdoodle.com/compile-kotlin-online")
+                                navController.navigate("assessmentScreen")
+
+//                                val url = "https://play.kotlinlang.org/"
+//                                val intent = Intent(Intent.ACTION_VIEW)
+//                                intent.data = Uri.parse(url)
+
+//                                if (intent.resolveActivity(context.packageManager) != null) {
+//                                    context.startActivity(intent)  // Launch browser with the URL
+//                                } else {
+//                                    Toast.makeText(context, "No browser found to open this link", Toast.LENGTH_SHORT).show()
+//                                }
+                            },
                             modifier = Modifier.weight(1f)
                         )
                     }
@@ -126,35 +145,35 @@ fun UserHomeScreen(navController: NavController, viewModel: AppViewModel, contex
                         Column(
                             verticalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
-//                            ImageRowCard(
-//                                label = "Latest Kotlin News",
-//                                imageRes = R.drawable.newspaper,
-//                                onClick = {
-//                                    Hawk.put("title", "")
-//                                    Hawk.put("link", "https://blog.jetbrains.com/kotlin/")
-//                                }
-//                            )
-//
-//                            ImageRowCard(
-//                                label = "Kotlin Forum",
-//                                imageRes = R.drawable.chat,
-//                                onClick = {
-//                                    Hawk.put("title", "")
-//                                    Hawk.put("link", "https://discuss.kotlinlang.org/")
-//                                }
-//                            )
-//
-//                            ImageRowCard(
-//                                label = "Install Android Studio",
-//                                imageRes = R.drawable.android,
-//                                onClick = {
-//                                    Hawk.put("title", "")
-//                                    Hawk.put("link", "https://developer.android.com/studio/install")
-//                                    navController.navigate("webView")
-//                                }
-//                            )
-//
-//
+                            ImageRowCard(
+                                label = "Latest Kotlin News",
+                                imageRes = R.drawable.newspaper,
+                                onClick = {
+                                    Hawk.put("title", "")
+                                    Hawk.put("link", "https://blog.jetbrains.com/kotlin/")
+                                    navController.navigate("webView")
+                                }
+                            )
+
+                            ImageRowCard(
+                                label = "Kotlin Forum",
+                                imageRes = R.drawable.chat,
+                                onClick = {
+                                    Hawk.put("title", "")
+                                    Hawk.put("link", "https://discuss.kotlinlang.org/")
+                                    navController.navigate("webView")
+                                }
+                            )
+
+                            ImageRowCard(
+                                label = "Install Android Studio",
+                                imageRes = R.drawable.android,
+                                onClick = {
+                                    Hawk.put("title", "")
+                                    Hawk.put("link", "https://developer.android.com/studio/install")
+                                    navController.navigate("webView")
+                                }
+                            )
                         }
                     }
                 }

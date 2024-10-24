@@ -64,6 +64,8 @@ fun WebView(navController: NavController, context: Context) {
                         )
                     }
                 }, update = {
+
+                    it.settings.javaScriptEnabled = true
                     it.loadUrl(link)
                 })
             }

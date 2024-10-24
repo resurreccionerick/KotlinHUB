@@ -10,7 +10,8 @@ import androidx.navigation.navArgument
 import com.example.flutterhub_jetpackcompose.data.models.QuizScoreModel
 import com.example.flutterhub_jetpackcompose.data.models.UserModel
 import com.example.flutterhub_jetpackcompose.screen.admin.AdminHomeScreen
-import com.example.flutterhub_jetpackcompose.screen.admin.assessment.AdminAssessmentScreen
+import com.example.flutterhub_jetpackcompose.screen.admin.assessment.AddAssessmentScreen
+import com.example.flutterhub_jetpackcompose.screen.admin.assessment.AssessmentScreen
 import com.example.flutterhub_jetpackcompose.screen.admin.lesson.AddLessonScreen
 import com.example.flutterhub_jetpackcompose.screen.admin.lesson.BasicHomeScreen
 import com.example.flutterhub_jetpackcompose.screen.admin.lesson.EditLessonScreen
@@ -119,10 +120,6 @@ fun NavGraph(navController: NavHostController, viewModel: AppViewModel, context:
             AdminEditQuizScreen(navController, viewModel, quiz, context)
         }
 
-        composable("adminAssessment") {
-            AdminAssessmentScreen(navController, viewModel, context)
-        }
-
         composable("addLesson") {
             AddLessonScreen(navController, viewModel, context)
         }
@@ -150,11 +147,17 @@ fun NavGraph(navController: NavHostController, viewModel: AppViewModel, context:
         composable("webView") {
             WebView(navController, context)
         }
-
         composable("scoreBasicQuiz") {
             LeaderboardScreen(navController, viewModel, context)
         }
 
+        composable("assessmentHome") {
+            AssessmentScreen(navController, viewModel, context)
+        }
+
+        composable("AddAssessment") {
+            AddAssessmentScreen(navController, viewModel, context)
+        }
     }
 }
 

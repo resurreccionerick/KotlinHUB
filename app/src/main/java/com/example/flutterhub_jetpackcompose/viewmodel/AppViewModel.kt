@@ -4,6 +4,7 @@ package com.example.flutterhub_jetpackcompose.viewmodel
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.flutterhub_jetpackcompose.data.models.AssessmentModel
 import com.example.flutterhub_jetpackcompose.data.models.LessonModel
 import com.example.flutterhub_jetpackcompose.data.models.QuizModel
 import com.example.flutterhub_jetpackcompose.data.models.QuizScoreModel
@@ -18,11 +19,11 @@ class AppViewModel @Inject constructor(
     private val repository: LessonRepository
 ) : ViewModel() {
 
+    val assessment = mutableStateListOf<AssessmentModel>()
     val quizzes = mutableStateListOf<QuizModel>()
     val lessons = mutableStateListOf<LessonModel>()
     val scores = mutableStateListOf<QuizScoreModel>()
     private var isLoading = false
-    private var isLoadingScore = false
 
     fun refreshLessonDifficulty() {
         repository.refreshDifficulty()
@@ -243,6 +244,22 @@ class AppViewModel @Inject constructor(
         viewModelScope.launch {
             scores.clear()
             scores.addAll(repository.getScores())
+        }
+    }
+
+
+    // ---------------------------------------------------- ASSESSMENT ---------------------------------------------------- //
+    fun addAssessment(
+        assessmentModel: AssessmentModel,
+        onSuccess: () -> Unit,
+        onFailure: (String) -> Unit
+    ) {
+        viewModelScope.launch {
+            repository.addAssessment(assessmentModel, onSuccess = {
+                onSuccess()
+            }, onFailure = { msg ->
+                onFailure(msg)
+            })
         }
     }
 
