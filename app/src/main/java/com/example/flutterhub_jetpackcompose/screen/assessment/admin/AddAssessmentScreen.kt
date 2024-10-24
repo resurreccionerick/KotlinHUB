@@ -1,4 +1,4 @@
-package com.example.flutterhub_jetpackcompose.screen.admin.assessment
+package com.example.flutterhub_jetpackcompose.screen.assessment.admin
 
 import android.content.Context
 import android.widget.Toast
@@ -34,14 +34,11 @@ import com.example.flutterhub_jetpackcompose.viewmodel.AppViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EditAssessmentScreen(
-    navController: NavController,
-    viewModel: AppViewModel,
-    assessmentModel: AssessmentModel,
-    context: Context
+fun AddAssessmentScreen(
+    navController: NavController, viewModel: AppViewModel, context: Context
 ) {
-    var title by rememberSaveable { mutableStateOf(assessmentModel.title) }
-    var instruction by rememberSaveable { mutableStateOf(assessmentModel.instructions) }
+    var title by rememberSaveable { mutableStateOf("") }
+    var instruction by rememberSaveable { mutableStateOf("") }
 
     Scaffold(
         topBar = {
@@ -85,14 +82,13 @@ fun EditAssessmentScreen(
 
             Button(onClick = {
                 val assessment = AssessmentModel(
-                    id = assessmentModel.id,
-                    title = title,
+                    id = "", title = title,
                     instructions = instruction
                 )
 
                 if (title.isNotEmpty() || instruction.isNotEmpty()) {
-                    viewModel.updateAssessment(assessment, onSuccess = {
-                        Toast.makeText(context, "Successfully Updated", Toast.LENGTH_SHORT).show()
+                    viewModel.addAssessment(assessment, onSuccess = {
+                        Toast.makeText(context, "Successfully Added", Toast.LENGTH_SHORT).show()
                         navController.popBackStack()
                     }, onFailure = { msg ->
                         Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
@@ -101,7 +97,7 @@ fun EditAssessmentScreen(
                 } else {
                     Toast.makeText(context, "Please Enter All Fields!", Toast.LENGTH_SHORT).show()
                 }
-            }, modifier = Modifier.align(Alignment.End)) { Text("Update") }
+            }, modifier = Modifier.align(Alignment.End)) { Text("Add") }
         }
 
     }

@@ -1,4 +1,4 @@
-package com.example.flutterhub_jetpackcompose.screen.user
+package com.example.flutterhub_jetpackcompose.screen.home
 
 import android.content.Context
 import androidx.compose.foundation.layout.Arrangement

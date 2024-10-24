@@ -1,4 +1,4 @@
-package com.example.flutterhub_jetpackcompose.screen.admin.lesson
+package com.example.flutterhub_jetpackcompose.screen.lessons.user
 
 import android.content.Context
 import androidx.compose.foundation.layout.*
@@ -17,28 +17,20 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.paint
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.flutterhub_jetpackcompose.R
 import com.example.flutterhub_jetpackcompose.screen.components.LessonCard
 import com.example.flutterhub_jetpackcompose.viewmodel.AppViewModel
 import com.orhanobut.hawk.Hawk
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun IntermediateHomeScreen(
-    navController: NavController,
-    viewModel: AppViewModel,
-    context: Context
-) {
+fun BasicHomeScreen(navController: NavController, viewModel: AppViewModel, context: Context) {
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(text = "Intermediate Lesson") },
+                title = { Text(text = "Basic Lesson") },
                 navigationIcon = {
                     IconButton(onClick = {
                         navController.popBackStack()
@@ -50,41 +42,30 @@ fun IntermediateHomeScreen(
         },
 
         floatingActionButton = {
-            if (Hawk.get<Boolean?>("role").equals("admin")) {
+            if(Hawk.get<Boolean?>("role").equals("admin")){
                 FloatingActionButton(onClick = {
-                    Hawk.put("difficulty", "intermediate")
                     navController.navigate("addLesson")
                 }) {
                     Icon(Icons.Default.Add, contentDescription = "Add lesson")
                 }
             }
         }
-    ) { paddingValues ->
 
-        Box(
+    ) { paddingValues ->
+        Column(
             modifier = Modifier
                 .fillMaxSize()
-//                .paint(
-//                    // Replace with your image id
-//                    painterResource(id = R.drawable.bg),
-//                    contentScale = ContentScale.FillBounds)
-
+                .padding(paddingValues)
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues)
-                    .padding(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                LazyColumn {
-                    items(viewModel.lessons) { lesson ->
-                        LessonCard(navController, lesson, viewModel, context)
-                    }
+
+            LazyColumn {
+                items(viewModel.lessons) { lesson ->
+                    LessonCard(navController, lesson, viewModel, context)
                 }
             }
         }
-
     }
 }
 

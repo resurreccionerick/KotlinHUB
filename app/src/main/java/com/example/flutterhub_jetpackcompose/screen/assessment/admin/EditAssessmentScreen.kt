@@ -1,4 +1,4 @@
-package com.example.flutterhub_jetpackcompose.screen.admin.assessment
+package com.example.flutterhub_jetpackcompose.screen.assessment.admin
 
 import android.content.Context
 import android.widget.Toast
@@ -29,17 +29,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.flutterhub_jetpackcompose.data.models.AssessmentModel
-import com.example.flutterhub_jetpackcompose.data.models.LessonModel
 import com.example.flutterhub_jetpackcompose.viewmodel.AppViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddAssessmentScreen(
-    navController: NavController, viewModel: AppViewModel, context: Context
+fun EditAssessmentScreen(
+    navController: NavController,
+    viewModel: AppViewModel,
+    assessmentModel: AssessmentModel,
+    context: Context
 ) {
-    var title by rememberSaveable { mutableStateOf("") }
-    var instruction by rememberSaveable { mutableStateOf("") }
+    var title by rememberSaveable { mutableStateOf(assessmentModel.title) }
+    var instruction by rememberSaveable { mutableStateOf(assessmentModel.instructions) }
 
     Scaffold(
         topBar = {
@@ -83,13 +85,14 @@ fun AddAssessmentScreen(
 
             Button(onClick = {
                 val assessment = AssessmentModel(
-                    id = "", title = title,
+                    id = assessmentModel.id,
+                    title = title,
                     instructions = instruction
                 )
 
                 if (title.isNotEmpty() || instruction.isNotEmpty()) {
-                    viewModel.addAssessment(assessment, onSuccess = {
-                        Toast.makeText(context, "Successfully Added", Toast.LENGTH_SHORT).show()
+                    viewModel.updateAssessment(assessment, onSuccess = {
+                        Toast.makeText(context, "Successfully Updated", Toast.LENGTH_SHORT).show()
                         navController.popBackStack()
                     }, onFailure = { msg ->
                         Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
@@ -98,7 +101,7 @@ fun AddAssessmentScreen(
                 } else {
                     Toast.makeText(context, "Please Enter All Fields!", Toast.LENGTH_SHORT).show()
                 }
-            }, modifier = Modifier.align(Alignment.End)) { Text("Add") }
+            }, modifier = Modifier.align(Alignment.End)) { Text("Update") }
         }
 
     }

@@ -1,4 +1,4 @@
-package com.example.flutterhub_jetpackcompose.screen.admin.lesson
+package com.example.flutterhub_jetpackcompose.screen.lessons.user
 
 import android.content.Context
 import androidx.compose.foundation.layout.*
@@ -25,12 +25,16 @@ import com.orhanobut.hawk.Hawk
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BasicHomeScreen(navController: NavController, viewModel: AppViewModel, context: Context) {
+fun IntermediateHomeScreen(
+    navController: NavController,
+    viewModel: AppViewModel,
+    context: Context
+) {
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(text = "Basic Lesson") },
+                title = { Text(text = "Intermediate Lesson") },
                 navigationIcon = {
                     IconButton(onClick = {
                         navController.popBackStack()
@@ -42,30 +46,41 @@ fun BasicHomeScreen(navController: NavController, viewModel: AppViewModel, conte
         },
 
         floatingActionButton = {
-            if(Hawk.get<Boolean?>("role").equals("admin")){
+            if (Hawk.get<Boolean?>("role").equals("admin")) {
                 FloatingActionButton(onClick = {
+                    Hawk.put("difficulty", "intermediate")
                     navController.navigate("addLesson")
                 }) {
                     Icon(Icons.Default.Add, contentDescription = "Add lesson")
                 }
             }
         }
-
     ) { paddingValues ->
-        Column(
+
+        Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues)
-                .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
+//                .paint(
+//                    // Replace with your image id
+//                    painterResource(id = R.drawable.bg),
+//                    contentScale = ContentScale.FillBounds)
 
-            LazyColumn {
-                items(viewModel.lessons) { lesson ->
-                    LessonCard(navController, lesson, viewModel, context)
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues)
+                    .padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                LazyColumn {
+                    items(viewModel.lessons) { lesson ->
+                        LessonCard(navController, lesson, viewModel, context)
+                    }
                 }
             }
         }
+
     }
 }
 

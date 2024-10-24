@@ -1,4 +1,4 @@
-package com.example.flutterhub_jetpackcompose.screen.admin.quiz
+package com.example.flutterhub_jetpackcompose.screen.quiz.admin
 
 import android.content.Context
 import androidx.compose.foundation.layout.Box
