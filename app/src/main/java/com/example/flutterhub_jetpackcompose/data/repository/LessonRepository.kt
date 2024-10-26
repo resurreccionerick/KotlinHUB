@@ -451,6 +451,7 @@ class LessonRepository @Inject constructor() {
                     onFailure("Something went wrong.")
                 }
             }.addOnFailureListener { msg ->
+                Log.e("saveAssessmentLink ERROR: ", msg.message.toString())
                 onFailure(msg.message.toString())
             }
     }

@@ -1,7 +1,6 @@
 package com.example.flutterhub_jetpackcompose
 
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -12,12 +11,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.flutterhub_jetpackcompose.screen.navigation.NavGraph
 import com.example.flutterhub_jetpackcompose.screen.components.BottomNavigationBar
-
+import com.example.flutterhub_jetpackcompose.screen.navigation.NavGraph
+import com.example.flutterhub_jetpackcompose.ui.theme.FlutterHub_JetpackComposeTheme
 import com.example.flutterhub_jetpackcompose.viewmodel.AppViewModel
 import com.orhanobut.hawk.Hawk
-
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -29,30 +27,32 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         // enableEdgeToEdge()
         setContent {
-            val navController = rememberNavController()
-            val navBackStackEntry by navController.currentBackStackEntryAsState()   // Observe the current route
-            val currentRoute = navBackStackEntry?.destination?.route
+            FlutterHub_JetpackComposeTheme {
+                val navController = rememberNavController()
+                val navBackStackEntry by navController.currentBackStackEntryAsState()   // Observe the current route
+                val currentRoute = navBackStackEntry?.destination?.route
 
 
-            if (Hawk.get<String?>("role") == null) {
-                NavGraph(navController, viewModel, this@MainActivity)
-            } else {
-                if (!Hawk.get<String?>("role").equals("admin")) {
-                    if (currentRoute == "userHome" || currentRoute == "userSettings") {
-                        Scaffold(bottomBar = {
-                            BottomNavigationBar(navController)
-                        }
-                        )
-                        { padding ->
-                            Box(modifier = Modifier.padding(padding)) {
-                                NavGraph(navController, viewModel, this@MainActivity)
+                if (Hawk.get<String?>("role") == null) {
+                    NavGraph(navController, viewModel, this@MainActivity)
+                } else {
+                    if (!Hawk.get<String?>("role").equals("admin")) {
+                        if (currentRoute == "userHome" || currentRoute == "userSettings") {
+                            Scaffold(bottomBar = {
+                                BottomNavigationBar(navController)
                             }
+                            )
+                            { padding ->
+                                Box(modifier = Modifier.padding(padding)) {
+                                    NavGraph(navController, viewModel, this@MainActivity)
+                                }
+                            }
+                        } else {
+                            NavGraph(navController, viewModel, this@MainActivity)
                         }
                     } else {
                         NavGraph(navController, viewModel, this@MainActivity)
                     }
-                } else {
-                    NavGraph(navController, viewModel, this@MainActivity)
                 }
             }
         }

@@ -136,7 +136,7 @@ fun UserHomeScreen(navController: NavController, viewModel: AppViewModel, contex
                                 imageRes = R.drawable.newspaper,
                                 onClick = {
                                     Hawk.put("title", "")
-                                    Hawk.put("link", "https://blog.jetbrains.com/kotlin/")
+                                    Hawk.put("link", "https://pl.kotl.in/ZS7bLCm6H")
                                     navController.navigate("webView")
                                 }
                             )
