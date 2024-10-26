@@ -10,8 +10,10 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.flutterhub_jetpackcompose.R
 import com.example.flutterhub_jetpackcompose.viewmodel.AppViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -27,9 +29,16 @@ fun AddLessonScreen(
 
 
     Scaffold(
+        containerColor = colorResource(id = R.color.metal_black),
         topBar = {
             TopAppBar(
                 title = { Text(text = "Add Lesson") },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = colorResource(id = R.color.metal_black2),
+                    titleContentColor = MaterialTheme.colorScheme.onPrimary,
+                    navigationIconContentColor = MaterialTheme.colorScheme.onPrimary,
+                    actionIconContentColor = MaterialTheme.colorScheme.onSecondary
+                ),
                 navigationIcon = {
                     IconButton(onClick = {
                         navController.popBackStack()

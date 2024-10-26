@@ -28,15 +28,18 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.example.flutterhub_jetpackcompose.R
 import com.example.flutterhub_jetpackcompose.screen.components.QuizCard
 import com.example.flutterhub_jetpackcompose.viewmodel.AppViewModel
 import com.orhanobut.hawk.Hawk
@@ -63,8 +66,17 @@ fun BasicQuizHomeScreen(
         }
     }
 
-    Scaffold(topBar = {
-        TopAppBar(title = { Text(text = "Basic Quizzes") }, navigationIcon = {
+    Scaffold(
+        containerColor = colorResource(id = R.color.metal_black),
+        topBar = {
+        TopAppBar(
+            colors = TopAppBarDefaults.topAppBarColors(
+                containerColor = colorResource(id = R.color.metal_black2),
+                titleContentColor = MaterialTheme.colorScheme.onPrimary,
+                navigationIconContentColor = MaterialTheme.colorScheme.onPrimary,
+                actionIconContentColor = MaterialTheme.colorScheme.onSecondary
+            ),
+            title = { Text(text = "Basic Quizzes") }, navigationIcon = {
             IconButton(onClick = {
                 navController.popBackStack()
             }) {

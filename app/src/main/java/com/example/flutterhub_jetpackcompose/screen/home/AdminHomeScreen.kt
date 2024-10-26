@@ -27,6 +27,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.flutterhub_jetpackcompose.R
@@ -41,6 +43,7 @@ fun AdminHomeScreen(navController: NavController, viewModel: AppViewModel, conte
     var expanded by remember { mutableStateOf(false) }
 
     Scaffold(
+        containerColor = colorResource(id = R.color.metal_black),
         topBar = {
             TopAppBar(title = { Text("Admin Home Screen") }, actions = {
                 IconButton(onClick = { expanded = !expanded }) {
@@ -64,7 +67,7 @@ fun AdminHomeScreen(navController: NavController, viewModel: AppViewModel, conte
                     }
                 }
             }, colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = MaterialTheme.colorScheme.primary,
+                containerColor =  colorResource(id = R.color.metal_black2),
                 titleContentColor = MaterialTheme.colorScheme.onPrimary,
                 navigationIconContentColor = MaterialTheme.colorScheme.onPrimary,
                 actionIconContentColor = MaterialTheme.colorScheme.onSecondary

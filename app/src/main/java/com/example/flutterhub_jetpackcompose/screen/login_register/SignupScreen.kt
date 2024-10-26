@@ -23,6 +23,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -31,6 +32,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -63,6 +65,7 @@ fun SignupScreen(navController: NavController, viewModel: AppViewModel, context:
 
 
     Scaffold(
+        containerColor = colorResource(id = R.color.dirty_white),
         topBar = {
             TopAppBar(
                 title = { Text(text = "Sign Up") },
@@ -72,7 +75,10 @@ fun SignupScreen(navController: NavController, viewModel: AppViewModel, context:
                     }) {
                         Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Back")
                     }
-                }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = colorResource(id = R.color.dirty_white)
+                )
             )
         },
         content = { paddingValues ->
@@ -94,7 +100,6 @@ fun SignupScreen(navController: NavController, viewModel: AppViewModel, context:
                             .padding(bottom = 16.dp)
                     )
 
-//            Text("SIGN UP")
                     OutlinedTextField(
                         value = name,
                         onValueChange = { name = it },

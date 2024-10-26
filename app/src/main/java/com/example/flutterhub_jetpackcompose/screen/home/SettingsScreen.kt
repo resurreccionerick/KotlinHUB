@@ -2,6 +2,7 @@ package com.example.flutterhub_jetpackcompose.screen.home
 
 import android.content.Context
 import android.widget.Toast
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,8 +16,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.flutterhub_jetpackcompose.R
 import com.example.flutterhub_jetpackcompose.viewmodel.AppViewModel
 import com.orhanobut.hawk.Hawk
 
@@ -26,6 +29,7 @@ fun SettingsScreen(navController: NavController, viewModel: AppViewModel, contex
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .background(colorResource(id = R.color.metal_black))
             .padding(16.dp), verticalArrangement = Arrangement.SpaceBetween
     ) {
         Column(
