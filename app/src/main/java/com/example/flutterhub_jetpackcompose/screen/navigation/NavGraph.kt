@@ -9,30 +9,30 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.flutterhub_jetpackcompose.data.models.QuizScoreModel
 import com.example.flutterhub_jetpackcompose.data.models.UserModel
-import com.example.flutterhub_jetpackcompose.screen.home.AdminHomeScreen
 import com.example.flutterhub_jetpackcompose.screen.assessment.admin.AddAssessmentScreen
-import com.example.flutterhub_jetpackcompose.screen.assessment.user.AssessmentScreen
 import com.example.flutterhub_jetpackcompose.screen.assessment.admin.EditAssessmentScreen
 import com.example.flutterhub_jetpackcompose.screen.assessment.admin.TrackAssessmentScreen
+import com.example.flutterhub_jetpackcompose.screen.assessment.user.AssessmentHomeScreen
+import com.example.flutterhub_jetpackcompose.screen.components.AssessmentDetailsScreen
+import com.example.flutterhub_jetpackcompose.screen.components.LeaderboardScreen
+import com.example.flutterhub_jetpackcompose.screen.components.LessonDetailsScreen
+import com.example.flutterhub_jetpackcompose.screen.components.WebView
+import com.example.flutterhub_jetpackcompose.screen.home.AdminHomeScreen
+import com.example.flutterhub_jetpackcompose.screen.home.SettingsScreen
+import com.example.flutterhub_jetpackcompose.screen.home.UserHomeScreen
 import com.example.flutterhub_jetpackcompose.screen.lessons.admin.AddLessonScreen
-import com.example.flutterhub_jetpackcompose.screen.lessons.user.BasicHomeScreen
 import com.example.flutterhub_jetpackcompose.screen.lessons.admin.EditLessonScreen
+import com.example.flutterhub_jetpackcompose.screen.lessons.user.BasicHomeScreen
 import com.example.flutterhub_jetpackcompose.screen.lessons.user.IntermediateHomeScreen
+import com.example.flutterhub_jetpackcompose.screen.login_register.ForgotPassScreen
+import com.example.flutterhub_jetpackcompose.screen.login_register.LoginScreen
+import com.example.flutterhub_jetpackcompose.screen.login_register.SignupScreen
 import com.example.flutterhub_jetpackcompose.screen.quiz.admin.AdminAddQuizScreen
 import com.example.flutterhub_jetpackcompose.screen.quiz.admin.AdminEditQuizScreen
 import com.example.flutterhub_jetpackcompose.screen.quiz.admin.BasicQuizHomeScreen
 import com.example.flutterhub_jetpackcompose.screen.quiz.admin.IntermediateQuizHomeScreen
 import com.example.flutterhub_jetpackcompose.screen.quiz.admin.QuizDifficultyScreen
-import com.example.flutterhub_jetpackcompose.screen.components.AssessmentDetailsScreen
-import com.example.flutterhub_jetpackcompose.screen.components.LessonDetailsScreen
-import com.example.flutterhub_jetpackcompose.screen.components.WebView
-import com.example.flutterhub_jetpackcompose.screen.login_register.ForgotPassScreen
-import com.example.flutterhub_jetpackcompose.screen.login_register.LoginScreen
-import com.example.flutterhub_jetpackcompose.screen.login_register.SignupScreen
-import com.example.flutterhub_jetpackcompose.screen.home.UserHomeScreen
 import com.example.flutterhub_jetpackcompose.screen.user.UserQuizScreen
-import com.example.flutterhub_jetpackcompose.screen.components.LeaderboardScreen
-import com.example.flutterhub_jetpackcompose.screen.home.SettingsScreen
 import com.example.flutterhub_jetpackcompose.viewmodel.AppViewModel
 import com.orhanobut.hawk.Hawk
 
@@ -172,7 +172,7 @@ fun NavGraph(navController: NavHostController, viewModel: AppViewModel, context:
 
         // ---------------------------------------------------- ASSESSMENT ---------------------------------------------------- //
         composable("assessmentHome") {
-            AssessmentScreen(navController, viewModel, context)
+            AssessmentHomeScreen(navController, viewModel, context)
         }
 
         composable("AddAssessment") {
@@ -189,6 +189,7 @@ fun NavGraph(navController: NavHostController, viewModel: AppViewModel, context:
             EditAssessmentScreen(navController, viewModel, assessment, context)
         }
 
+
         composable(
             "assessmentView/{assessmentId}",
             arguments = listOf(navArgument("assessmentId") { type = NavType.StringType })
@@ -199,9 +200,18 @@ fun NavGraph(navController: NavHostController, viewModel: AppViewModel, context:
             AssessmentDetailsScreen(navController, user!!.name, viewModel, context, assessment)
         }
 
-        composable("assessmentTrack") {
-            TrackAssessmentScreen(navController, viewModel, context)
+
+        composable("assessmentTrack/{assessmentId}") { backStackEntry ->
+            val assessmentId = backStackEntry.arguments?.getString("assessmentId")
+            assessmentId?.let {
+                // Fetch specific assessment links using the ID
+                val selectedAssessment = viewModel.getAssessmentById(assessmentId)
+
+                // Pass the selected assessment to TrackAssessmentScreen
+                TrackAssessmentScreen(navController, viewModel, selectedAssessment, context)
+            }
         }
+
     }
 }
 

@@ -27,7 +27,7 @@ import com.orhanobut.hawk.Hawk
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AssessmentScreen(
+fun AssessmentHomeScreen(
     navController: NavHostController,
     viewModel: AppViewModel,
     context: Context

@@ -13,13 +13,12 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.flutterhub_jetpackcompose.data.models.AssessmentModel
@@ -27,7 +26,6 @@ import com.example.flutterhub_jetpackcompose.ui.theme.DeleteRedDark
 import com.example.flutterhub_jetpackcompose.ui.theme.DeleteRedLight
 import com.example.flutterhub_jetpackcompose.ui.theme.EditGreenDark
 import com.example.flutterhub_jetpackcompose.ui.theme.EditGreenLight
-import com.example.flutterhub_jetpackcompose.ui.theme.KotlinHubTheme
 import com.example.flutterhub_jetpackcompose.ui.theme.TrackBlueDark
 import com.example.flutterhub_jetpackcompose.ui.theme.TrackBlueLight
 import com.example.flutterhub_jetpackcompose.viewmodel.AppViewModel
@@ -47,79 +45,92 @@ fun AssessmentCard(
     val deleteColor = if (isDarkMode) DeleteRedDark else DeleteRedLight
     val trackColor = if (isDarkMode) TrackBlueDark else TrackBlueLight
 
-    Card(
-        onClick = {
-            navController.navigate("assessmentView/${assessmentModel.id}")
-        },
-        shape = RoundedCornerShape(8.dp), // Rounded corners for the card
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp), // Card padding
-        elevation = CardDefaults.cardElevation(4.dp) // Card elevation (shadow effect)
-    ) {
-        // Box to align content inside the card
-        Box(
+    assessmentModel.links.forEach { link ->
+        Card(
+            onClick = {
+                if (!link.checked) {
+                    navController.navigate("assessmentView/${assessmentModel.id}")
+                } else {
+                    Toast.makeText(context, "Already Done", Toast.LENGTH_SHORT).show()
+                }
+
+            }, shape = RoundedCornerShape(8.dp), // Rounded corners for the card
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp) // Padding inside the card
+                .padding(8.dp), // Card padding
+            elevation = CardDefaults.cardElevation(4.dp) // Card elevation (shadow effect)
         ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically, // Center vertically
-                horizontalArrangement = Arrangement.SpaceBetween // Spread text and buttons
+
+            // Box to align content inside the card
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp) // Padding inside the card
             ) {
-                Text(
-                    text = "Title: ${assessmentModel.title}",
-                    style = MaterialTheme.typography.bodyLarge,
-                    modifier = Modifier.weight(1f)
-                )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically, // Center vertically
+                    horizontalArrangement = Arrangement.SpaceBetween // Spread text and buttons
+                ) {
+                    Text(
+                        text = "Title: ${assessmentModel.title}",
+                        style = MaterialTheme.typography.bodyLarge,
+                        modifier = Modifier.weight(1f)
+                    )
+
+                    if (!Hawk.get<Boolean?>("role").equals("admin")) {
+                        Checkbox(
+                            checked = link.checked,
+                            onCheckedChange = null, // Disable changing from the user side
+                            enabled = false // Make checkbox unclickable for user view
+                        )
+                    }
+                }
             }
-        }
-        Row(modifier = Modifier.align(Alignment.CenterHorizontally)) {
+            Row(modifier = Modifier.align(Alignment.CenterHorizontally)) {
+                if (Hawk.get<Boolean?>("role").equals("admin")) {
 
-            //Track button
-            if (Hawk.get<Boolean?>("role").equals("admin")) {
-                Button(
-                    onClick = {
-                        navController.navigate("assessmentTrack")
-                    },
-                    colors = ButtonDefaults.buttonColors(containerColor = trackColor),
-                    modifier = Modifier.padding(8.dp)
-                ) {
-                    Text("Track")
-                }
 
-                // Edit Button
-                Button(
-                    onClick = {
-                        navController.navigate("editAssessment/${assessmentModel.id}")
-                    },
-                    colors = ButtonDefaults.buttonColors(containerColor = editColor),
-                    modifier = Modifier.padding(8.dp) // Spacing between buttons
-                ) {
-                    Text("Edit")
-                }
+                    //Track button
+                    Button(
+                        onClick = {
+                            navController.navigate("assessmentTrack/${assessmentModel.id}")
+                        },
+                        colors = ButtonDefaults.buttonColors(containerColor = trackColor),
+                        modifier = Modifier.padding(8.dp)
+                    ) {
+                        Text("Track")
+                    }
 
-                // Delete Button
-                Button(
-                    onClick = {
-                        viewModel.deleteAssessment(assessmentModel.id,
-                            onSuccess = {
+
+                    // Edit Button
+                    Button(
+                        onClick = {
+                            navController.navigate("editAssessment/${assessmentModel.id}")
+                        },
+                        colors = ButtonDefaults.buttonColors(containerColor = editColor),
+                        modifier = Modifier.padding(8.dp) // Spacing between buttons
+                    ) {
+                        Text("Edit")
+                    }
+
+                    // Delete Button
+                    Button(
+                        onClick = {
+                            viewModel.deleteAssessment(assessmentModel.id, onSuccess = {
                                 Toast.makeText(
-                                    context,
-                                    "Successfully deleted",
-                                    Toast.LENGTH_SHORT
+                                    context, "Successfully deleted", Toast.LENGTH_SHORT
                                 ).show()
 
-                            },
-                            onFailure = { error ->
+                            }, onFailure = { error ->
                                 Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
                             })
-                    },
-                    colors = ButtonDefaults.buttonColors(containerColor = deleteColor),
-                    modifier = Modifier.padding(8.dp)
-                ) {
-                    Text("Delete")
+                        },
+                        colors = ButtonDefaults.buttonColors(containerColor = deleteColor),
+                        modifier = Modifier.padding(8.dp)
+                    ) {
+                        Text("Delete")
+                    }
                 }
             }
         }

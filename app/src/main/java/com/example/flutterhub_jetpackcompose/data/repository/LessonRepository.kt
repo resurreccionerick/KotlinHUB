@@ -364,20 +364,24 @@ class LessonRepository @Inject constructor() {
         }
     }
 
-
-    suspend fun getAssessment(
-    ): List<AssessmentModel> {
+    suspend fun getAssessment(): List<AssessmentModel> {
         return try {
             val snapshot = firestore.collection("assessment").get().await()
             val assessments = snapshot.toObjects(AssessmentModel::class.java)
 
-            // Fetch links for each assessment
+            // Fetch links for each assessment, providing a placeholder if no links are present
             assessments.map { assessment ->
-                val links =
-                    getLinksForAssessment(assessment.id) // Fetch links for the specific assessment
-                assessment.copy(links = links) // Update the assessment with the fetched links
+                val links = getLinksForAssessment(assessment.id)
+                assessment.copy(
+                    links = if (links.isEmpty()) listOf(
+                        AssessmentLink(
+                            field = "No Links Available",
+                            link = "",
+                            checked = false
+                        )
+                    ) else links
+                )
             }
-
         } catch (e: Exception) {
             Log.e("getAssessment ERROR: ", e.message.toString())
             emptyList()
@@ -386,33 +390,32 @@ class LessonRepository @Inject constructor() {
 
     private suspend fun getLinksForAssessment(assessmentId: String): List<AssessmentLink> {
         return try {
-            // Fetch the snapshot of the "links" subcollection for the given assessmentId
             val linksSnapshot = firestore.collection("assessment")
                 .document(assessmentId)
                 .collection("links")
-                .get() // Get all documents in the "links" collection
-                .await() // Await the result (this is a suspend function)
+                .get()
+                .await()
 
-            // Map over the documents in the snapshot to create a list of AssessmentLink objects
             linksSnapshot.documents.flatMap { document ->
-                // Get all fields in the document
+                val isChecked = document.getBoolean("checked")
+                    ?: false // Get "checked" field value, default to false
+
                 document.data?.mapNotNull { (fieldName, linkValue) ->
-                    // Log the field name and link value
                     Log.d("AssessmentLink", "Field Name: $fieldName, Link Value: $linkValue")
 
-                    // Exclude fields named "checked"
                     if (fieldName != "checked") {
-                        // Create an AssessmentLink object if the link value is not null
                         linkValue?.let { link ->
-                            AssessmentLink(field = fieldName, link = link.toString())
+                            AssessmentLink(
+                                field = fieldName,
+                                link = link.toString(),
+                                checked = isChecked // Set the checked value
+                            )
                         }
                     } else null // Skip fields named "checked"
-                } ?: emptyList() // If data is null, return an empty list
+                } ?: emptyList()
             }
         } catch (e: Exception) {
-            // Log any errors that occur during the fetch process
             Log.e("getLinksForAssessment ERROR: ", e.message.toString())
-            // Return an empty list if an error occurs
             emptyList()
         }
     }
@@ -483,4 +486,15 @@ class LessonRepository @Inject constructor() {
                 onFailure(msg.message.toString())
             }
     }
+
+    suspend fun getAssessmentById(assessmentId: String): AssessmentModel {
+        return try {
+            val document = firestore.collection("assessment").document(assessmentId).get().await()
+            document.toObject(AssessmentModel::class.java) ?: AssessmentModel()
+        } catch (e: Exception) {
+            Log.e("getAssessmentById ERROR", e.message.toString())
+            AssessmentModel() // Return empty if there's an error
+        }
+    }
+
 }

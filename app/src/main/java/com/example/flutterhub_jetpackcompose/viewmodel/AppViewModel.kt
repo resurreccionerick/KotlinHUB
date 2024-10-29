@@ -1,7 +1,10 @@
 package com.example.flutterhub_jetpackcompose.viewmodel
 
 
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.flutterhub_jetpackcompose.data.models.AssessmentModel
@@ -18,7 +21,7 @@ import javax.inject.Inject
 class AppViewModel @Inject constructor(
     private val repository: LessonRepository
 ) : ViewModel() {
-
+    var selectedAssessment by mutableStateOf<AssessmentModel?>(null)
     val assessment = mutableStateListOf<AssessmentModel>()
     val quizzes = mutableStateListOf<QuizModel>()
     val lessons = mutableStateListOf<LessonModel>()
@@ -339,4 +342,6 @@ class AppViewModel @Inject constructor(
                 })
         }
     }
+
+
 }
