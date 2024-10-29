@@ -2,6 +2,7 @@ package com.example.flutterhub_jetpackcompose.screen.components
 
 import android.content.Context
 import android.widget.Toast
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -13,6 +14,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -21,6 +23,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.flutterhub_jetpackcompose.data.models.AssessmentModel
+import com.example.flutterhub_jetpackcompose.ui.theme.DeleteRedDark
+import com.example.flutterhub_jetpackcompose.ui.theme.DeleteRedLight
+import com.example.flutterhub_jetpackcompose.ui.theme.EditGreenDark
+import com.example.flutterhub_jetpackcompose.ui.theme.EditGreenLight
+import com.example.flutterhub_jetpackcompose.ui.theme.KotlinHubTheme
+import com.example.flutterhub_jetpackcompose.ui.theme.TrackBlueDark
+import com.example.flutterhub_jetpackcompose.ui.theme.TrackBlueLight
 import com.example.flutterhub_jetpackcompose.viewmodel.AppViewModel
 import com.orhanobut.hawk.Hawk
 
@@ -31,6 +40,13 @@ fun AssessmentCard(
     viewModel: AppViewModel,
     context: Context
 ) {
+    val isDarkMode = isSystemInDarkTheme()
+
+    // Conditionally apply colors
+    val editColor = if (isDarkMode) EditGreenDark else EditGreenLight
+    val deleteColor = if (isDarkMode) DeleteRedDark else DeleteRedLight
+    val trackColor = if (isDarkMode) TrackBlueDark else TrackBlueLight
+
     Card(
         onClick = {
             navController.navigate("assessmentView/${assessmentModel.id}")
@@ -67,7 +83,7 @@ fun AssessmentCard(
                     onClick = {
                          navController.navigate("assessmentTrack/${assessmentModel.id}")
                     },
-                    colors = ButtonDefaults.buttonColors(containerColor = Color.Magenta.copy(alpha = 0.5f)),
+                    colors = ButtonDefaults.buttonColors(containerColor = trackColor),
                     modifier = Modifier.padding(8.dp)
                 ) {
                     Text("Track")
@@ -78,7 +94,7 @@ fun AssessmentCard(
                     onClick = {
                         navController.navigate("editAssessment/${assessmentModel.id}")
                     },
-                    colors = ButtonDefaults.buttonColors(containerColor = Color.Blue),
+                    colors = ButtonDefaults.buttonColors(containerColor = editColor),
                     modifier = Modifier.padding(8.dp) // Spacing between buttons
                 ) {
                     Text("Edit")
@@ -100,7 +116,7 @@ fun AssessmentCard(
                                 Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
                             })
                     },
-                    colors = ButtonDefaults.buttonColors(containerColor = Color.Red),
+                    colors = ButtonDefaults.buttonColors(containerColor = deleteColor),
                     modifier = Modifier.padding(8.dp)
                 ) {
                     Text("Delete")

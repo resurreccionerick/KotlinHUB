@@ -338,7 +338,6 @@ class AppViewModel @Inject constructor(
             repository.updateAssessmentLink(assessmentId, authName, checked,
                 onSuccess = {
                     onSuccess()
-                    loadAssessment()
                 }, onFailure = { msg ->
                     onFailure(msg)
                 })

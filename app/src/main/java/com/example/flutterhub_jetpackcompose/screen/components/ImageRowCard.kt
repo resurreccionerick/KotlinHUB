@@ -44,7 +44,7 @@ fun ImageRowCard(
         Row(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(26.dp, 0.dp, 0.dp, 0.dp),
+                .padding(22.dp, 0.dp, 0.dp, 0.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Start,
         ) {

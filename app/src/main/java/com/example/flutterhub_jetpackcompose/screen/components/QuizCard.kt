@@ -2,6 +2,7 @@ package com.example.flutterhub_jetpackcompose.screen.components
 
 import android.content.Context
 import android.widget.Toast
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -22,6 +23,10 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 
 import com.example.flutterhub_jetpackcompose.data.models.QuizModel
+import com.example.flutterhub_jetpackcompose.ui.theme.DeleteRedDark
+import com.example.flutterhub_jetpackcompose.ui.theme.DeleteRedLight
+import com.example.flutterhub_jetpackcompose.ui.theme.EditGreenDark
+import com.example.flutterhub_jetpackcompose.ui.theme.EditGreenLight
 import com.example.flutterhub_jetpackcompose.viewmodel.AppViewModel
 import com.orhanobut.hawk.Hawk
 
@@ -32,6 +37,13 @@ fun QuizCard(
     viewModel: AppViewModel,
     context: Context
 ) {
+    val isDarkMode = isSystemInDarkTheme()
+
+    // Conditionally apply colors
+    val editColor = if (isDarkMode) EditGreenDark else EditGreenLight
+    val deleteColor = if (isDarkMode) DeleteRedDark else DeleteRedLight
+
+
     Card(
         shape = RoundedCornerShape(15.dp), // Rounded corners for the card
         modifier = Modifier
@@ -65,7 +77,7 @@ fun QuizCard(
                     onClick = {
                         navController.navigate("adminEditQuiz/${quiz.id}")
                     },
-                    colors = ButtonDefaults.buttonColors(containerColor = Color.Blue),
+                    colors = ButtonDefaults.buttonColors(containerColor = editColor),
                     modifier = Modifier.padding(end = 8.dp) // Spacing between buttons
                 ) {
                     Text("Edit")
@@ -89,7 +101,7 @@ fun QuizCard(
                                 Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
                             })
                     },
-                    colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
+                    colors = ButtonDefaults.buttonColors(containerColor = deleteColor)
                 ) {
                     Text("Delete")
                 }
