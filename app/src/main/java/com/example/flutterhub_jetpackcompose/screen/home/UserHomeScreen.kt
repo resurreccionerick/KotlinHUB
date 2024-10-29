@@ -22,7 +22,6 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -37,12 +36,11 @@ import com.orhanobut.hawk.Hawk
 fun UserHomeScreen(navController: NavController, viewModel: AppViewModel, context: Context) {
 
     Scaffold(
-        containerColor = colorResource(id = R.color.metal_black),
         topBar = {
             TopAppBar(
                 title = { Text("KotlinHub") },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = colorResource(id = R.color.metal_black2),
+                    containerColor = MaterialTheme.colorScheme.primary,
                     titleContentColor = MaterialTheme.colorScheme.onPrimary,
                     navigationIconContentColor = MaterialTheme.colorScheme.onPrimary,
                     actionIconContentColor = MaterialTheme.colorScheme.onSecondary
@@ -65,7 +63,7 @@ fun UserHomeScreen(navController: NavController, viewModel: AppViewModel, contex
                 ) {
                     Text(
                         "What would you like to learn today?",
-                        color = Color.White,
+                        color = Color.Black,
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier.padding(bottom = 16.dp, top = 8.dp)
                     )
@@ -119,7 +117,7 @@ fun UserHomeScreen(navController: NavController, viewModel: AppViewModel, contex
 
                     Spacer(modifier = Modifier.height(50.dp))
 
-                    Text("Other Topics: ", color = Color.White, fontWeight = FontWeight.Bold)
+                    Text("Other Topics: ", color = Color.Black, fontWeight = FontWeight.Bold)
 
                     Box(
                         modifier = Modifier

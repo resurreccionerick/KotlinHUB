@@ -2,7 +2,6 @@ package com.example.flutterhub_jetpackcompose.screen.user
 
 import android.content.Context
 import android.widget.Toast
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -28,12 +27,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.example.flutterhub_jetpackcompose.R
 import com.example.flutterhub_jetpackcompose.data.models.QuizModel
 import com.example.flutterhub_jetpackcompose.data.models.QuizScoreModel
 import com.example.flutterhub_jetpackcompose.data.models.UserModel
@@ -79,8 +76,7 @@ fun UserQuizScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp)
-                .background(colorResource(id = R.color.dirty_white)),
+                .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(text = "Quiz Completed!", fontSize = 32.sp, fontWeight = FontWeight.Bold)
@@ -234,10 +230,10 @@ fun UserQuizScreen(
 
         Box(modifier = Modifier.padding(start = 16.dp, end = 16.dp)) {
             if (answered) {
-                if (isCorrect) {
-                    AnswerDescription(isCorrect, currentQuiz.correctDesc)
-                } else {
-                    AnswerDescription(isCorrect, currentQuiz.wrongDesc)
+                if(isCorrect){
+                    AnswerDescription(isCorrect,currentQuiz.correctDesc)
+                }else{
+                    AnswerDescription(isCorrect,currentQuiz.wrongDesc)
                 }
             }
         }

@@ -98,11 +98,11 @@ fun AssessmentDetailsScreen(
                         ExtendedFloatingActionButton(onClick = {
                             Toast.makeText(
                                 context,
-                                assessmentModel.links.get(0).link,
+                                assessmentModel.links[0].link,
                                 Toast.LENGTH_SHORT
                             ).show()
                             openTheLink(
-                                context, assessmentModel.links.get(0).link
+                                context, assessmentModel.links[0].link
                             )
                         },
                             icon = {

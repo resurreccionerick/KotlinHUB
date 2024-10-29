@@ -8,8 +8,9 @@ data class AssessmentModel(
 )
 
 
-
 data class AssessmentLink(
+    val id: String = "",
     val field: String = "",
-    val link: String = ""
+    val link: String = "",
+    var checked: Boolean = false
 )

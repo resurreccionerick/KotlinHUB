@@ -12,11 +12,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.example.flutterhub_jetpackcompose.R
 
 @Composable
 fun BottomNavigationBar(navController: NavHostController) {
@@ -25,7 +23,7 @@ fun BottomNavigationBar(navController: NavHostController) {
     val currentRoute = navBackStackEntry?.destination?.route
 
     NavigationBar(
-        containerColor = colorResource(id = R.color.dirty_white),
+        containerColor = Color.White,
         contentColor = MaterialTheme.colorScheme.primary,
         tonalElevation = 5.dp,
     ) {

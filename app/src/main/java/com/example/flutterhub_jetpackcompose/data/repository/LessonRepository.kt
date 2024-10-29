@@ -433,19 +433,45 @@ class LessonRepository @Inject constructor() {
 
     fun saveAssessmentLink(
         assessmentId: String,
-        authId: String,
+        authName: String,
         link: String,
         onSuccess: () -> Unit,
         onFailure: (String) -> Unit
     ) {
         val linkData = hashMapOf(
-            authId to link
+            authName to link
         )
 
         firestore.collection("assessment").document(assessmentId).collection("links")
-            .document(authId).set(linkData)
+            .document(authName).set(linkData)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
+                    onSuccess()
+                } else {
+                    onFailure("Something went wrong.")
+                }
+            }.addOnFailureListener { msg ->
+                Log.e("saveAssessmentLink ERROR: ", msg.message.toString())
+                onFailure(msg.message.toString())
+            }
+    }
+
+    fun updateAssessmentLink(
+        assessmentId: String,
+        authName: String,
+        checked: Boolean,
+        onSuccess: () -> Unit,
+        onFailure: (String) -> Unit
+    ) {
+        val linkData = mapOf(
+            "checked" to checked
+        )
+
+        firestore.collection("assessment").document(assessmentId).collection("links")
+            .document(authName).update(linkData)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+
                     onSuccess()
                 } else {
                     onFailure("Something went wrong.")

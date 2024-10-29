@@ -7,7 +7,7 @@ import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import com.example.flutterhub_jetpackcompose.R
+
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -24,7 +24,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.compose.material3.*
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.example.flutterhub_jetpackcompose.data.models.LessonModel
@@ -37,16 +36,9 @@ fun LessonDetailsScreen(
     lessonModel: LessonModel,
 ) {
     Scaffold(
-        containerColor = colorResource(id = R.color.metal_black),
         topBar = {
             TopAppBar(
                 title = { Text("Lesson Details") },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = colorResource(id = R.color.metal_black2),
-                    titleContentColor = MaterialTheme.colorScheme.onPrimary,
-                    navigationIconContentColor = MaterialTheme.colorScheme.onPrimary,
-                    actionIconContentColor = MaterialTheme.colorScheme.onSecondary
-                ),
                 navigationIcon = {
                     IconButton(onClick = {
                         navController.popBackStack()

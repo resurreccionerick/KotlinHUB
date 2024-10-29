@@ -322,4 +322,22 @@ class AppViewModel @Inject constructor(
                 })
         }
     }
+
+    fun updateAssessmentLink(
+        assessmentId: String,
+        authName: String,
+        checked: Boolean,
+        onSuccess: () -> Unit,
+        onFailure: (String) -> Unit
+    ) {
+        viewModelScope.launch {
+            repository.updateAssessmentLink(assessmentId, authName, checked,
+                onSuccess = {
+                    onSuccess()
+                    loadAssessment()
+                }, onFailure = { msg ->
+                    onFailure(msg)
+                })
+        }
+    }
 }
