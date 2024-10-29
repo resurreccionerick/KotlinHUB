@@ -400,10 +400,13 @@ class LessonRepository @Inject constructor() {
                     // Log the field name and link value
                     Log.d("AssessmentLink", "Field Name: $fieldName, Link Value: $linkValue")
 
-                    // Create an AssessmentLink object if the link value is not null
-                    linkValue?.let { link ->
-                        AssessmentLink(field = fieldName, link = link.toString())
-                    }
+                    // Exclude fields named "checked"
+                    if (fieldName != "checked") {
+                        // Create an AssessmentLink object if the link value is not null
+                        linkValue?.let { link ->
+                            AssessmentLink(field = fieldName, link = link.toString())
+                        }
+                    } else null // Skip fields named "checked"
                 } ?: emptyList() // If data is null, return an empty list
             }
         } catch (e: Exception) {
@@ -471,7 +474,6 @@ class LessonRepository @Inject constructor() {
             .document(authName).update(linkData)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-
                     onSuccess()
                 } else {
                     onFailure("Something went wrong.")

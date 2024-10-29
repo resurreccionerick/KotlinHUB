@@ -2,6 +2,7 @@ package com.example.flutterhub_jetpackcompose.screen.components
 
 import android.content.Context
 import android.widget.Toast
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -25,6 +26,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.flutterhub_jetpackcompose.data.models.AssessmentModel
+import com.example.flutterhub_jetpackcompose.ui.theme.DeleteRedDark
+import com.example.flutterhub_jetpackcompose.ui.theme.DeleteRedLight
+import com.example.flutterhub_jetpackcompose.ui.theme.EditGreenDark
+import com.example.flutterhub_jetpackcompose.ui.theme.EditGreenLight
+import com.example.flutterhub_jetpackcompose.ui.theme.TrackBlueDark
+import com.example.flutterhub_jetpackcompose.ui.theme.TrackBlueLight
 import com.example.flutterhub_jetpackcompose.viewmodel.AppViewModel
 import com.orhanobut.hawk.Hawk
 
@@ -71,10 +78,12 @@ fun TrackAssessmentCard(
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
                         ) {
+                            Toast.makeText(context, link.checked.toString(), Toast.LENGTH_SHORT).show()
                             Checkbox(
                                 checked = link.checked,
                                 onCheckedChange = { isChecked ->
                                     link.checked = isChecked
+                                    checked = isChecked
 
                                     // Update Firestore with the modified assessmentModel
                                     viewModel.updateAssessmentLink(
@@ -107,9 +116,7 @@ fun TrackAssessmentCard(
                                     openTheLink(context, link.link)
                                 },
                                 colors = ButtonDefaults.buttonColors(
-                                    containerColor = Color.Magenta.copy(
-                                        alpha = 0.5f
-                                    )
+                                    containerColor = MaterialTheme.colorScheme.onTertiaryContainer
                                 ),
                                 modifier = Modifier.padding(8.dp)
                             ) {

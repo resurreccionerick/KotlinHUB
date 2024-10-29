@@ -13,7 +13,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.flutterhub_jetpackcompose.screen.components.BottomNavigationBar
 import com.example.flutterhub_jetpackcompose.screen.navigation.NavGraph
-import com.example.flutterhub_jetpackcompose.ui.theme.FlutterHub_JetpackComposeTheme
+import com.example.flutterhub_jetpackcompose.ui.theme.KotlinHubTheme
 import com.example.flutterhub_jetpackcompose.viewmodel.AppViewModel
 import com.orhanobut.hawk.Hawk
 import dagger.hilt.android.AndroidEntryPoint
@@ -27,7 +27,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         // enableEdgeToEdge()
         setContent {
-            FlutterHub_JetpackComposeTheme {
+            KotlinHubTheme {
                 val navController = rememberNavController()
                 val navBackStackEntry by navController.currentBackStackEntryAsState()   // Observe the current route
                 val currentRoute = navBackStackEntry?.destination?.route

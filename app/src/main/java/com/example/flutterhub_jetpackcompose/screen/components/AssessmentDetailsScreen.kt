@@ -24,6 +24,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -95,16 +96,12 @@ fun AssessmentDetailsScreen(
                     Box(
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        ExtendedFloatingActionButton(onClick = {
-                            Toast.makeText(
-                                context,
-                                assessmentModel.links[0].link,
-                                Toast.LENGTH_SHORT
-                            ).show()
-                            openTheLink(
-                                context, assessmentModel.links[0].link
-                            )
-                        },
+                        ExtendedFloatingActionButton(
+                            onClick = {
+                                openTheLink(
+                                    context, assessmentModel.links[0].link
+                                )
+                            },
                             icon = {
                                 Icon(
                                     Icons.Filled.Code, contentDescription = "Code Runner"
@@ -114,10 +111,10 @@ fun AssessmentDetailsScreen(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .background(
-                                    Color.Magenta.copy(alpha = 0.5f),
+                                    MaterialTheme.colorScheme.onTertiaryContainer,
                                     shape = RoundedCornerShape(8.dp)
                                 ),
-                            containerColor = Color.Magenta.copy(alpha = 0.5f),
+                            containerColor = MaterialTheme.colorScheme.onTertiaryContainer,
                             contentColor = Color.White
                         )
                     }
@@ -177,7 +174,7 @@ fun openTheLink(context: Context, s: String) {
     intent.data = Uri.parse(url)
 
 //    if (intent.resolveActivity(context.packageManager) != null) {
-        context.startActivity(intent)  // Launch browser with the URL
+    context.startActivity(intent)  // Launch browser with the URL
 //    } else {
 //        Toast.makeText(
 //            context, "No browser found to open this link", Toast.LENGTH_SHORT
