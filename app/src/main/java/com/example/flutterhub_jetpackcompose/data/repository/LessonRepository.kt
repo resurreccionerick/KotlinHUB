@@ -487,14 +487,59 @@ class LessonRepository @Inject constructor() {
             }
     }
 
-    suspend fun getAssessmentById(assessmentId: String): AssessmentModel {
-        return try {
-            val document = firestore.collection("assessment").document(assessmentId).get().await()
-            document.toObject(AssessmentModel::class.java) ?: AssessmentModel()
-        } catch (e: Exception) {
-            Log.e("getAssessmentById ERROR", e.message.toString())
-            AssessmentModel() // Return empty if there's an error
-        }
+    fun checkIfUserChecked(
+        assessmentId: String,
+        userName: String,
+        onResult: (Boolean) -> Unit,
+        getLink: (String) -> Unit
+    ) {
+        Log.d(
+            "checkIfUserChecked",
+            "Assessment ID: $assessmentId, User: $userName"
+        ) // Log assessment ID and user
+
+        firestore.collection("assessment")
+            .document(assessmentId)
+            .collection("links")
+            .document(userName)
+            .get()
+            .addOnSuccessListener { document ->
+                if (document.exists()) {
+                    val isChecked = document.getBoolean("checked") ?: false
+                    val getLink = document.getString(userName) ?: ""
+                    Log.d(
+                        "checkIfUserChecked",
+                        "Check status for $userName: $isChecked"
+                    ) // Log the check status
+                    onResult(isChecked)
+                    getLink(getLink)
+                } else {
+                    Log.d("checkIfUserChecked", "Document for $userName not found.")
+                    onResult(false)
+                }
+            }
+            .addOnFailureListener { e ->
+                Log.e("checkIfUserChecked ERROR", "Failed to fetch document: ${e.message}")
+                onResult(false) // Default to false on failure
+            }
     }
+
+//    fun checkIfUserChecked(
+//        assessmentId: String, userName: String, onResult: (Boolean) -> Unit
+//    ) {
+//        firestore.collection("assessment")
+//            .document(assessmentId)
+//            .collection("links")
+//            .document(userName)
+//            .get()
+//            .addOnSuccessListener { document ->
+//                val isChecked = document.getBoolean("check") ?: false
+//                onResult(isChecked)
+//            }
+//            .addOnFailureListener { e ->
+//                Log.e("checkUserStatus ERROR: ", e.message.toString())
+//                onResult(false) // Default to false on failure
+//            }
+//    }
 
 }

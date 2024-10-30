@@ -48,11 +48,7 @@ fun AssessmentCard(
     assessmentModel.links.forEach { link ->
         Card(
             onClick = {
-                if (!link.checked) {
-                    navController.navigate("assessmentView/${assessmentModel.id}")
-                } else {
-                    Toast.makeText(context, "Already Done", Toast.LENGTH_SHORT).show()
-                }
+                navController.navigate("assessmentView/${assessmentModel.id}")
 
             }, shape = RoundedCornerShape(8.dp), // Rounded corners for the card
             modifier = Modifier
@@ -77,14 +73,6 @@ fun AssessmentCard(
                         style = MaterialTheme.typography.bodyLarge,
                         modifier = Modifier.weight(1f)
                     )
-
-                    if (!Hawk.get<Boolean?>("role").equals("admin")) {
-                        Checkbox(
-                            checked = link.checked,
-                            onCheckedChange = null, // Disable changing from the user side
-                            enabled = false // Make checkbox unclickable for user view
-                        )
-                    }
                 }
             }
             Row(modifier = Modifier.align(Alignment.CenterHorizontally)) {
