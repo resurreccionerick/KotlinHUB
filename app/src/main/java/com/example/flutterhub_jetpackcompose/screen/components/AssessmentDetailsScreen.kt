@@ -24,13 +24,16 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -53,6 +56,17 @@ fun AssessmentDetailsScreen(
     assessmentModel: AssessmentModel,
 ) {
     var link by rememberSaveable { mutableStateOf("") }
+    var isApproved by remember { mutableStateOf(false) }
+    var getLink by remember { mutableStateOf("") }
+
+    // Fetch user check status on screen load
+    LaunchedEffect(Unit) {
+        viewModel.checkUserStatus(assessmentModel.id, userID, onResult = { data ->
+            isApproved = data
+        }, getLink = { res ->
+            getLink = res
+        })
+    }
 
     Scaffold(topBar = {
         TopAppBar(title = { Text(assessmentModel.title) }, navigationIcon = {
@@ -92,84 +106,112 @@ fun AssessmentDetailsScreen(
                 }
 
                 item {
-                    Box(
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        ExtendedFloatingActionButton(onClick = {
-                            Toast.makeText(
-                                context,
-                                assessmentModel.links[0].link,
-                                Toast.LENGTH_SHORT
-                            ).show()
-                            openTheLink(
-                                context, assessmentModel.links[0].link
+                    if (!isApproved) {
+                        Box(
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            ExtendedFloatingActionButton(
+                                onClick = {
+                                    openTheLink(
+                                        context, assessmentModel.links.getOrNull(0)?.link ?: ""
+                                    )
+                                },
+                                icon = {
+                                    Icon(
+                                        Icons.Filled.Code, contentDescription = "Code Runner"
+                                    )
+                                },
+                                text = { Text(text = "Let's do this!") },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .background(
+                                        MaterialTheme.colorScheme.onTertiaryContainer,
+                                        shape = RoundedCornerShape(8.dp)
+                                    ),
+                                containerColor = MaterialTheme.colorScheme.onTertiaryContainer,
+                                contentColor = Color.White
                             )
-                        },
-                            icon = {
-                                Icon(
-                                    Icons.Filled.Code, contentDescription = "Code Runner"
-                                )
-                            },
-                            text = { Text(text = "Let's do this!") },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .background(
-                                    Color.Magenta.copy(alpha = 0.5f),
-                                    shape = RoundedCornerShape(8.dp)
-                                ),
-                            containerColor = Color.Magenta.copy(alpha = 0.5f),
-                            contentColor = Color.White
-                        )
+                        }
+                    } else {
+                        Box(
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            ExtendedFloatingActionButton(
+                                onClick = {
+                                    openTheLink(
+                                        context, getLink
+                                    )
+                                },
+                                icon = {
+                                    Icon(
+                                        Icons.Filled.Code, contentDescription = "Code Runner"
+                                    )
+                                },
+                                text = { Text(text = "See your work") },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .background(
+                                        MaterialTheme.colorScheme.onTertiaryContainer,
+                                        shape = RoundedCornerShape(8.dp)
+                                    ),
+                                containerColor = MaterialTheme.colorScheme.onTertiaryContainer,
+                                contentColor = Color.White
+                            )
+                        }
                     }
                 }
             }
 
 
-            Column(
-                modifier = Modifier
-                    .align(Alignment.BottomCenter) // Aligns this at the bottom
-                    .fillMaxWidth()
-                    .background(Color.LightGray.copy(0.5f))
-                    .padding(16.dp)
-            ) {
-                OutlinedTextField(modifier = Modifier.fillMaxWidth(),
-                    value = link,
-                    onValueChange = { link = it },
-                    label = { Text("Paste your answer link here") })
-
-                Button(
+            if (!isApproved) {
+                Column(
                     modifier = Modifier
-                        .align(Alignment.End)
-                        .padding(top = 8.dp),
-                    onClick = {
-                        if (isKotlinLangUrl(link)) {
-                            viewModel.saveAssessmentLink(assessmentModel,
-                                userID,
-                                link,
-                                onSuccess = {
-                                    Toast.makeText(
-                                        context, "Successfully Submitted", Toast.LENGTH_SHORT
-                                    ).show()
-                                    navController.popBackStack()
-
-                                },
-                                onFailure = { msg ->
-                                    Toast.makeText(
-                                        context, msg, Toast.LENGTH_SHORT
-                                    ).show()
-                                })
-                        } else {
-                            Toast.makeText(context, "Invalid Link", Toast.LENGTH_SHORT).show()
-                        }
-                    },
+                        .align(Alignment.BottomCenter) // Aligns this at the bottom
+                        .fillMaxWidth()
+                        .background(Color.LightGray.copy(0.5f))
+                        .padding(16.dp)
                 ) {
-                    Text("Submit")
+                    OutlinedTextField(
+                        modifier = Modifier.fillMaxWidth(),
+                        value = link,
+                        onValueChange = { link = it },
+                        label = { Text("Paste your answer link here") }
+                    )
+
+                    Button(
+                        modifier = Modifier
+                            .align(Alignment.End)
+                            .padding(top = 8.dp),
+                        onClick = {
+                            if (isKotlinLangUrl(link)) {
+                                viewModel.saveAssessmentLink(
+                                    assessmentModel,
+                                    userID,
+                                    link,
+                                    onSuccess = {
+                                        Toast.makeText(
+                                            context, "Successfully Submitted", Toast.LENGTH_SHORT
+                                        ).show()
+                                        navController.popBackStack()
+                                    },
+                                    onFailure = { msg ->
+                                        Toast.makeText(
+                                            context, msg, Toast.LENGTH_SHORT
+                                        ).show()
+                                    }
+                                )
+                            } else {
+                                Toast.makeText(context, "Invalid Link", Toast.LENGTH_SHORT).show()
+                            }
+                        },
+                    ) {
+                        Text("Submit")
+                    }
                 }
             }
         }
     })
 }
-
 
 fun openTheLink(context: Context, s: String) {
     val url = s
@@ -177,7 +219,7 @@ fun openTheLink(context: Context, s: String) {
     intent.data = Uri.parse(url)
 
 //    if (intent.resolveActivity(context.packageManager) != null) {
-        context.startActivity(intent)  // Launch browser with the URL
+    context.startActivity(intent)  // Launch browser with the URL
 //    } else {
 //        Toast.makeText(
 //            context, "No browser found to open this link", Toast.LENGTH_SHORT

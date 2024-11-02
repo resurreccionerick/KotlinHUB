@@ -340,4 +340,19 @@ class AppViewModel @Inject constructor(
                 })
         }
     }
+
+    fun checkUserStatus(
+        id: String,
+        userID: String,
+        onResult: (Boolean) -> Unit,
+        getLink: (String) -> Unit
+    ) {
+        viewModelScope.launch {
+            repository.checkIfUserChecked(id, userID, getLink = { link ->
+                getLink(link)
+            }, onResult = { res ->
+                onResult(res)
+            })
+        }
+    }
 }

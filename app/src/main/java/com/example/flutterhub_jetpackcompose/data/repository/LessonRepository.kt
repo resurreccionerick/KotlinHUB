@@ -481,4 +481,36 @@ class LessonRepository @Inject constructor() {
                 onFailure(msg.message.toString())
             }
     }
+
+    fun checkIfUserChecked(
+        assessmentId: String,
+        userName: String,
+        onResult: (Boolean) -> Unit,
+        getLink: (String) -> Unit
+    ) {
+        firestore.collection("assessment")
+            .document(assessmentId)
+            .collection("links")
+            .document(userName)
+            .get()
+            .addOnSuccessListener { document ->
+                if (document.exists()) {
+                    val isChecked = document.getBoolean("checked") ?: false
+                    val getLink = document.getString(userName) ?: ""
+                    Log.d(
+                        "checkIfUserChecked",
+                        "Check status for $userName: $isChecked"
+                    ) // Log the check status
+                    onResult(isChecked)
+                    getLink(getLink)
+                } else {
+                    Log.d("checkIfUserChecked", "Document for $userName not found.")
+                    onResult(false)
+                }
+            }
+            .addOnFailureListener { e ->
+                Log.e("checkIfUserChecked ERROR", "Failed to fetch document: ${e.message}")
+                onResult(false) // Default to false on failure
+            }
+    }
 }
