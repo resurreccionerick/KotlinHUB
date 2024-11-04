@@ -17,6 +17,7 @@ import com.orhanobut.hawk.Hawk
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
+
 //The repository handles FireStore operations. Here’s an example for adding lessons to Firestore.
 class LessonRepository @Inject constructor() {
 
@@ -37,6 +38,7 @@ class LessonRepository @Inject constructor() {
     }
 
 
+
     // ---------------------------------------------------- USER PART ---------------------------------------------------- //
     suspend fun userRegister(
         name: String, email: String, pass: String, onSuccess: () -> Unit, //callback if success
@@ -54,7 +56,6 @@ class LessonRepository @Inject constructor() {
 
                 // Update the user's profile with name
                 it.updateProfile(profileUpdates).await()
-                Log.d("userRegister", "User profile updated with name: $name")
 
                 onSuccess()
             } ?: run {
