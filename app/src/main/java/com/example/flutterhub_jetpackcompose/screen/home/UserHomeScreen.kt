@@ -63,7 +63,6 @@ fun UserHomeScreen(navController: NavController, viewModel: AppViewModel, contex
                 ) {
                     Text(
                         "What would you like to learn today?",
-                        color = Color.Black,
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier.padding(bottom = 16.dp, top = 8.dp)
                     )
@@ -108,8 +107,8 @@ fun UserHomeScreen(navController: NavController, viewModel: AppViewModel, contex
                             imageRes = R.drawable.developer,
                             imgHeight = 450,
                             onClick = {
-                                viewModel.loadAssessment()
-                                navController.navigate("assessmentHome")
+//                                viewModel.loadAssessment()
+//                                navController.navigate("assessmentHome")
                             },
                             modifier = Modifier.weight(1f)
                         )
@@ -117,7 +116,7 @@ fun UserHomeScreen(navController: NavController, viewModel: AppViewModel, contex
 
                     Spacer(modifier = Modifier.height(50.dp))
 
-                    Text("Other Topics: ", color = Color.Black, fontWeight = FontWeight.Bold)
+                    Text("Other Topics: ",  fontWeight = FontWeight.Bold)
 
                     Box(
                         modifier = Modifier
@@ -134,7 +133,7 @@ fun UserHomeScreen(navController: NavController, viewModel: AppViewModel, contex
                                 imageRes = R.drawable.newspaper,
                                 onClick = {
                                     Hawk.put("title", "")
-                                    Hawk.put("link", "https://pl.kotl.in/ZS7bLCm6H")
+                                    Hawk.put("link", "https://blog.jetbrains.com/kotlin/")
                                     navController.navigate("webView")
                                 }
                             )

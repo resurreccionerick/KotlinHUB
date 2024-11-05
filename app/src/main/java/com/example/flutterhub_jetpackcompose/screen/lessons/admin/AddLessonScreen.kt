@@ -69,6 +69,7 @@ fun AddLessonScreen(
 
                 OutlinedTextField(
                     value = link,
+                    maxLines = 1,
                     onValueChange = { link = it },
                     label = { Text("YouTube video link") },
                     modifier = Modifier.fillMaxWidth()

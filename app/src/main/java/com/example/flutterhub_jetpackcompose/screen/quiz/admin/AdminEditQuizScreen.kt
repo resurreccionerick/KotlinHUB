@@ -77,6 +77,7 @@ fun AdminEditQuizScreen(
             ) {
                 OutlinedTextField(
                     value = question,
+                    maxLines = 1,
                     onValueChange = { question = it },
                     label = { Text("Question") },
                     modifier = Modifier.fillMaxWidth()
@@ -88,10 +89,11 @@ fun AdminEditQuizScreen(
                 Spacer(modifier = Modifier.height(8.dp))
 
                 //radiobutton 4 choices
-                Text("Choices:")
+                //Text("Choices:")
                 choices.forEachIndexed { index, choice ->
                     OutlinedTextField(
                         value = choice,
+                        maxLines = 1,
                         onValueChange = { choices[index] = it },
                         label = { Text("Choices ${index + 1}") },
                         modifier = Modifier.fillMaxWidth()
@@ -111,6 +113,7 @@ fun AdminEditQuizScreen(
 
                 OutlinedTextField(value = correctDesc,
                     onValueChange = { correctDesc = it },
+                    maxLines = 1,
                     label = { Text("Correct Answer Description") },
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -118,6 +121,7 @@ fun AdminEditQuizScreen(
                 Spacer(modifier = Modifier.height(8.dp))
 
                 OutlinedTextField(value = wrongDesc,
+                    maxLines = 1,
                     onValueChange = { wrongDesc = it },
                     label = { Text("Wrong Answer Description") },
                     modifier = Modifier.fillMaxWidth()
@@ -131,7 +135,6 @@ fun AdminEditQuizScreen(
                     ) {
                         val quiz = quizModel.copy(
                             question = question,
-                            //difficulty = difficulty,
                             choices = choices,
                             selectedAns = selectedAns,
                             correctDesc = correctDesc,
