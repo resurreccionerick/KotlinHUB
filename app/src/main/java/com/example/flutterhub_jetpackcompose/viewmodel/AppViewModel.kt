@@ -4,6 +4,7 @@ package com.example.flutterhub_jetpackcompose.viewmodel
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.flutterhub_jetpackcompose.data.models.AssessmentLink
 import com.example.flutterhub_jetpackcompose.data.models.AssessmentModel
 import com.example.flutterhub_jetpackcompose.data.models.LessonModel
 import com.example.flutterhub_jetpackcompose.data.models.QuizModel
@@ -20,6 +21,7 @@ class AppViewModel @Inject constructor(
 ) : ViewModel() {
 
     val assessment = mutableStateListOf<AssessmentModel>()
+    val links = mutableStateListOf<AssessmentLink>()
     val quizzes = mutableStateListOf<QuizModel>()
     val lessons = mutableStateListOf<LessonModel>()
     val scores = mutableStateListOf<QuizScoreModel>()
@@ -257,6 +259,7 @@ class AppViewModel @Inject constructor(
         viewModelScope.launch {
             repository.addAssessment(assessmentModel, onSuccess = {
                 onSuccess()
+                loadAssessment()
             }, onFailure = { msg ->
                 onFailure(msg)
             })
@@ -309,12 +312,13 @@ class AppViewModel @Inject constructor(
     fun saveAssessmentLink(
         assessmentModel: AssessmentModel,
         authID: String,
+        authName: String,
         link: String,
         onSuccess: () -> Unit,
         onFailure: (String) -> Unit
     ) {
         viewModelScope.launch {
-            repository.saveAssessmentLink(assessmentModel.id, authID, link,
+            repository.saveAssessmentLink(assessmentModel, authID,authName, link,
                 onSuccess = {
                     onSuccess()
                 }, onFailure = { msg ->
@@ -354,5 +358,22 @@ class AppViewModel @Inject constructor(
                 onResult(res)
             })
         }
+    }
+
+    fun loadLinks(id: String) {
+        if (isLoading) return
+
+        viewModelScope.launch {
+            val _links = repository.getLinksByID(id)
+
+            links.clear()
+            links.addAll(_links)
+        }
+    }
+
+
+    fun getLinksById(linkId: String): AssessmentLink {
+        // This function returns the lesson by its ID.
+        return links.find { it.id == linkId } ?: AssessmentLink()
     }
 }

@@ -1,6 +1,8 @@
 package com.example.flutterhub_jetpackcompose.screen.navigation
 
 import android.content.Context
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -196,11 +198,16 @@ fun NavGraph(navController: NavHostController, viewModel: AppViewModel, context:
             val id = backStackEntry.arguments?.getString("assessmentId") ?: ""
             // Fetch the lesson by ID (if needed)
             val assessment = viewModel.getAssessmentById(id)
-            AssessmentDetailsScreen(navController, user!!.name, viewModel, context, assessment)
+            AssessmentDetailsScreen(navController, user!!.id, user!!.name, viewModel, context, assessment)
         }
 
-        composable("assessmentTrack") {
-            TrackAssessmentScreen(navController, viewModel, context)
+        composable(
+            "assessmentTrack/{assessmentId}",
+            arguments = listOf(navArgument("assessmentId") { type = NavType.StringType })
+        ) { backStackEntry ->
+
+            val id = backStackEntry.arguments?.getString("assessmentId") ?: ""
+            TrackAssessmentScreen(navController, viewModel, context, id)
         }
     }
 }

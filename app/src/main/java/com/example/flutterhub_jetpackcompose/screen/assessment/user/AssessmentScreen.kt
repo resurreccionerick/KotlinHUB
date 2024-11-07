@@ -70,6 +70,5 @@ fun AssessmentScreen(
                 }
             }
         }
-
     }
 }

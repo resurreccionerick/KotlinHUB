@@ -87,7 +87,15 @@ fun AddAssessmentScreen(
                 )
 
                 if (title.isNotEmpty() || instruction.isNotEmpty()) {
-                    viewModel.addAssessment(assessment, onSuccess = {
+                    // Generate a custom ID (you can modify this based on your needs)
+                    val customId =
+                        "assessment_${System.currentTimeMillis()}"  // Example custom ID using timestamp
+
+                    // Add the custom ID to the assessment data
+                    val assessmentWithId = assessment.copy(id = customId)
+
+                    // Call the ViewModel to add the assessment with the custom ID
+                    viewModel.addAssessment(assessmentWithId, onSuccess = {
                         Toast.makeText(context, "Successfully Added", Toast.LENGTH_SHORT).show()
                         navController.popBackStack()
                     }, onFailure = { msg ->

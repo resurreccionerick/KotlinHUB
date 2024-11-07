@@ -51,6 +51,7 @@ import com.example.flutterhub_jetpackcompose.viewmodel.AppViewModel
 fun AssessmentDetailsScreen(
     navController: NavController,
     userID: String,
+    userName: String,
     viewModel: AppViewModel,
     context: Context,
     assessmentModel: AssessmentModel,
@@ -187,6 +188,7 @@ fun AssessmentDetailsScreen(
                                 viewModel.saveAssessmentLink(
                                     assessmentModel,
                                     userID,
+                                    userName,
                                     link,
                                     onSuccess = {
                                         Toast.makeText(

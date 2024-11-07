@@ -1,6 +1,7 @@
 package com.example.flutterhub_jetpackcompose.screen.assessment.admin
 
 import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -15,16 +16,29 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.flutterhub_jetpackcompose.data.models.AssessmentLink
+import com.example.flutterhub_jetpackcompose.data.models.AssessmentModel
 import com.example.flutterhub_jetpackcompose.screen.components.TrackAssessmentCard
 import com.example.flutterhub_jetpackcompose.viewmodel.AppViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TrackAssessmentScreen(navController: NavController, viewModel: AppViewModel, context: Context) {
+fun TrackAssessmentScreen(
+    navController: NavController,
+    viewModel: AppViewModel,
+    context: Context,
+    id: String,
+) {
+
+    LaunchedEffect(Unit) {
+        viewModel.loadLinks(id)
+        Toast.makeText(context, id, Toast.LENGTH_SHORT).show()
+    }
 
     Scaffold(
         topBar = {
@@ -47,12 +61,10 @@ fun TrackAssessmentScreen(navController: NavController, viewModel: AppViewModel,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             LazyColumn() {
-                items(viewModel.assessment) { assessment ->
-                    TrackAssessmentCard(navController, assessment, viewModel, context)
+                items(viewModel.links) { link ->
+                    TrackAssessmentCard(navController, link, viewModel, context)
                 }
             }
         }
-
     }
-
 }

@@ -7,8 +7,11 @@ import com.example.flutterhub_jetpackcompose.data.models.LessonModel
 import com.example.flutterhub_jetpackcompose.data.models.QuizModel
 import com.example.flutterhub_jetpackcompose.data.models.QuizScoreModel
 import com.example.flutterhub_jetpackcompose.data.models.UserModel
+import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserProfileChangeRequest
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.database
 import com.google.firebase.firestore.FirebaseFirestore
 import com.orhanobut.hawk.Hawk
 import kotlinx.coroutines.tasks.await
@@ -19,6 +22,7 @@ class LessonRepository @Inject constructor() {
 
     private var difficulty: String = Hawk.get("difficulty", "null")
     private val firestore = FirebaseFirestore.getInstance()
+    val realtimeDB = FirebaseDatabase.getInstance().reference
     private val auth = FirebaseAuth.getInstance()
 
 
@@ -335,11 +339,16 @@ class LessonRepository @Inject constructor() {
         onFailure: (String) -> Unit
     ) {
         try {
-            val assessmentRef = firestore.collection("assessment").document()
-            val assessmentWithID = assessmentModel.copy(id = assessmentRef.id)
-
-            assessmentRef.set(assessmentWithID).await()
-            onSuccess()
+            realtimeDB.child("assessment").child(assessmentModel.id).setValue(assessmentModel)
+                .addOnCompleteListener { complete ->
+                    if (complete.isSuccessful) {
+                        onSuccess()
+                    } else {
+                        onFailure("Something went wrong")
+                    }
+                }.addOnFailureListener { msg ->
+                    onFailure(msg.message.toString())
+                }.await()
         } catch (e: Exception) {
             onFailure(e.message.toString())
         }
@@ -351,7 +360,7 @@ class LessonRepository @Inject constructor() {
         onFailure: (String) -> Unit
     ) {
         try {
-            firestore.collection("assessment").document(assessmentModel.id).set(assessmentModel)
+            realtimeDB.child("assessment").child(assessmentModel.id).setValue(assessmentModel)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         onSuccess()
@@ -368,15 +377,21 @@ class LessonRepository @Inject constructor() {
     suspend fun getAssessment(
     ): List<AssessmentModel> {
         return try {
-            val snapshot = firestore.collection("assessment").get().await()
-            val assessments = snapshot.toObjects(AssessmentModel::class.java)
+            // Get data from Firebase Realtime Database
+            val snapshot = realtimeDB.child("assessment").get().await()
 
-            // Fetch links for each assessment
-            assessments.map { assessment ->
-                val links =
-                    getLinksForAssessment(assessment.id) // Fetch links for the specific assessment
-                assessment.copy(links = links) // Update the assessment with the fetched links
+            // Map the snapshot to a list of AssessmentModel objects
+            val assessmentList = mutableListOf<AssessmentModel>()
+
+            // Loop through all the children of the "assessment" node
+            for (child in snapshot.children) {
+                val assessment = child.getValue(AssessmentModel::class.java)
+                if (assessment != null) {
+                    assessmentList.add(assessment)
+                }
             }
+
+            assessmentList
 
         } catch (e: Exception) {
             Log.e("getAssessment ERROR: ", e.message.toString())
@@ -384,77 +399,52 @@ class LessonRepository @Inject constructor() {
         }
     }
 
-    private suspend fun getLinksForAssessment(assessmentId: String): List<AssessmentLink> {
-        return try {
-            // Fetch the snapshot of the "links" subcollection for the given assessmentId
-            val linksSnapshot = firestore.collection("assessment")
-                .document(assessmentId)
-                .collection("links")
-                .get() // Get all documents in the "links" collection
-                .await() // Await the result (this is a suspend function)
-
-            // Map over the documents in the snapshot to create a list of AssessmentLink objects
-            linksSnapshot.documents.flatMap { document ->
-                // Get all fields in the document
-                document.data?.mapNotNull { (fieldName, linkValue) ->
-                    // Log the field name and link value
-                    Log.d("AssessmentLink", "Field Name: $fieldName, Link Value: $linkValue")
-
-                    // Create an AssessmentLink object if the link value is not null
-                    linkValue?.let { link ->
-                        AssessmentLink(field = fieldName, link = link.toString())
-                    }
-                } ?: emptyList() // If data is null, return an empty list
-            }
-        } catch (e: Exception) {
-            // Log any errors that occur during the fetch process
-            Log.e("getLinksForAssessment ERROR: ", e.message.toString())
-            // Return an empty list if an error occurs
-            emptyList()
-        }
-    }
-
 
     fun deleteAssessment(id: String, onSuccess: () -> Unit, onFailure: (String) -> Unit) {
         try {
-            firestore.collection("assessment").document(id).delete().addOnCompleteListener { task ->
-                if (task.isSuccessful()) {
-                    onSuccess()
-                } else {
-                    onFailure("Something went wrong.")
+            realtimeDB.child("assessment").child(id).removeValue()
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        onSuccess()
+                    } else {
+                        onFailure("Something went wrong.")
+                    }
+                }.addOnFailureListener { msg ->
+                    onFailure(msg.message.toString())
                 }
-            }.addOnFailureListener { msg ->
-                onFailure(msg.message.toString())
-            }
         } catch (e: Exception) {
             Log.e("DELETE ASSESSMENT ERROR: ", e.message.toString())
         }
     }
 
     fun saveAssessmentLink(
-        assessmentId: String,
-        authName: String,
+        assessmentModel: AssessmentModel,
+        userId: String,
+        userName: String,
         link: String,
         onSuccess: () -> Unit,
         onFailure: (String) -> Unit
     ) {
+
         val linkData = hashMapOf(
-            authName to link
+            "id" to userId,
+            "name" to userName,
+            "checked" to false,
+            "link" to link
         )
 
-        firestore.collection("assessment").document(assessmentId).collection("links")
-            .document(authName).set(linkData)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
+        realtimeDB.child("links").child(assessmentModel.id).child(userId).setValue(linkData)
+            .addOnCompleteListener { db ->
+                if (db.isSuccessful) {
                     onSuccess()
                 } else {
-                    onFailure("Something went wrong.")
+                    onFailure("Something went wrong on saving")
                 }
             }.addOnFailureListener { msg ->
-                Log.e("saveAssessmentLink ERROR: ", msg.message.toString())
                 onFailure(msg.message.toString())
             }
     }
+
 
     fun updateAssessmentLink(
         assessmentId: String,
@@ -512,5 +502,27 @@ class LessonRepository @Inject constructor() {
                 Log.e("checkIfUserChecked ERROR", "Failed to fetch document: ${e.message}")
                 onResult(false) // Default to false on failure
             }
+    }
+
+    suspend fun getLinksByID(assessmentId: String): List<AssessmentLink> {
+        return try {
+            // Get data from Firebase Realtime Database
+            val snapshot = realtimeDB.child("links").child(assessmentId).get().await()
+
+            // Map the snapshot to a list of AssessmentModel objects
+            val link = mutableListOf<AssessmentLink>()
+
+            // Loop through all the children of the "assessment" node
+            for (child in snapshot.children) {
+                val assessmentLink = child.getValue(AssessmentLink::class.java)
+                if (assessmentLink != null) {
+                    link.add(assessmentLink)
+                }
+            }
+
+            link
+        } catch (e: Exception) {
+            emptyList()  // Return an empty list in case of error
+        }
     }
 }

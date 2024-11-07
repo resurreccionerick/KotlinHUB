@@ -67,6 +67,7 @@ dependencies {
     implementation("com.google.dagger:hilt-android:2.51.1")
     implementation(libs.firebase.storage)
     implementation(libs.androidx.espresso.core)
+    implementation(libs.firebase.database)
     kapt("com.google.dagger:hilt-android-compiler:2.51.1")
 
     implementation (libs.androidx.hilt.navigation.compose)
