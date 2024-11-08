@@ -188,6 +188,8 @@ fun NavGraph(navController: NavHostController, viewModel: AppViewModel, context:
             val id = backStackEntry.arguments?.getString("assessmentId") ?: ""
             // Fetch the lesson by ID (if needed)
             val assessment = viewModel.getAssessmentById(id)
+
+            Log.d("ASSESSMENT EDIT ID:", assessment.id)
             EditAssessmentScreen(navController, viewModel, assessment, context)
         }
 
@@ -198,16 +200,25 @@ fun NavGraph(navController: NavHostController, viewModel: AppViewModel, context:
             val id = backStackEntry.arguments?.getString("assessmentId") ?: ""
             // Fetch the lesson by ID (if needed)
             val assessment = viewModel.getAssessmentById(id)
-            AssessmentDetailsScreen(navController, user!!.id, user!!.name, viewModel, context, assessment)
+            val link = viewModel.getLinksById(assessment.id)
+
+            AssessmentDetailsScreen(
+                navController,
+                user!!.id,
+                user!!.name,
+                viewModel,
+                context,
+                assessment
+            )
         }
 
         composable(
             "assessmentTrack/{assessmentId}",
             arguments = listOf(navArgument("assessmentId") { type = NavType.StringType })
         ) { backStackEntry ->
-
             val id = backStackEntry.arguments?.getString("assessmentId") ?: ""
-            TrackAssessmentScreen(navController, viewModel, context, id)
+            val assessment = viewModel.getAssessmentById(id)
+            TrackAssessmentScreen(navController, viewModel, context, assessment.id)
         }
     }
 }

@@ -37,7 +37,6 @@ fun TrackAssessmentScreen(
 
     LaunchedEffect(Unit) {
         viewModel.loadLinks(id)
-        Toast.makeText(context, id, Toast.LENGTH_SHORT).show()
     }
 
     Scaffold(
@@ -62,7 +61,7 @@ fun TrackAssessmentScreen(
         ) {
             LazyColumn() {
                 items(viewModel.links) { link ->
-                    TrackAssessmentCard(navController, link, viewModel, context)
+                    TrackAssessmentCard(navController, link, viewModel, context, id)
                 }
             }
         }
