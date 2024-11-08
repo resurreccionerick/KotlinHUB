@@ -75,18 +75,18 @@ fun TrackAssessmentCard(
                         Checkbox(
                             checked = link.checked,
                             onCheckedChange = { isChecked ->
-                                Toast.makeText(
-                                    context,
-                                    isChecked.toString(),
-                                    Toast.LENGTH_SHORT
-                                ).show()
+//                                Toast.makeText(
+//                                    context,
+//                                    isChecked.toString(),
+//                                    Toast.LENGTH_SHORT
+//                                ).show()
 
                                 link.checked = isChecked
 
                                 viewModel.updateAssessmentLink(
                                     assessmentId = assessmentId,
                                     linkId = link.id,
-                                    authName = link.name,
+                                    authName = link.id,
                                     checked = isChecked,
                                     onSuccess = {
                                         Toast.makeText(
@@ -120,7 +120,7 @@ fun TrackAssessmentCard(
                             ),
                             modifier = Modifier.padding(8.dp)
                         ) {
-                            Text("View")
+                            Text("View", color = Color.White)
                         }
                     }
                 }

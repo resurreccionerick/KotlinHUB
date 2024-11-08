@@ -458,6 +458,7 @@ class LessonRepository @Inject constructor() {
             "checked" to checked
         )
 
+        Log.d("UPDATE ASSESSMENT LINK:" ,"ASSESSMENT ID: " + assessmentId + " LINK ID: ${linkId}" + " AUTH ID: ${authName}")
         realtimeDB.child("links").child(assessmentId).child(linkId).child(authName).updateChildren(linkData)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {

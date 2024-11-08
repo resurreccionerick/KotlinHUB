@@ -70,7 +70,7 @@ fun AssessmentCard(
                     colors = ButtonDefaults.buttonColors(containerColor = Color.Magenta.copy(alpha = 0.5f)),
                     modifier = Modifier.padding(8.dp)
                 ) {
-                    Text("Track")
+                    Text("Track", color = Color.White)
                 }
 
                 // Edit Button
@@ -81,7 +81,7 @@ fun AssessmentCard(
                     colors = ButtonDefaults.buttonColors(containerColor = Color.Blue),
                     modifier = Modifier.padding(8.dp) // Spacing between buttons
                 ) {
-                    Text("Edit")
+                    Text("Edit", color = Color.White)
                 }
 
                 // Delete Button
@@ -103,7 +103,7 @@ fun AssessmentCard(
                     colors = ButtonDefaults.buttonColors(containerColor = Color.Red),
                     modifier = Modifier.padding(8.dp)
                 ) {
-                    Text("Delete")
+                    Text("Delete", color = Color.White)
                 }
             }
         }
