@@ -162,6 +162,7 @@ fun NavGraph(navController: NavHostController, viewModel: AppViewModel, context:
 
         // ---------------------------------------------------- WEB VIEW ---------------------------------------------------- //
         composable("webView") {
+            //TheWebView("https://pl.kotl.in/Eaa0qDeSD")
             WebView(navController, context)
         }
 

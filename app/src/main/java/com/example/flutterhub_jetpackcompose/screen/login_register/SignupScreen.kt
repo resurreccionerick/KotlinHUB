@@ -86,7 +86,7 @@ fun SignupScreen(navController: NavController, viewModel: AppViewModel, context:
                 if (!isLoading) {
 
                     Image(
-                        painter = painterResource(id = R.drawable.app_logo),
+                        painter = painterResource(id = R.drawable.app_logo_login),
                         contentDescription = "app logo",
                         modifier = Modifier
                             .fillMaxWidth()

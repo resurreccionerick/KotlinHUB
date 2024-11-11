@@ -38,8 +38,6 @@ fun TrackAssessmentCard(
     assessmentId: String
 ) {
 
-    var checked by remember { mutableStateOf(link.checked) }
-
     Card(
         onClick = {
             navController.navigate("assessmentView/${link.id}")

@@ -12,13 +12,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -33,14 +29,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.flutterhub_jetpackcompose.R
 import com.example.flutterhub_jetpackcompose.viewmodel.AppViewModel
-import com.google.firebase.auth.FirebaseAuth
-import com.orhanobut.hawk.Hawk
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -79,7 +73,7 @@ fun LoginScreen(navController: NavController, viewModel: AppViewModel, context: 
                 if (!isLoading) {
 
                     Image(
-                        painter = painterResource(id = R.drawable.app_logo),
+                        painter = painterResource(id = R.drawable.app_logo_login),
                         contentDescription = "app logo",
                         modifier = Modifier
                             .fillMaxWidth()
@@ -121,30 +115,18 @@ fun LoginScreen(navController: NavController, viewModel: AppViewModel, context: 
                         if (email.isNotEmpty() && password.isNotEmpty()) {
                             isLoading = true
 
+
                             viewModel.userLogin(email, password,
                                 onSuccess = {
                                     isLoading = false
-
-//                            // Get the current user from Firebase
-//                            val currentUser = FirebaseAuth.getInstance().currentUser
-//                            val userEmail = currentUser?.email
-//
-//                            // Check if the email belongs to the admin or a regular user
-//                            if (userEmail == "esr@gmail.com") {
-//                                navController.navigate("adminHome") {
-//                                    popUpTo(0) // Clear the back stack
-//                                }
-//                            } else {
                                     navController.navigate("userHome")
-//                                {
-//                                    popUpTo(0) // Clear the back stack
-//                                }
-//                            }
                                 },
                                 onFailure = { errorMsg ->
                                     isLoading = false
                                     Toast.makeText(context, errorMsg, Toast.LENGTH_SHORT).show()
                                 })
+
+
                         } else {
                             Toast.makeText(context, "Please enter all fields", Toast.LENGTH_SHORT)
                                 .show()
@@ -160,7 +142,6 @@ fun LoginScreen(navController: NavController, viewModel: AppViewModel, context: 
                     }, modifier = Modifier.align(Alignment.CenterHorizontally)) {
                         Text("Don't have an account yet? Sign up now")
                     }
-
 
 
                 }

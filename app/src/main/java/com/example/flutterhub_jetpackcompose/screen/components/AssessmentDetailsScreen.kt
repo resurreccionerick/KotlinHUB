@@ -114,7 +114,7 @@ fun AssessmentDetailsScreen(
                             ExtendedFloatingActionButton(
                                 onClick = {
                                     openTheLink(
-                                        context, assessmentModel.links.getOrNull(0)?.link ?: ""
+                                        context, "https://pl.kotl.in/Eaa0qDeSD"
                                     )
                                 },
                                 icon = {
@@ -122,15 +122,20 @@ fun AssessmentDetailsScreen(
                                         Icons.Filled.Code, contentDescription = "Code Runner"
                                     )
                                 },
-                                text = { Text(text = "Let's do this!") },
+                                text = {
+                                    Text(
+                                        text = "Let's do this!",
+                                        color = MaterialTheme.colorScheme.onPrimary
+                                    )
+                                },
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .background(
                                         MaterialTheme.colorScheme.onTertiaryContainer,
                                         shape = RoundedCornerShape(8.dp)
                                     ),
-                                containerColor = MaterialTheme.colorScheme.onTertiaryContainer,
-                                contentColor = Color.White
+                                containerColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                                contentColor = MaterialTheme.colorScheme.primary
                             )
                         }
                     } else {
