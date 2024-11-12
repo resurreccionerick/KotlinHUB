@@ -59,6 +59,7 @@ fun AssessmentDetailsScreen(
     var link by rememberSaveable { mutableStateOf("") }
     var isApproved by remember { mutableStateOf(false) }
     var getLink by remember { mutableStateOf("") }
+    val openAlertDialog = remember { mutableStateOf(false) }
 
     // Fetch user check status on screen load
     LaunchedEffect(Unit) {
@@ -113,15 +114,17 @@ fun AssessmentDetailsScreen(
                         ) {
                             ExtendedFloatingActionButton(
                                 onClick = {
-                                    openTheLink(
-                                        context, assessmentModel.links.getOrNull(0)?.link ?: ""
-                                    )
+                                    openAlertDialog.value = true
                                 },
+
+
                                 icon = {
                                     Icon(
                                         Icons.Filled.Code, contentDescription = "Code Runner"
                                     )
                                 },
+
+
                                 text = { Text(text = "Let's do this!") },
                                 modifier = Modifier
                                     .fillMaxWidth()
@@ -129,7 +132,7 @@ fun AssessmentDetailsScreen(
                                         MaterialTheme.colorScheme.onTertiaryContainer,
                                         shape = RoundedCornerShape(8.dp)
                                     ),
-                                containerColor = MaterialTheme.colorScheme.onTertiaryContainer,
+                                containerColor = MaterialTheme.colorScheme.onPrimary,
                                 contentColor = Color.White
                             )
                         }
@@ -139,9 +142,7 @@ fun AssessmentDetailsScreen(
                         ) {
                             ExtendedFloatingActionButton(
                                 onClick = {
-                                    openTheLink(
-                                        context, getLink
-                                    )
+
                                 },
                                 icon = {
                                     Icon(
@@ -159,6 +160,13 @@ fun AssessmentDetailsScreen(
                                 contentColor = Color.White
                             )
                         }
+                    }
+
+                    if(openAlertDialog.value){
+                        InstructionsAlertDialog(
+                            context = context,
+                            shouldShowDialog = openAlertDialog
+                        )
                     }
                 }
             }
@@ -215,7 +223,7 @@ fun AssessmentDetailsScreen(
     })
 }
 
-fun openTheLink(context: Context, s: String) {
+public fun openTheLink(context: Context, s: String) {
     val url = s
     val intent = Intent(Intent.ACTION_VIEW)
     intent.data = Uri.parse(url)

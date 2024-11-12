@@ -1,8 +1,6 @@
 package com.example.flutterhub_jetpackcompose.screen.navigation
 
 import android.content.Context
-import android.util.Log
-import android.widget.Toast
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -13,9 +11,9 @@ import com.example.flutterhub_jetpackcompose.data.models.QuizScoreModel
 import com.example.flutterhub_jetpackcompose.data.models.UserModel
 import com.example.flutterhub_jetpackcompose.screen.home.AdminHomeScreen
 import com.example.flutterhub_jetpackcompose.screen.assessment.admin.AddAssessmentScreen
-import com.example.flutterhub_jetpackcompose.screen.assessment.user.AssessmentScreen
 import com.example.flutterhub_jetpackcompose.screen.assessment.admin.EditAssessmentScreen
 import com.example.flutterhub_jetpackcompose.screen.assessment.admin.TrackAssessmentScreen
+import com.example.flutterhub_jetpackcompose.screen.assessment.user.AssessmentHomeScreen
 import com.example.flutterhub_jetpackcompose.screen.lessons.admin.AddLessonScreen
 import com.example.flutterhub_jetpackcompose.screen.lessons.user.BasicHomeScreen
 import com.example.flutterhub_jetpackcompose.screen.lessons.admin.EditLessonScreen
@@ -174,7 +172,7 @@ fun NavGraph(navController: NavHostController, viewModel: AppViewModel, context:
 
         // ---------------------------------------------------- ASSESSMENT ---------------------------------------------------- //
         composable("assessmentHome") {
-            AssessmentScreen(navController, viewModel, context)
+            AssessmentHomeScreen(navController, viewModel, context)
         }
 
         composable("AddAssessment") {

@@ -54,9 +54,9 @@ fun ImageRowCard(
                 modifier = Modifier
                     .size(60.dp)
                     .clip(CircleShape)
-                    .padding(0.dp, 0.dp, 16.dp, 0.dp)
+                    .padding(0.dp, 0.dp, 8.dp, 0.dp)
             )
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(8.dp))
             Text(text = label, fontWeight = FontWeight.Bold)
         }
     }
