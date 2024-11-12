@@ -80,7 +80,7 @@ fun QuizCard(
                     colors = ButtonDefaults.buttonColors(containerColor = editColor),
                     modifier = Modifier.padding(end = 8.dp) // Spacing between buttons
                 ) {
-                    Text("Edit")
+                    Text("Edit", color = Color.White)
                 }
 
                 // Delete Button
@@ -103,7 +103,7 @@ fun QuizCard(
                     },
                     colors = ButtonDefaults.buttonColors(containerColor = deleteColor)
                 ) {
-                    Text("Delete")
+                    Text("Delete", color = Color.White)
                 }
             }
         }

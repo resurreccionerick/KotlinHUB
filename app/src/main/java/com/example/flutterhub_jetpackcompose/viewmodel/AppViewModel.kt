@@ -251,21 +251,6 @@ class AppViewModel @Inject constructor(
 
 
     // ---------------------------------------------------- ASSESSMENT ---------------------------------------------------- //
-    fun addAssessment(
-        assessmentModel: AssessmentModel,
-        onSuccess: () -> Unit,
-        onFailure: (String) -> Unit
-    ) {
-        viewModelScope.launch {
-            repository.addAssessment(assessmentModel, onSuccess = {
-                onSuccess()
-                loadAssessment()
-            }, onFailure = { msg ->
-                onFailure(msg)
-            })
-        }
-    }
-
     fun loadAssessment() {
         if (isLoading) return
 
@@ -281,6 +266,23 @@ class AppViewModel @Inject constructor(
         // This function returns the lesson by its ID.
         return assessment.find { it.id == assessmentId } ?: AssessmentModel()
     }
+
+
+    fun addAssessment(
+        assessmentModel: AssessmentModel,
+        onSuccess: () -> Unit,
+        onFailure: (String) -> Unit
+    ) {
+        viewModelScope.launch {
+            repository.addAssessment(assessmentModel, onSuccess = {
+                onSuccess()
+                loadAssessment()
+            }, onFailure = { msg ->
+                onFailure(msg)
+            })
+        }
+    }
+
 
     fun updateAssessment(
         assessment: AssessmentModel,
@@ -329,13 +331,14 @@ class AppViewModel @Inject constructor(
 
     fun updateAssessmentLink(
         assessmentId: String,
+        linkId: String,
         authName: String,
         checked: Boolean,
         onSuccess: () -> Unit,
         onFailure: (String) -> Unit
     ) {
         viewModelScope.launch {
-            repository.updateAssessmentLink(assessmentId, authName, checked,
+            repository.updateAssessmentLink(assessmentId,linkId, authName, checked,
                 onSuccess = {
                     onSuccess()
                 }, onFailure = { msg ->

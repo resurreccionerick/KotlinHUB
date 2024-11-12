@@ -34,10 +34,9 @@ fun TrackAssessmentCard(
     navController: NavController,
     link: AssessmentLink,
     viewModel: AppViewModel,
-    context: Context
+    context: Context,
+    assessmentId: String
 ) {
-
-    var checked by remember { mutableStateOf(link.checked) }
 
     Card(
         onClick = {
@@ -60,7 +59,7 @@ fun TrackAssessmentCard(
                 horizontalArrangement = Arrangement.SpaceBetween // Spread text and buttons
             ) {
                 Text(
-                    text = "Name: ${link.field}",
+                    text = "Name: ${link.name}",
                     style = MaterialTheme.typography.bodyLarge,
                     modifier = Modifier.padding(vertical = 4.dp)
                 )
@@ -74,13 +73,19 @@ fun TrackAssessmentCard(
                         Checkbox(
                             checked = link.checked,
                             onCheckedChange = { isChecked ->
+//                                Toast.makeText(
+//                                    context,
+//                                    isChecked.toString(),
+//                                    Toast.LENGTH_SHORT
+//                                ).show()
+
                                 link.checked = isChecked
 
-                                // Update Firestore with the modified assessmentModel
                                 viewModel.updateAssessmentLink(
-                                    assessmentId = link.id,
-                                    authName = link.field,
-                                    checked = checked,
+                                    assessmentId = assessmentId,
+                                    linkId = link.id,
+                                    authName = link.id,
+                                    checked = isChecked,
                                     onSuccess = {
                                         Toast.makeText(
                                             context,
@@ -113,7 +118,7 @@ fun TrackAssessmentCard(
                             ),
                             modifier = Modifier.padding(8.dp)
                         ) {
-                            Text("View")
+                            Text("View", color = Color.White)
                         }
                     }
                 }
