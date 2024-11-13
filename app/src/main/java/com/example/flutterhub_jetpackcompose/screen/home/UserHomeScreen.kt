@@ -20,8 +20,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -34,6 +34,8 @@ import com.orhanobut.hawk.Hawk
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UserHomeScreen(navController: NavController, viewModel: AppViewModel, context: Context) {
+
+    LaunchedEffect(Unit) { viewModel.refreshProfileDetails() }
 
     Scaffold(
         topBar = {
@@ -116,7 +118,7 @@ fun UserHomeScreen(navController: NavController, viewModel: AppViewModel, contex
 
                     Spacer(modifier = Modifier.height(50.dp))
 
-                    Text("Other Topics: ",  fontWeight = FontWeight.Bold)
+                    Text("Other Topics: ", fontWeight = FontWeight.Bold)
 
                     Box(
                         modifier = Modifier

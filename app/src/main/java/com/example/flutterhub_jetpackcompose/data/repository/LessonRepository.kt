@@ -7,13 +7,13 @@ import com.example.flutterhub_jetpackcompose.data.models.LessonModel
 import com.example.flutterhub_jetpackcompose.data.models.QuizModel
 import com.example.flutterhub_jetpackcompose.data.models.QuizScoreModel
 import com.example.flutterhub_jetpackcompose.data.models.UserModel
-import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.database
 import com.google.firebase.firestore.FirebaseFirestore
 import com.orhanobut.hawk.Hawk
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
@@ -38,7 +38,6 @@ class LessonRepository @Inject constructor() {
     }
 
 
-
     // ---------------------------------------------------- USER PART ---------------------------------------------------- //
     suspend fun userRegister(
         name: String, email: String, pass: String, onSuccess: () -> Unit, //callback if success
@@ -49,6 +48,18 @@ class LessonRepository @Inject constructor() {
 
             // Get current user after registration
             val user = authResult.user
+
+            val theUser = UserModel(
+                id = user!!.uid,
+                name = name,
+                email = email,
+                intermediateScore = "0",
+                basicScore = "0"
+            )
+
+            firestore.collection("users") // Generate a document reference with an auto-ID
+                .document(user!!.uid).set(theUser)
+
 
             // Check if user is not null, then update their profile with name
             user?.let {
@@ -67,14 +78,17 @@ class LessonRepository @Inject constructor() {
         }
     }
 
-    fun userLogin(
+    suspend fun userLogin(
         email: String, pass: String, onSuccess: () -> Unit, onFailure: (String) -> Unit
     ) {
         try {
             auth.signInWithEmailAndPassword(email, pass).addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     onSuccess()
-                    saveProfileDetails()
+                    // Launch a coroutine to call the suspend function
+                    GlobalScope.launch {
+                        saveProfileDetails()
+                    }
                 } else {
                     onFailure("No account found")
                 }
@@ -102,19 +116,35 @@ class LessonRepository @Inject constructor() {
         }
     }
 
-    private fun saveProfileDetails() { //save to hawk
+    suspend fun saveProfileDetails() { // Save to Hawk
         val firebaseUser = auth.currentUser
 
         if (firebaseUser != null) {
+            val userSnapshot =
+                firestore.collection("users").document(firebaseUser.uid).get().await()
+            userSnapshot.toObject(UserModel::class.java)
+
+            Log.d("PROFILE DETAILS :", "basic " + userSnapshot.get("basicScore"))
+            Log.d("PROFILE DETAILS :", "int " + userSnapshot.get("intermediateScore"))
+
+            // Safely extract scores as Strings
+            val basicScore = userSnapshot.get("basicScore") as? String ?: "0"
+            val intermediateScore = userSnapshot.get("intermediateScore") as? String ?: "0"
+
+            // Create the UserModel object with scores
             val user = UserModel(
                 id = firebaseUser.uid,
                 name = firebaseUser.displayName ?: "",
-                email = firebaseUser.email ?: ""
+                email = firebaseUser.email ?: "",
+                basicScore = basicScore.toString(),
+                intermediateScore = intermediateScore.toString()
             )
 
+            // Save to Hawk
             Hawk.put("user_details", user)
 
-            if (firebaseUser.email.equals("esr@gmail.com") || firebaseUser.email.equals("hanansworks@gmail.com")) {
+            // Check and save role based on email
+            if (firebaseUser.email == "esr@gmail.com" || firebaseUser.email == "hanansworks@gmail.com") {
                 Hawk.put("role", "admin")
             } else {
                 Hawk.put("role", "user")
@@ -459,8 +489,12 @@ class LessonRepository @Inject constructor() {
             "checked" to checked
         )
 
-        Log.d("UPDATE ASSESSMENT LINK:" ,"ASSESSMENT ID: " + assessmentId + " LINK ID: ${linkId}" + " AUTH ID: ${authName}")
-        realtimeDB.child("links").child(assessmentId).child(linkId).child(authName).updateChildren(linkData)
+        Log.d(
+            "UPDATE ASSESSMENT LINK:",
+            "ASSESSMENT ID: " + assessmentId + " LINK ID: ${linkId}" + " AUTH ID: ${authName}"
+        )
+        realtimeDB.child("links").child(assessmentId).child(linkId).child(authName)
+            .updateChildren(linkData)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     onSuccess()

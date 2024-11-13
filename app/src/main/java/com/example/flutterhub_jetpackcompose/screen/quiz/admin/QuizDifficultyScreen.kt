@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -20,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.flutterhub_jetpackcompose.R
+import com.example.flutterhub_jetpackcompose.data.models.UserModel
 import com.example.flutterhub_jetpackcompose.screen.components.ImageCard
 import com.example.flutterhub_jetpackcompose.viewmodel.AppViewModel
 import com.orhanobut.hawk.Hawk
@@ -31,6 +33,7 @@ fun QuizDifficultyScreen(
     viewModel: AppViewModel,
     context: Context
 ) {
+    val userModel = Hawk.get<UserModel>("user_details")
 
     Scaffold(
         topBar = {
@@ -48,42 +51,59 @@ fun QuizDifficultyScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(16.dp)
-            )
-            {
+            ) {
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(paddingValues)
-                )
-                {
-                    ImageCard(
-                        label = "Basic",
-                        imageRes = R.drawable.basic, 300,
-                        onClick = {
-                            Hawk.put("difficulty", "basic")
-                            if (viewModel.quizzes.isEmpty()) { // Call refresh only if needed
-                                viewModel.refreshQuizDifficulty()
+                ) {
+                    // Basic Section
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 16.dp)
+                    ) {
+                        Text(
+                            text = "Current Score: ${userModel.basicScore}",
+                            modifier = Modifier.padding(bottom = 8.dp),
+                        )
+                        ImageCard(
+                            label = "Basic",
+                            imageRes = R.drawable.basic, 250,
+                            onClick = {
+                                Hawk.put("difficulty", "basic")
+                                if (viewModel.quizzes.isEmpty()) { // Call refresh only if needed
+                                    viewModel.refreshQuizDifficulty()
+                                }
+                                navController.navigate("basicQuiz")
                             }
-                            navController.navigate("basicQuiz")
-                        }
+                        )
+                    }
 
-                    )
+                    Spacer(modifier = Modifier.height(32.dp))
 
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    ImageCard(
-                        label = "Intermediate",
-                        imageRes = R.drawable.muscle, 300,
-                        onClick = {
-                            Hawk.put("difficulty", "intermediate")
-                            viewModel.refreshQuizDifficulty()
-                            navController.navigate("intermediateQuiz")
-                        }
-                    )
+                    // Intermediate Section
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 16.dp)
+                    ) {
+                        Text(
+                            text = "Current Score: ${userModel.intermediateScore}",
+                            modifier = Modifier.padding(bottom = 8.dp)
+                        )
+                        ImageCard(
+                            label = "Intermediate",
+                            imageRes = R.drawable.muscle, 250,
+                            onClick = {
+                                Hawk.put("difficulty", "intermediate")
+                                viewModel.refreshQuizDifficulty()
+                                navController.navigate("intermediateQuiz")
+                            }
+                        )
+                    }
                 }
             }
-
-
         }
     )
 

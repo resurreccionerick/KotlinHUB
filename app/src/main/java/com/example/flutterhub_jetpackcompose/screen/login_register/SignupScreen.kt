@@ -94,7 +94,7 @@ fun SignupScreen(navController: NavController, viewModel: AppViewModel, context:
                             .padding(bottom = 16.dp)
                     )
 
-//            Text("SIGN UP")
+
                     OutlinedTextField(
                         value = name,
                         onValueChange = { name = it },

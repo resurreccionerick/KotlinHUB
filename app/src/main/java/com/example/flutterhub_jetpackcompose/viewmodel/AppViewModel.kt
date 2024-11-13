@@ -320,7 +320,7 @@ class AppViewModel @Inject constructor(
         onFailure: (String) -> Unit
     ) {
         viewModelScope.launch {
-            repository.saveAssessmentLink(assessmentModel, authID,authName, link,
+            repository.saveAssessmentLink(assessmentModel, authID, authName, link,
                 onSuccess = {
                     onSuccess()
                 }, onFailure = { msg ->
@@ -338,7 +338,7 @@ class AppViewModel @Inject constructor(
         onFailure: (String) -> Unit
     ) {
         viewModelScope.launch {
-            repository.updateAssessmentLink(assessmentId,linkId, authName, checked,
+            repository.updateAssessmentLink(assessmentId, linkId, authName, checked,
                 onSuccess = {
                     onSuccess()
                 }, onFailure = { msg ->
@@ -377,5 +377,9 @@ class AppViewModel @Inject constructor(
     fun getLinksById(linkId: String): AssessmentLink {
         // This function returns the lesson by its ID.
         return links.find { it.id == linkId } ?: AssessmentLink()
+    }
+
+    suspend fun refreshProfileDetails() {
+        repository.saveProfileDetails()
     }
 }
