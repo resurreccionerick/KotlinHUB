@@ -8,11 +8,13 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.ui.graphics.Color
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 
 @Composable
-fun InstructionsAlertDialog(context: Context, shouldShowDialog: MutableState<Boolean>) {
+fun InstructionsAlertDialog(context: Context, onDismiss: () -> Unit) {
+    val openWatchDialog = remember { mutableStateOf(false) }
+
     AlertDialog(
         icon = {
             Icon(Icons.Default.Info, contentDescription = "Example Icon")
@@ -28,9 +30,18 @@ fun InstructionsAlertDialog(context: Context, shouldShowDialog: MutableState<Boo
                         "4. Paste the copied link into the input text box at the bottom part of the assessment form/page."
             )
         },
+        dismissButton = {
+            TextButton(
+                onClick = {
+                    openWatchDialog.value = true
+                }
+            ) {
+                Text("Watch Tutorial")
+            }
+        },
 
         onDismissRequest = {
-            shouldShowDialog.value = false
+            onDismiss()
         },
         confirmButton = {
             TextButton(
@@ -42,6 +53,11 @@ fun InstructionsAlertDialog(context: Context, shouldShowDialog: MutableState<Boo
                 }
             ) {
                 Text("Confirm")
+            }
+
+            if (openWatchDialog.value) {
+                WatchInstructions(context = context, onDismiss = { openWatchDialog.value = false }
+                )
             }
         },
     )

@@ -59,7 +59,7 @@ fun AssessmentDetailsScreen(
     var link by rememberSaveable { mutableStateOf("") }
     var isApproved by remember { mutableStateOf(false) }
     var getLink by remember { mutableStateOf("") }
-    val openAlertDialog = remember { mutableStateOf(false) }
+    var openAlertDialog = remember { mutableStateOf(false) }
 
     // Fetch user check status on screen load
     LaunchedEffect(Unit) {
@@ -132,7 +132,7 @@ fun AssessmentDetailsScreen(
                                         MaterialTheme.colorScheme.onTertiaryContainer,
                                         shape = RoundedCornerShape(8.dp)
                                     ),
-                                containerColor = MaterialTheme.colorScheme.onPrimary,
+                                containerColor = MaterialTheme.colorScheme.onTertiaryContainer,
                                 contentColor = Color.White
                             )
                         }
@@ -162,10 +162,9 @@ fun AssessmentDetailsScreen(
                         }
                     }
 
-                    if(openAlertDialog.value){
+                    if (openAlertDialog.value) {
                         InstructionsAlertDialog(
-                            context = context,
-                            shouldShowDialog = openAlertDialog
+                            context = context, onDismiss = { openAlertDialog.value = false }
                         )
                     }
                 }
@@ -180,12 +179,10 @@ fun AssessmentDetailsScreen(
                         .background(Color.LightGray.copy(0.5f))
                         .padding(16.dp)
                 ) {
-                    OutlinedTextField(
-                        modifier = Modifier.fillMaxWidth(),
+                    OutlinedTextField(modifier = Modifier.fillMaxWidth(),
                         value = link,
                         onValueChange = { link = it },
-                        label = { Text("Paste your answer link here") }
-                    )
+                        label = { Text("Paste your answer link here") })
 
                     Button(
                         modifier = Modifier
@@ -193,8 +190,7 @@ fun AssessmentDetailsScreen(
                             .padding(top = 8.dp),
                         onClick = {
                             if (isKotlinLangUrl(link)) {
-                                viewModel.saveAssessmentLink(
-                                    assessmentModel,
+                                viewModel.saveAssessmentLink(assessmentModel,
                                     userID,
                                     userName,
                                     link,
@@ -208,8 +204,7 @@ fun AssessmentDetailsScreen(
                                         Toast.makeText(
                                             context, msg, Toast.LENGTH_SHORT
                                         ).show()
-                                    }
-                                )
+                                    })
                             } else {
                                 Toast.makeText(context, "Invalid Link", Toast.LENGTH_SHORT).show()
                             }

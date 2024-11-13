@@ -62,14 +62,15 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
 
-    implementation ("androidx.compose.material:material-icons-extended:1.0.0")
+    implementation (libs.androidx.material.icons.extended)
 
-    implementation("com.google.dagger:hilt-android:2.51.1")
+    implementation(libs.hilt.android)
     implementation(libs.firebase.storage)
     implementation(libs.androidx.espresso.core)
     implementation(libs.firebase.database)
     implementation(libs.firebase.database.ktx)
-    kapt("com.google.dagger:hilt-android-compiler:2.51.1")
+    implementation(libs.androidx.media3.exoplayer)
+    kapt(libs.hilt.android.compiler.v2511)
 
     implementation (libs.androidx.hilt.navigation.compose)
 
@@ -78,11 +79,16 @@ dependencies {
     implementation(libs.firebase.auth)
     implementation(libs.firebase.firestore)
 
-    implementation ("io.coil-kt:coil-compose:2.4.0")
+    implementation (libs.coil.compose)
 
-    implementation ("com.orhanobut:hawk:2.0.1")
+    implementation (libs.hawk)
 
     implementation (libs.androidx.navigation.compose)
+
+    implementation(libs.coil.gif)
+
+    implementation("com.google.android.exoplayer:exoplayer:2.19.1")
+
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
