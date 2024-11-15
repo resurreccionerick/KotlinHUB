@@ -44,6 +44,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.flutterhub_jetpackcompose.data.models.AssessmentModel
 import com.example.flutterhub_jetpackcompose.viewmodel.AppViewModel
+import com.orhanobut.hawk.Hawk
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -114,6 +115,9 @@ fun AssessmentDetailsScreen(
                         ) {
                             ExtendedFloatingActionButton(
                                 onClick = {
+//                                    Hawk.put("title", "")
+//                                    Hawk.put("link", "https://onecompiler.com/kotlin")
+//                                    navController.navigate("webView")
                                     openAlertDialog.value = true
                                 },
 

@@ -87,7 +87,7 @@ fun BasicQuizHomeScreen(
                         onClick = {
                             Hawk.put("difficulty", "basic")
                             viewModel.refreshLeaderboardsDifficulty()
-                            navController.navigate("scoreBasicQuiz")
+                            navController.navigate("scoreQuiz")
                         }) {
                         Icon(
                             Icons.Default.Star,

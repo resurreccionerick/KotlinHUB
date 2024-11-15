@@ -32,12 +32,11 @@ class MainActivity : ComponentActivity() {
                 val navBackStackEntry by navController.currentBackStackEntryAsState()   // Observe the current route
                 val currentRoute = navBackStackEntry?.destination?.route
 
-
                 if (Hawk.get<String?>("role") == null) {
                     NavGraph(navController, viewModel, this@MainActivity)
                 } else {
                     if (!Hawk.get<String?>("role").equals("admin")) {
-                        if (currentRoute == "userHome" || currentRoute == "userSettings") {
+                        if (currentRoute == "userHome" || currentRoute == "scoreQuiz" || currentRoute == "userSettings") {
                             Scaffold(bottomBar = {
                                 BottomNavigationBar(navController)
                             }

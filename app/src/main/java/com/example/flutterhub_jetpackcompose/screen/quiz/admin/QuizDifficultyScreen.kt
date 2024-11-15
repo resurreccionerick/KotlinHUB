@@ -63,10 +63,13 @@ fun QuizDifficultyScreen(
                             .fillMaxWidth()
                             .padding(bottom = 16.dp)
                     ) {
-                        Text(
-                            text = "Current Score: ${userModel.basicScore}",
-                            modifier = Modifier.padding(bottom = 8.dp),
-                        )
+                        if (!Hawk.get<String?>("role").equals("admin")) {
+                            Text(
+                                text = "Current Score: ${userModel.basicScore}",
+                                modifier = Modifier.padding(bottom = 8.dp),
+                            )
+                        }
+
                         ImageCard(
                             label = "Basic",
                             imageRes = R.drawable.basic, 250,
@@ -88,10 +91,12 @@ fun QuizDifficultyScreen(
                             .fillMaxWidth()
                             .padding(bottom = 16.dp)
                     ) {
-                        Text(
-                            text = "Current Score: ${userModel.intermediateScore}",
-                            modifier = Modifier.padding(bottom = 8.dp)
-                        )
+                        if (!Hawk.get<String?>("role").equals("admin")) {
+                            Text(
+                                text = "Current Score: ${userModel.intermediateScore}",
+                                modifier = Modifier.padding(bottom = 8.dp),
+                            )
+                        }
                         ImageCard(
                             label = "Intermediate",
                             imageRes = R.drawable.muscle, 250,

@@ -1,7 +1,10 @@
 package com.example.flutterhub_jetpackcompose.screen.components
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Code
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Leaderboard
+import androidx.compose.material.icons.filled.Score
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -10,7 +13,6 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -18,7 +20,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 
 @Composable
 fun BottomNavigationBar(navController: NavHostController) {
-    val items = listOf(Screen.Home, Screen.Settings)
+    val items = listOf(Screen.Home, Screen.Assessment, Screen.Settings)
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
@@ -49,6 +51,7 @@ fun BottomNavigationBar(navController: NavHostController) {
 
 sealed class Screen(val route: String, val label: String, val icon: ImageVector) {
     data object Home : Screen("userHome", "Home", Icons.Default.Home)
+    data object Assessment : Screen("scoreQuiz", "Leaderboards", Icons.Default.Leaderboard)
     data object Settings : Screen("userSettings", "Settings", Icons.Default.Settings)
 }
 

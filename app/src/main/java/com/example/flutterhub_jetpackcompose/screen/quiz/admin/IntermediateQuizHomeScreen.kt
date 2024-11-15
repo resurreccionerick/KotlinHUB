@@ -89,7 +89,7 @@ fun IntermediateQuizHomeScreen(
                         onClick = {
                             Hawk.put("difficulty", "intermediate")
                             viewModel.refreshLeaderboardsDifficulty()
-                            navController.navigate("scoreBasicQuiz")
+                            navController.navigate("scoreQuiz")
                         }) {
                         Icon(
                             Icons.Default.Star,

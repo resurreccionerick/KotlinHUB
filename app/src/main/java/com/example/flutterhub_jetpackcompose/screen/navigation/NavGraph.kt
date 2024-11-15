@@ -167,7 +167,7 @@ fun NavGraph(navController: NavHostController, viewModel: AppViewModel, context:
 
 
         // ---------------------------------------------------- SCORE ---------------------------------------------------- //
-        composable("scoreBasicQuiz") {
+        composable("scoreQuiz") {
             LeaderboardScreen(navController, viewModel, context)
         }
 

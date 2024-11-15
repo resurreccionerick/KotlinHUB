@@ -39,7 +39,7 @@ fun SettingsScreen(navController: NavController, viewModel: AppViewModel, contex
         Card(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(210.dp),
+                .height(200.dp),
             elevation = CardDefaults.cardElevation(4.dp)
         ) {
             Image(

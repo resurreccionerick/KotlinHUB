@@ -26,6 +26,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.flutterhub_jetpackcompose.R
+import com.example.flutterhub_jetpackcompose.data.models.UserModel
 import com.example.flutterhub_jetpackcompose.screen.components.ImageCard
 import com.example.flutterhub_jetpackcompose.screen.components.ImageRowCard
 import com.example.flutterhub_jetpackcompose.viewmodel.AppViewModel
@@ -36,11 +37,17 @@ import com.orhanobut.hawk.Hawk
 fun UserHomeScreen(navController: NavController, viewModel: AppViewModel, context: Context) {
 
     LaunchedEffect(Unit) { viewModel.refreshProfileDetails() }
+    val user: UserModel? = Hawk.get("user_details")
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("KotlinHub") },
+                title = {
+                    Text(
+                        "Your Current Score: " + ((user?.basicScore?.toIntOrNull()
+                            ?: 0) + (user?.intermediateScore?.toIntOrNull() ?: 0))
+                    )
+                },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primary,
                     titleContentColor = MaterialTheme.colorScheme.onPrimary,
@@ -63,11 +70,11 @@ fun UserHomeScreen(navController: NavController, viewModel: AppViewModel, contex
                         .fillMaxSize()
                         .padding(16.dp)
                 ) {
-                    Text(
-                        "What would you like to learn today?",
-                        fontWeight = FontWeight.Bold,
-                        modifier = Modifier.padding(bottom = 16.dp, top = 8.dp)
-                    )
+//                    Text(
+//                        "What would you like to learn today?",
+//                        fontWeight = FontWeight.Bold,
+//                        modifier = Modifier.padding(bottom = 16.dp, top = 8.dp)
+//                    )
 
                     Row(
                         modifier = Modifier.weight(2f)
