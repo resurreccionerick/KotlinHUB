@@ -94,6 +94,7 @@ fun UserQuizScreen(
                         name = userModel.name
                     )
 
+                viewModel.refreshLessonDifficulty()
                 viewModel.saveQuizScore(scoreModel,
                     onSuccess = {
                         Toast.makeText(context, "Score saved", Toast.LENGTH_SHORT).show();

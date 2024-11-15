@@ -4,6 +4,6 @@ data class UserModel(
     val id: String = "",
     val name: String = "",
     val email: String = "",
-    val basicScore: String = "",
-    val intermediateScore: String = ""
+    val basic_Score: String = "",
+    val intermediate_Score: String = ""
 )

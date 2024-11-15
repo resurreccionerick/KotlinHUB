@@ -51,7 +51,7 @@ fun BottomNavigationBar(navController: NavHostController) {
 
 sealed class Screen(val route: String, val label: String, val icon: ImageVector) {
     data object Home : Screen("userHome", "Home", Icons.Default.Home)
-    data object Assessment : Screen("scoreQuiz", "Leaderboards", Icons.Default.Leaderboard)
+    data object Assessment : Screen("overallLeaderboards", "Leaderboards", Icons.Default.Leaderboard)
     data object Settings : Screen("userSettings", "Settings", Icons.Default.Settings)
 }
 

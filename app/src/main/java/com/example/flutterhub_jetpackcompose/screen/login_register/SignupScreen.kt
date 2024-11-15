@@ -151,19 +151,20 @@ fun SignupScreen(navController: NavController, viewModel: AppViewModel, context:
                                 name, email, password,
                                 onSuccess = {
                                     isLoading = false
+                                    navController.popBackStack()
+
                                     Toast.makeText(
                                         context,
                                         "Successfully Registered",
                                         Toast.LENGTH_SHORT
                                     )
                                         .show()
-
-                                    navController.popBackStack()
                                 },
                                 onFailure = { errorMsg ->
                                     isLoading = false
                                     Toast.makeText(context, errorMsg, Toast.LENGTH_SHORT).show()
                                 })
+
                         } else {
                             Toast.makeText(context, "Please enter all fields", Toast.LENGTH_SHORT)
                                 .show()

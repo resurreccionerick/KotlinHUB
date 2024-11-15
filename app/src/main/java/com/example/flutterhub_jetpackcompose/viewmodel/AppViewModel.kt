@@ -43,6 +43,10 @@ class AppViewModel @Inject constructor(
         loadLeaderboards()
     }
 
+    fun getOverallLeaderboards(){
+        loadOverallLeaderboards()
+    }
+
 
     private fun loadLessons() {
         if (isLoading) return
@@ -246,6 +250,15 @@ class AppViewModel @Inject constructor(
         viewModelScope.launch {
             scores.clear()
             scores.addAll(repository.getScores())
+        }
+    }
+
+    private fun loadOverallLeaderboards() {
+        if (isLoading) return
+
+        viewModelScope.launch {
+            scores.clear()
+            scores.addAll(repository.getCombinedScores())
         }
     }
 

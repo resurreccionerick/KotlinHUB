@@ -65,7 +65,7 @@ fun QuizDifficultyScreen(
                     ) {
                         if (!Hawk.get<String?>("role").equals("admin")) {
                             Text(
-                                text = "Current Score: ${userModel.basicScore}",
+                                text = "Current Score: ${userModel.basic_Score}",
                                 modifier = Modifier.padding(bottom = 8.dp),
                             )
                         }
@@ -93,7 +93,7 @@ fun QuizDifficultyScreen(
                     ) {
                         if (!Hawk.get<String?>("role").equals("admin")) {
                             Text(
-                                text = "Current Score: ${userModel.intermediateScore}",
+                                text = "Current Score: ${userModel.intermediate_Score}",
                                 modifier = Modifier.padding(bottom = 8.dp),
                             )
                         }

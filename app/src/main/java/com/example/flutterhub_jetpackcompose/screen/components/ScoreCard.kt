@@ -34,8 +34,8 @@ fun ScoreCard(
         shape = RoundedCornerShape(8.dp),
         modifier = Modifier
             .fillMaxWidth()
-            .padding(3.dp),
-        elevation = CardDefaults.cardElevation(1.dp)
+            .padding(8.dp),
+        elevation = CardDefaults.cardElevation(4.dp)
     )
     {
         Row(

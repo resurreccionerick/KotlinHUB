@@ -33,6 +33,7 @@ import com.example.flutterhub_jetpackcompose.screen.login_register.SignupScreen
 import com.example.flutterhub_jetpackcompose.screen.home.UserHomeScreen
 import com.example.flutterhub_jetpackcompose.screen.user.UserQuizScreen
 import com.example.flutterhub_jetpackcompose.screen.components.LeaderboardScreen
+import com.example.flutterhub_jetpackcompose.screen.components.OverallLeaderboardScreen
 import com.example.flutterhub_jetpackcompose.screen.home.SettingsScreen
 import com.example.flutterhub_jetpackcompose.viewmodel.AppViewModel
 import com.orhanobut.hawk.Hawk
@@ -169,6 +170,10 @@ fun NavGraph(navController: NavHostController, viewModel: AppViewModel, context:
         // ---------------------------------------------------- SCORE ---------------------------------------------------- //
         composable("scoreQuiz") {
             LeaderboardScreen(navController, viewModel, context)
+        }
+
+        composable("overallLeaderboards") {
+            OverallLeaderboardScreen(navController, viewModel, context)
         }
 
 

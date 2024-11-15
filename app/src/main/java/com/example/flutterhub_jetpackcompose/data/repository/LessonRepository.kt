@@ -17,7 +17,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
-
 //The repository handles FireStore operations. Here’s an example for adding lessons to Firestore.
 class LessonRepository @Inject constructor() {
 
@@ -26,9 +25,9 @@ class LessonRepository @Inject constructor() {
     val realtimeDB = FirebaseDatabase.getInstance().reference
     private val auth = FirebaseAuth.getInstance()
 
-
     fun refreshDifficulty() {
         difficulty = Hawk.get("difficulty", "default")
+
         Log.d("Hawk LessonRepository", "Difficulty refreshed to: $difficulty")
     }
 
@@ -40,7 +39,10 @@ class LessonRepository @Inject constructor() {
 
     // ---------------------------------------------------- USER PART ---------------------------------------------------- //
     suspend fun userRegister(
-        name: String, email: String, pass: String, onSuccess: () -> Unit, //callback if success
+        name: String,
+        email: String,
+        pass: String,
+        onSuccess: () -> Unit, // callback if success
         onFailure: (String) -> Unit
     ) {
         try {
@@ -49,27 +51,29 @@ class LessonRepository @Inject constructor() {
             // Get current user after registration
             val user = authResult.user
 
-            val theUser = UserModel(
-                id = user!!.uid,
-                name = name,
-                email = email,
-                intermediateScore = "0",
-                basicScore = "0"
-            )
-
-            firestore.collection("users") // Generate a document reference with an auto-ID
-                .document(user!!.uid).set(theUser)
+            if (user != null) {
+                val theUser = UserModel(
+                    id = user.uid,
+                    name = name,
+                    email = email,
+                    intermediate_Score = "0",
+                    basic_Score = "0"
+                )
 
 
-            // Check if user is not null, then update their profile with name
-            user?.let {
-                val profileUpdates = UserProfileChangeRequest.Builder().setDisplayName(name).build()
+                // Save the user data to the "users" collection with the UID as the document ID
+                firestore.collection("users")
+                    .document(user.uid)
+                    .set(theUser)
+                    .await() // Await the set operation to ensure it completes
 
                 // Update the user's profile with name
-                it.updateProfile(profileUpdates).await()
+                val profileUpdates = UserProfileChangeRequest.Builder().setDisplayName(name).build()
+                user.updateProfile(profileUpdates).await()
 
+                // Call onSuccess if everything is successful
                 onSuccess()
-            } ?: run {
+            } else {
                 onFailure("User registration failed. Please try again.")
             }
         } catch (e: Exception) {
@@ -77,6 +81,7 @@ class LessonRepository @Inject constructor() {
             Log.e("userRegister ERROR: ", e.message.toString())
         }
     }
+
 
     suspend fun userLogin(
         email: String, pass: String, onSuccess: () -> Unit, onFailure: (String) -> Unit
@@ -124,20 +129,20 @@ class LessonRepository @Inject constructor() {
                 firestore.collection("users").document(firebaseUser.uid).get().await()
             userSnapshot.toObject(UserModel::class.java)
 
-            Log.d("PROFILE DETAILS :", "basic " + userSnapshot.get("basicScore"))
-            Log.d("PROFILE DETAILS :", "int " + userSnapshot.get("intermediateScore"))
+            Log.d("PROFILE DETAILS :", "basic " + userSnapshot.get("basic_Score"))
+            Log.d("PROFILE DETAILS :", "int " + userSnapshot.get("intermediate_Score"))
 
             // Safely extract scores as Strings
-            val basicScore = userSnapshot.get("basicScore") as? String ?: "0"
-            val intermediateScore = userSnapshot.get("intermediateScore") as? String ?: "0"
+            val basicScore = userSnapshot.get("basic_Score") as? String ?: "0"
+            val intermediateScore = userSnapshot.get("intermediate_Score") as? String ?: "0"
 
             // Create the UserModel object with scores
             val user = UserModel(
                 id = firebaseUser.uid,
                 name = firebaseUser.displayName ?: "",
                 email = firebaseUser.email ?: "",
-                basicScore = basicScore.toString(),
-                intermediateScore = intermediateScore.toString()
+                basic_Score = basicScore.toString(),
+                intermediate_Score = intermediateScore.toString()
             )
 
             // Save to Hawk
@@ -329,17 +334,32 @@ class LessonRepository @Inject constructor() {
         onFailure: (String) -> Unit
     ) {
         try {
-            val difficulty = getDifficulty()
+            val difficulty = Hawk.get("difficulty", "")
             val saveRef = firestore.collection("quiz_scores_$difficulty").document()
-
             val scoreWithId = scoreModel.copy(id = saveRef.id)
 
+            val userRef = firestore.collection("users").document(auth.currentUser!!.uid)
+
+            // Prepare the fields to update based on the difficulty level
+
+
+            val updates = if (difficulty.equals("basic")) {
+                Log.d("DIFFICULTY WAS: ", difficulty)
+                mapOf("basic_Score" to scoreModel.score)
+            } else {
+                Log.d("DIFFICULTY WAS : ", "NDI" + difficulty)
+                mapOf("intermediate_Score" to scoreModel.score)
+            }
+
+
+            // Save the score and update specific fields in the user document
             saveRef.set(scoreWithId).await()
+            userRef.update(updates).await()
 
+            // Call onSuccess if both operations succeed
             onSuccess()
-
         } catch (e: Exception) {
-            Log.e("getQuizzes ERROR: ", e.message.toString())
+            Log.e("saveQuiz ERROR: ", e.message.toString())
             onFailure(e.message.toString())
         }
     }
@@ -351,8 +371,8 @@ class LessonRepository @Inject constructor() {
     suspend fun getScores(): List<QuizScoreModel> {
         return try {
             val difficulty = getDifficulty()
-            val basicScoreSnapshots = firestore.collection("quiz_scores_$difficulty").get().await()
-            val scoreList = basicScoreSnapshots.toObjects(QuizScoreModel::class.java)
+            val scoreSnapshots = firestore.collection("quiz_scores_$difficulty").get().await()
+            val scoreList = scoreSnapshots.toObjects(QuizScoreModel::class.java)
 
             scoreList.sortedByDescending { it.score }
             //basicScoreSnapshots.toObjects(QuizScoreModel::class.java)
@@ -361,6 +381,33 @@ class LessonRepository @Inject constructor() {
             emptyList()
         }
     }
+
+    suspend fun getCombinedScores(): List<QuizScoreModel> { // for leaderboards of users
+        return try {
+            // Fetch all user documents from the "users" collection
+            val userSnapshots = firestore.collection("users").get().await()
+
+            // Convert snapshots to a list of UserModel
+            val userList = userSnapshots.toObjects(UserModel::class.java)
+
+            // Map the user data into QuizScoreModel instances with combined scores
+            val combinedScores = userList.map { user ->
+                val combinedScore = (user.basic_Score.toIntOrNull() ?: 0) + (user.intermediate_Score.toIntOrNull() ?: 0)
+                QuizScoreModel(
+                    id = user.id,
+                    name = user.name,
+                    score = combinedScore.toString() // Use a String or Int as needed
+                )
+            }.sortedByDescending { it.score.toIntOrNull() ?: 0 }
+
+            combinedScores
+        } catch (e: Exception) {
+            Log.e("GET getCombinedScores ERROR: ", e.message.toString())
+            emptyList()
+        }
+    }
+
+
 
     // ---------------------------------------------------- ASSESSMENT ---------------------------------------------------- //
 
