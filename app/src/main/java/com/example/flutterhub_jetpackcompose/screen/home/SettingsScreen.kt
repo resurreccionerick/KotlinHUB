@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -19,6 +20,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -32,21 +34,22 @@ import com.orhanobut.hawk.Hawk
 fun SettingsScreen(navController: NavController, viewModel: AppViewModel, context: Context) {
     Column(
         modifier = Modifier
-            .fillMaxSize(),
+            .fillMaxSize()
+            .offset(y = (-15).dp), // Shifts the image upwards by 5dp,
         verticalArrangement = Arrangement.SpaceBetween
     ) {
         // Card box for the banner
         Card(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(200.dp),
-            elevation = CardDefaults.cardElevation(4.dp)
+                .height(250.dp)
         ) {
             Image(
-                painter = painterResource(id = R.drawable.kotlin),
+                painter = painterResource(id = R.drawable.kotlin_settings),
                 contentDescription = null,
                 modifier = Modifier
-                    .fillMaxSize()
+                    .fillMaxSize(),
+                contentScale = ContentScale.Crop
             )
         }
 
@@ -62,9 +65,9 @@ fun SettingsScreen(navController: NavController, viewModel: AppViewModel, contex
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 32.dp, start = 16.dp, end = 16.dp, bottom = 16.dp),
-                elevation = CardDefaults.cardElevation(4.dp)
-            ) {
-                Text(text = "Name: ${userModel.name}", modifier = Modifier.padding(16.dp))
+
+                ) {
+                Text(text = "Name: ${userModel.name}", modifier = Modifier.padding(12.dp))
             }
 
             Card(
@@ -73,7 +76,7 @@ fun SettingsScreen(navController: NavController, viewModel: AppViewModel, contex
                     .padding(16.dp),
                 elevation = CardDefaults.cardElevation(4.dp)
             ) {
-                Text(text = "Email: ${userModel.email}", modifier = Modifier.padding(16.dp))
+                Text(text = "Email: ${userModel.email}", modifier = Modifier.padding(12.dp))
             }
 
 
@@ -94,7 +97,7 @@ fun SettingsScreen(navController: NavController, viewModel: AppViewModel, contex
                 .padding(16.dp),
             colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
         ) {
-            Text("Logout", color = Color.White)
+            Text("Logout", color = Color.White, modifier = Modifier.padding(12.dp))
         }
     }
 }

@@ -89,11 +89,11 @@ class LessonRepository @Inject constructor() {
         try {
             auth.signInWithEmailAndPassword(email, pass).addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    onSuccess()
                     // Launch a coroutine to call the suspend function
                     GlobalScope.launch {
                         saveProfileDetails()
                     }
+                    onSuccess()
                 } else {
                     onFailure("No account found")
                 }
@@ -128,9 +128,6 @@ class LessonRepository @Inject constructor() {
             val userSnapshot =
                 firestore.collection("users").document(firebaseUser.uid).get().await()
             userSnapshot.toObject(UserModel::class.java)
-
-            Log.d("PROFILE DETAILS :", "basic " + userSnapshot.get("basic_Score"))
-            Log.d("PROFILE DETAILS :", "int " + userSnapshot.get("intermediate_Score"))
 
             // Safely extract scores as Strings
             val basicScore = userSnapshot.get("basic_Score") as? String ?: "0"
@@ -392,7 +389,9 @@ class LessonRepository @Inject constructor() {
 
             // Map the user data into QuizScoreModel instances with combined scores
             val combinedScores = userList.map { user ->
-                val combinedScore = (user.basic_Score.toIntOrNull() ?: 0) + (user.intermediate_Score.toIntOrNull() ?: 0)
+                val combinedScore =
+                    (user.basic_Score.toIntOrNull() ?: 0) + (user.intermediate_Score.toIntOrNull()
+                        ?: 0)
                 QuizScoreModel(
                     id = user.id,
                     name = user.name,
@@ -406,7 +405,6 @@ class LessonRepository @Inject constructor() {
             emptyList()
         }
     }
-
 
 
     // ---------------------------------------------------- ASSESSMENT ---------------------------------------------------- //

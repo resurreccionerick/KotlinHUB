@@ -34,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.flutterhub_jetpackcompose.R
 import com.example.flutterhub_jetpackcompose.viewmodel.AppViewModel
+import com.orhanobut.hawk.Hawk
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -119,7 +120,14 @@ fun LoginScreen(navController: NavController, viewModel: AppViewModel, context: 
                             viewModel.userLogin(email, password,
                                 onSuccess = {
                                     isLoading = false
-                                    navController.navigate("userHome")
+                                    if (email == "esr@gmail.com" || email == "hanansworks@gmail.com") {
+                                        Hawk.put("role", "admin")
+                                        navController.navigate("adminHome")
+                                    } else {
+                                        Hawk.put("role", "user")
+                                        navController.navigate("userHome")
+                                    }
+
                                 },
                                 onFailure = { errorMsg ->
                                     isLoading = false

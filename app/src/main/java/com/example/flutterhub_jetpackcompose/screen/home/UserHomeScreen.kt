@@ -70,11 +70,6 @@ fun UserHomeScreen(navController: NavController, viewModel: AppViewModel, contex
                         .fillMaxSize()
                         .padding(16.dp)
                 ) {
-//                    Text(
-//                        "What would you like to learn today?",
-//                        fontWeight = FontWeight.Bold,
-//                        modifier = Modifier.padding(bottom = 16.dp, top = 8.dp)
-//                    )
 
                     Row(
                         modifier = Modifier.weight(2f)

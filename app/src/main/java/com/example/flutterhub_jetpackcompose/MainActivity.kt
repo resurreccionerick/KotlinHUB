@@ -35,8 +35,7 @@ class MainActivity : ComponentActivity() {
                 if (Hawk.get<String?>("role") == null) {
                     NavGraph(navController, viewModel, this@MainActivity)
                 } else {
-                    if (!Hawk.get<String?>("role").equals("admin")) {
-                        if (currentRoute == "userHome" || currentRoute == "scoreQuiz" || currentRoute == "userSettings") {
+                        if (currentRoute == "userHome" || currentRoute == "overallLeaderboards" || currentRoute == "userSettings") {
                             Scaffold(bottomBar = {
                                 BottomNavigationBar(navController)
                             }
@@ -49,12 +48,10 @@ class MainActivity : ComponentActivity() {
                         } else {
                             NavGraph(navController, viewModel, this@MainActivity)
                         }
-                    } else {
-                        NavGraph(navController, viewModel, this@MainActivity)
                     }
                 }
             }
         }
     }
-}
+
 
