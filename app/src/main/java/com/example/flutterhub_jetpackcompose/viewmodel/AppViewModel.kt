@@ -1,7 +1,9 @@
 package com.example.flutterhub_jetpackcompose.viewmodel
 
 
+import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.flutterhub_jetpackcompose.data.models.AssessmentLink
@@ -25,7 +27,16 @@ class AppViewModel @Inject constructor(
     val quizzes = mutableStateListOf<QuizModel>()
     val lessons = mutableStateListOf<LessonModel>()
     val scores = mutableStateListOf<QuizScoreModel>()
+    val darkMode = mutableStateOf(false)
+    val darkModeState: State<Boolean> = darkMode
+
+
     private var isLoading = false
+
+    // Toggle dark mode state
+    fun toggleDarkMode(isDarkMode: Boolean) {
+        darkMode.value = isDarkMode
+    }
 
     fun refreshLessonDifficulty() {
         repository.refreshDifficulty()

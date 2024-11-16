@@ -10,31 +10,32 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.flutterhub_jetpackcompose.data.models.QuizScoreModel
 import com.example.flutterhub_jetpackcompose.data.models.UserModel
-import com.example.flutterhub_jetpackcompose.screen.home.AdminHomeScreen
 import com.example.flutterhub_jetpackcompose.screen.assessment.admin.AddAssessmentScreen
 import com.example.flutterhub_jetpackcompose.screen.assessment.admin.EditAssessmentScreen
 import com.example.flutterhub_jetpackcompose.screen.assessment.admin.TrackAssessmentScreen
 import com.example.flutterhub_jetpackcompose.screen.assessment.user.AssessmentHomeScreen
+import com.example.flutterhub_jetpackcompose.screen.components.AssessmentDetailsScreen
+import com.example.flutterhub_jetpackcompose.screen.components.LeaderboardScreen
+import com.example.flutterhub_jetpackcompose.screen.components.LessonDetailsScreen
+import com.example.flutterhub_jetpackcompose.screen.components.OverallLeaderboardScreen
+import com.example.flutterhub_jetpackcompose.screen.components.ProfileComponent
+import com.example.flutterhub_jetpackcompose.screen.components.WebView
+import com.example.flutterhub_jetpackcompose.screen.home.AdminHomeScreen
+import com.example.flutterhub_jetpackcompose.screen.home.SettingsScreen
+import com.example.flutterhub_jetpackcompose.screen.home.UserHomeScreen
 import com.example.flutterhub_jetpackcompose.screen.lessons.admin.AddLessonScreen
-import com.example.flutterhub_jetpackcompose.screen.lessons.user.BasicHomeScreen
 import com.example.flutterhub_jetpackcompose.screen.lessons.admin.EditLessonScreen
+import com.example.flutterhub_jetpackcompose.screen.lessons.user.BasicHomeScreen
 import com.example.flutterhub_jetpackcompose.screen.lessons.user.IntermediateHomeScreen
+import com.example.flutterhub_jetpackcompose.screen.login_register.ForgotPassScreen
+import com.example.flutterhub_jetpackcompose.screen.login_register.LoginScreen
+import com.example.flutterhub_jetpackcompose.screen.login_register.SignupScreen
 import com.example.flutterhub_jetpackcompose.screen.quiz.admin.AdminAddQuizScreen
 import com.example.flutterhub_jetpackcompose.screen.quiz.admin.AdminEditQuizScreen
 import com.example.flutterhub_jetpackcompose.screen.quiz.admin.BasicQuizHomeScreen
 import com.example.flutterhub_jetpackcompose.screen.quiz.admin.IntermediateQuizHomeScreen
 import com.example.flutterhub_jetpackcompose.screen.quiz.admin.QuizDifficultyScreen
-import com.example.flutterhub_jetpackcompose.screen.components.AssessmentDetailsScreen
-import com.example.flutterhub_jetpackcompose.screen.components.LessonDetailsScreen
-import com.example.flutterhub_jetpackcompose.screen.components.WebView
-import com.example.flutterhub_jetpackcompose.screen.login_register.ForgotPassScreen
-import com.example.flutterhub_jetpackcompose.screen.login_register.LoginScreen
-import com.example.flutterhub_jetpackcompose.screen.login_register.SignupScreen
-import com.example.flutterhub_jetpackcompose.screen.home.UserHomeScreen
 import com.example.flutterhub_jetpackcompose.screen.user.UserQuizScreen
-import com.example.flutterhub_jetpackcompose.screen.components.LeaderboardScreen
-import com.example.flutterhub_jetpackcompose.screen.components.OverallLeaderboardScreen
-import com.example.flutterhub_jetpackcompose.screen.home.SettingsScreen
 import com.example.flutterhub_jetpackcompose.viewmodel.AppViewModel
 import com.orhanobut.hawk.Hawk
 
@@ -97,6 +98,10 @@ fun NavGraph(navController: NavHostController, viewModel: AppViewModel, context:
 
         composable("adminIntermediate") {
             IntermediateHomeScreen(navController, viewModel, context)
+        }
+
+        composable("profile") {
+            ProfileComponent(navController, viewModel, context)
         }
 
 

@@ -44,7 +44,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.flutterhub_jetpackcompose.data.models.AssessmentModel
 import com.example.flutterhub_jetpackcompose.viewmodel.AppViewModel
-import com.orhanobut.hawk.Hawk
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -133,10 +132,10 @@ fun AssessmentDetailsScreen(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .background(
-                                        MaterialTheme.colorScheme.onTertiaryContainer,
+                                        Color.Red,
                                         shape = RoundedCornerShape(8.dp)
                                     ),
-                                containerColor = MaterialTheme.colorScheme.onTertiaryContainer,
+                                containerColor = Color.Red,
                                 contentColor = Color.White
                             )
                         }

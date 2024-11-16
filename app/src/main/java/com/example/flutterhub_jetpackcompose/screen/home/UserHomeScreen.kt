@@ -44,8 +44,7 @@ fun UserHomeScreen(navController: NavController, viewModel: AppViewModel, contex
             TopAppBar(
                 title = {
                     Text(
-                        "Your Current Score: " + ((user?.basic_Score?.toIntOrNull()
-                            ?: 0) + (user?.intermediate_Score?.toIntOrNull() ?: 0))
+                        "Hello, " + user!!.name
                     )
                 },
                 colors = TopAppBarDefaults.topAppBarColors(

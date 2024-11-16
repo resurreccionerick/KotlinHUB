@@ -27,7 +27,11 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         // enableEdgeToEdge()
         setContent {
-            KotlinHubTheme {
+            // Observe the theme state from ViewModel
+            val darkModeState = viewModel.darkModeState.value
+
+            KotlinHubTheme(darkTheme = darkModeState) {
+
                 val navController = rememberNavController()
                 val navBackStackEntry by navController.currentBackStackEntryAsState()   // Observe the current route
                 val currentRoute = navBackStackEntry?.destination?.route
@@ -35,23 +39,23 @@ class MainActivity : ComponentActivity() {
                 if (Hawk.get<String?>("role") == null) {
                     NavGraph(navController, viewModel, this@MainActivity)
                 } else {
-                        if (currentRoute == "userHome" || currentRoute == "overallLeaderboards" || currentRoute == "userSettings") {
-                            Scaffold(bottomBar = {
-                                BottomNavigationBar(navController)
-                            }
-                            )
-                            { padding ->
-                                Box(modifier = Modifier.padding(padding)) {
-                                    NavGraph(navController, viewModel, this@MainActivity)
-                                }
-                            }
-                        } else {
-                            NavGraph(navController, viewModel, this@MainActivity)
+                    if (currentRoute == "userHome" || currentRoute == "overallLeaderboards" || currentRoute == "userSettings") {
+                        Scaffold(bottomBar = {
+                            BottomNavigationBar(navController)
                         }
+                        )
+                        { padding ->
+                            Box(modifier = Modifier.padding(padding)) {
+                                NavGraph(navController, viewModel, this@MainActivity)
+                            }
+                        }
+                    } else {
+                        NavGraph(navController, viewModel, this@MainActivity)
                     }
                 }
             }
         }
     }
+}
 
 

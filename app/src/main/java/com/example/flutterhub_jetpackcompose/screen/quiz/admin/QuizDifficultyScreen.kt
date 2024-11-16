@@ -38,7 +38,12 @@ fun QuizDifficultyScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Choose Difficulty") },
+                title = {
+                    Text(
+                        "Your Overall Score: " + ((userModel?.basic_Score?.toIntOrNull()
+                            ?: 0) + (userModel?.intermediate_Score?.toIntOrNull() ?: 0))
+                    )
+                },
                 navigationIcon = {
                     IconButton(onClick = {
                         navController.popBackStack()
@@ -72,7 +77,7 @@ fun QuizDifficultyScreen(
 
                         ImageCard(
                             label = "Basic",
-                            imageRes = R.drawable.basic, 250,
+                            imageRes = R.drawable.easy_colored, 250,
                             onClick = {
                                 Hawk.put("difficulty", "basic")
                                 if (viewModel.quizzes.isEmpty()) { // Call refresh only if needed
@@ -99,7 +104,7 @@ fun QuizDifficultyScreen(
                         }
                         ImageCard(
                             label = "Intermediate",
-                            imageRes = R.drawable.muscle, 250,
+                            imageRes = R.drawable.muscle_colored, 250,
                             onClick = {
                                 Hawk.put("difficulty", "intermediate")
                                 viewModel.refreshQuizDifficulty()
