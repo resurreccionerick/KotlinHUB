@@ -1,6 +1,7 @@
 package com.example.flutterhub_jetpackcompose.screen.components
 
 import android.content.Context
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -15,17 +16,14 @@ import androidx.compose.material3.Checkbox
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.flutterhub_jetpackcompose.data.models.AssessmentLink
-import com.example.flutterhub_jetpackcompose.data.models.AssessmentModel
 import com.example.flutterhub_jetpackcompose.viewmodel.AppViewModel
 import com.orhanobut.hawk.Hawk
 
@@ -37,6 +35,7 @@ fun TrackAssessmentCard(
     context: Context,
     assessmentId: String
 ) {
+    val isCheckedState = remember { mutableStateOf(link.checked) }
 
     Card(
         onClick = {
@@ -71,29 +70,30 @@ fun TrackAssessmentCard(
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Checkbox(
-                            checked = link.checked,
-                            onCheckedChange = { isChecked ->
-//                                Toast.makeText(
-//                                    context,
-//                                    isChecked.toString(),
-//                                    Toast.LENGTH_SHORT
-//                                ).show()
+                            checked = isCheckedState.value,
 
+                            onCheckedChange = { isChecked ->
                                 link.checked = isChecked
+                                Log.d("ISCHECKED: ", isChecked.toString())
 
                                 viewModel.updateAssessmentLink(
                                     assessmentId = assessmentId,
                                     linkId = link.id,
-                                    authName = link.id,
+                                    authID = link.id,  // Ensure this is correct or replace with the right value
                                     checked = isChecked,
                                     onSuccess = {
+                                        // Update the original `link.checked` to keep consistency
+                                        link.checked = isChecked
                                         Toast.makeText(
                                             context,
                                             "Updated",
                                             Toast.LENGTH_SHORT
                                         ).show()
+                                        navController.popBackStack()
                                     },
                                     onFailure = { msg ->
+                                        // Revert UI state if update fails
+                                        isCheckedState.value = !isChecked
                                         Toast.makeText(
                                             context,
                                             msg,

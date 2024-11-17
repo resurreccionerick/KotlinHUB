@@ -1,7 +1,6 @@
 package com.example.flutterhub_jetpackcompose.screen.assessment.admin
 
 import android.content.Context
-import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -21,10 +20,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.flutterhub_jetpackcompose.data.models.AssessmentLink
-import com.example.flutterhub_jetpackcompose.data.models.AssessmentModel
+import com.example.flutterhub_jetpackcompose.data.models.UserModel
 import com.example.flutterhub_jetpackcompose.screen.components.TrackAssessmentCard
 import com.example.flutterhub_jetpackcompose.viewmodel.AppViewModel
+import com.orhanobut.hawk.Hawk
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -34,6 +33,7 @@ fun TrackAssessmentScreen(
     context: Context,
     id: String,
 ) {
+    val userModel = Hawk.get<UserModel>("user_details")
 
     LaunchedEffect(Unit) {
         viewModel.loadLinks(id)

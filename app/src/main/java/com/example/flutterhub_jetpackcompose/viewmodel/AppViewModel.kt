@@ -54,7 +54,7 @@ class AppViewModel @Inject constructor(
         loadLeaderboards()
     }
 
-    fun getOverallLeaderboards(){
+    fun getOverallLeaderboards() {
         loadOverallLeaderboards()
     }
 
@@ -356,15 +356,16 @@ class AppViewModel @Inject constructor(
     fun updateAssessmentLink(
         assessmentId: String,
         linkId: String,
-        authName: String,
+        authID: String,
         checked: Boolean,
         onSuccess: () -> Unit,
         onFailure: (String) -> Unit
     ) {
         viewModelScope.launch {
-            repository.updateAssessmentLink(assessmentId, linkId, authName, checked,
+            repository.updateAssessmentLink(assessmentId, linkId, authID, checked,
                 onSuccess = {
                     onSuccess()
+
                 }, onFailure = { msg ->
                     onFailure(msg)
                 })
@@ -395,12 +396,6 @@ class AppViewModel @Inject constructor(
             links.clear()
             links.addAll(_links)
         }
-    }
-
-
-    fun getLinksById(linkId: String): AssessmentLink {
-        // This function returns the lesson by its ID.
-        return links.find { it.id == linkId } ?: AssessmentLink()
     }
 
     suspend fun refreshProfileDetails() {

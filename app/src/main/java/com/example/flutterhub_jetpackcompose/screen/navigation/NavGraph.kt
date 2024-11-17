@@ -210,7 +210,6 @@ fun NavGraph(navController: NavHostController, viewModel: AppViewModel, context:
             val id = backStackEntry.arguments?.getString("assessmentId") ?: ""
             // Fetch the lesson by ID (if needed)
             val assessment = viewModel.getAssessmentById(id)
-            val link = viewModel.getLinksById(assessment.id)
 
             AssessmentDetailsScreen(
                 navController,
@@ -218,7 +217,7 @@ fun NavGraph(navController: NavHostController, viewModel: AppViewModel, context:
                 user!!.name,
                 viewModel,
                 context,
-                assessment
+                assessment,
             )
         }
 

@@ -36,16 +36,23 @@ import com.orhanobut.hawk.Hawk
 @Composable
 fun UserHomeScreen(navController: NavController, viewModel: AppViewModel, context: Context) {
 
-    LaunchedEffect(Unit) { viewModel.refreshProfileDetails() }
+    LaunchedEffect(Unit) {
+        viewModel.refreshProfileDetails()
+    }
     val user: UserModel? = Hawk.get("user_details")
+
 
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {
-                    Text(
-                        "Hello, " + user!!.name
-                    )
+                    if (!Hawk.get<Boolean?>("role").equals("admin")) {
+                        if (user != null) {
+                            Text(
+                                "Hello, " + user!!.name
+                            )
+                        }
+                    }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primary,

@@ -16,6 +16,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Code
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
@@ -55,7 +56,8 @@ fun AssessmentDetailsScreen(
     viewModel: AppViewModel,
     context: Context,
     assessmentModel: AssessmentModel,
-) {
+
+    ) {
     var link by rememberSaveable { mutableStateOf("") }
     var isApproved by remember { mutableStateOf(false) }
     var getLink by remember { mutableStateOf("") }
@@ -114,9 +116,6 @@ fun AssessmentDetailsScreen(
                         ) {
                             ExtendedFloatingActionButton(
                                 onClick = {
-//                                    Hawk.put("title", "")
-//                                    Hawk.put("link", "https://onecompiler.com/kotlin")
-//                                    navController.navigate("webView")
                                     openAlertDialog.value = true
                                 },
 
@@ -145,11 +144,13 @@ fun AssessmentDetailsScreen(
                         ) {
                             ExtendedFloatingActionButton(
                                 onClick = {
-
+                                    openTheLink(
+                                        context, getLink
+                                    )
                                 },
                                 icon = {
                                     Icon(
-                                        Icons.Filled.Code, contentDescription = "Code Runner"
+                                        Icons.Filled.Check, contentDescription = "Code Runner"
                                     )
                                 },
                                 text = { Text(text = "See your work") },
@@ -221,7 +222,7 @@ fun AssessmentDetailsScreen(
     })
 }
 
-public fun openTheLink(context: Context, s: String) {
+fun openTheLink(context: Context, s: String) {
     val url = s
     val intent = Intent(Intent.ACTION_VIEW)
     intent.data = Uri.parse(url)
