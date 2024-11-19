@@ -117,7 +117,7 @@ fun UserHomeScreen(navController: NavController, viewModel: AppViewModel, contex
                             imageRes = R.drawable.developer,
                             imgHeight = 450,
                             onClick = {
-                                viewModel.loadAssessment()
+                               // viewModel.loadAssessment(user!!.id)
                                 navController.navigate("assessmentHome")
                             },
                             modifier = Modifier.weight(1f)

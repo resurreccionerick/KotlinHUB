@@ -449,32 +449,62 @@ class LessonRepository @Inject constructor() {
         }
     }
 
-
-    suspend fun getAssessment(
-    ): List<AssessmentModel> {
+    suspend fun getAssessment(userId: String): List<AssessmentModel> {
         return try {
             // Get data from Firebase Realtime Database
             val snapshot = realtimeDB.child("assessment").get().await()
 
-            // Map the snapshot to a list of AssessmentModel objects
             val assessmentList = mutableListOf<AssessmentModel>()
 
-            // Loop through all the children of the "assessment" node
             for (child in snapshot.children) {
                 val assessment = child.getValue(AssessmentModel::class.java)
                 if (assessment != null) {
+                    // Check if the user has checked the assessment
+                    val userLink = assessment.links[userId] // Get the link for the specific user
+
+                    if (userLink != null) {
+                        // Log if the user has checked the assessment
+                        Log.d("Assessment Checked", "User: $userId, Assessment: ${assessment.title}, Link: ${userLink.name}, CHECKED: ${userLink.checked}")
+                    }
+
+                    // Add the assessment to the list
                     assessmentList.add(assessment)
                 }
             }
 
             assessmentList
-
         } catch (e: Exception) {
             Log.e("getAssessment ERROR: ", e.message.toString())
             emptyList()
         }
     }
 
+
+
+//    suspend fun getAssessment(): List<AssessmentModel> {
+//        return try {
+//            // Get data from Firebase Realtime Database
+//            val snapshot = realtimeDB.child("assessment").get().await()
+//
+//            val assessmentList = mutableListOf<AssessmentModel>()
+//
+//            // Loop through all the children of the "assessment" node
+//            for (child in snapshot.children) {
+//                val assessment = child.getValue(AssessmentModel::class.java)
+//                if (assessment != null) {
+//                    // Convert links Map to List if needed
+//                    val linksList = assessment.links.values.toList()
+//                    val updatedAssessment = assessment.copy(links = linksList.associateBy { it.id })
+//                    assessmentList.add(updatedAssessment)
+//                }
+//            }
+//
+//            assessmentList
+//        } catch (e: Exception) {
+//            Log.e("getAssessment ERROR: ", e.message.toString())
+//            emptyList()
+//        }
+//    }
 
     fun deleteAssessment(id: String, onSuccess: () -> Unit, onFailure: (String) -> Unit) {
         try {
@@ -509,7 +539,8 @@ class LessonRepository @Inject constructor() {
             "link" to link
         )
 
-        realtimeDB.child("links").child(assessmentModel.id).child(userId).setValue(linkData)
+        realtimeDB.child("assessment").child(assessmentModel.id).child("links").child(userId)
+            .setValue(linkData)
             .addOnCompleteListener { db ->
                 if (db.isSuccessful) {
                     onSuccess()
@@ -539,7 +570,8 @@ class LessonRepository @Inject constructor() {
             "ASSESSMENT ID: " + assessmentId + " LINK ID: ${linkId}" + " AUTH ID: ${authID}, " + " CHECKED $checked"
         )
 
-        realtimeDB.child("links").child(assessmentId).child(linkId).updateChildren(linkData)
+        realtimeDB.child("assessment").child(assessmentId).child("links").child(linkId)
+            .updateChildren(linkData)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     onSuccess()
@@ -559,7 +591,7 @@ class LessonRepository @Inject constructor() {
         getLink: (String) -> Unit
     ) {
         // Access the specific child node in the Realtime Database
-        realtimeDB.child("links").child(assessmentId).child(userName).get()
+        realtimeDB.child("assessment").child(assessmentId).child("links").child(userName).get()
             .addOnSuccessListener { snapshot ->
                 if (snapshot.exists()) {
                     // Check if the 'checked' field is true/false
@@ -583,50 +615,56 @@ class LessonRepository @Inject constructor() {
             }
     }
 
+
     suspend fun getLinksByID(assessmentId: String): List<AssessmentLink> {
         return try {
             // Get data from Firebase Realtime Database
-            val snapshot = realtimeDB.child("links").child(assessmentId).get().await()
+            val snapshot =
+                realtimeDB.child("assessment").child(assessmentId).child("links").get().await()
 
             val links = mutableListOf<AssessmentLink>()
 
-            // Loop through all the children of the "assessment" node (e.g., F1OAjyaoxqQSSVALAfN5bi2BDdt2)
+            // Loop through all the children of the "links" node
             for (child in snapshot.children) {
-                val linkSnapshot = child.child("link")  // Navigate to the "link" node
-                val assessmentLink = linkSnapshot.getValue(AssessmentLink::class.java)
-
+                // Directly deserialize each child into an AssessmentLink object
+                val assessmentLink = child.getValue(AssessmentLink::class.java)
                 if (assessmentLink != null) {
                     links.add(assessmentLink)
+                } else {
+                    Log.w("getLinksByID", "Skipped invalid link node: ${child.key}")
                 }
             }
 
             links
         } catch (e: Exception) {
+            Log.e("getLinksByID ERROR", ": ${e.message}")
             emptyList()  // Return an empty list in case of error
         }
     }
-
 
 //    suspend fun getLinksByID(assessmentId: String): List<AssessmentLink> {
 //        return try {
 //            // Get data from Firebase Realtime Database
 //            val snapshot =
-//                realtimeDB.child("links").child(assessmentId).child(assessmentId).get().await()
+//                realtimeDB.child("assessment").child(assessmentId).child("links").get().await()
 //
-//            // Map the snapshot to a list of AssessmentModel objects
-//            val link = mutableListOf<AssessmentLink>()
+//            val links = mutableListOf<AssessmentLink>()
 //
-//            // Loop through all the children of the "assessment" node
+//            // Loop through all the children of the "assessment" node (e.g., F1OAjyaoxqQSSVALAfN5bi2BDdt2)
 //            for (child in snapshot.children) {
-//                val assessmentLink = child.getValue(AssessmentLink::class.java)
+//                val linkSnapshot = child.child("link")  // Navigate to the "link" node
+//                val assessmentLink = linkSnapshot.getValue(AssessmentLink::class.java)
+//
 //                if (assessmentLink != null) {
-//                    link.add(assessmentLink)
+//                    links.add(assessmentLink)
 //                }
 //            }
 //
-//            link
+//            links
 //        } catch (e: Exception) {
+//            Log.e("getLinksByID ERROR", ":  ${e.message}")
 //            emptyList()  // Return an empty list in case of error
 //        }
 //    }
+
 }

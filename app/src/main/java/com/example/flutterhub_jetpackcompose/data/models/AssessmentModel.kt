@@ -5,7 +5,7 @@ data class AssessmentModel(
     val id: String = "",
     val title: String = "",
     val instructions: String = "",
-    val links: List<AssessmentLink> = emptyList()
+    val links: Map<String, AssessmentLink> = emptyMap() // Change List to Map
 )
 
 
@@ -15,3 +15,5 @@ data class AssessmentLink(
     val link: String = "",
     var checked: Boolean = false
 )
+
+

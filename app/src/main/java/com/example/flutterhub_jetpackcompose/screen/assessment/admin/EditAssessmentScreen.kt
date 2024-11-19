@@ -29,7 +29,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.flutterhub_jetpackcompose.data.models.AssessmentModel
+import com.example.flutterhub_jetpackcompose.data.models.UserModel
 import com.example.flutterhub_jetpackcompose.viewmodel.AppViewModel
+import com.orhanobut.hawk.Hawk
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -42,7 +44,7 @@ fun EditAssessmentScreen(
 ) {
     var title by rememberSaveable { mutableStateOf(assessmentModel.title) }
     var instruction by rememberSaveable { mutableStateOf(assessmentModel.instructions) }
-
+    val user: UserModel? = Hawk.get("user_details")
     Scaffold(
         topBar = {
             TopAppBar(title = { Text("Add Assessment") }, navigationIcon = {
@@ -91,7 +93,7 @@ fun EditAssessmentScreen(
                 )
 
                 if (title.isNotEmpty() || instruction.isNotEmpty()) {
-                    viewModel.updateAssessment(assessment, onSuccess = {
+                    viewModel.updateAssessment(user!!.id, assessment, onSuccess = {
                         Toast.makeText(context, "Successfully Updated", Toast.LENGTH_SHORT).show()
                         navController.popBackStack()
                     }, onFailure = { msg ->

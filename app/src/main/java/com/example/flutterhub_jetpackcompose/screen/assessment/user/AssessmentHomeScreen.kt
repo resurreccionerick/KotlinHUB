@@ -26,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.example.flutterhub_jetpackcompose.data.models.UserModel
 import com.example.flutterhub_jetpackcompose.screen.components.AssessmentCard
 import com.example.flutterhub_jetpackcompose.viewmodel.AppViewModel
 import com.orhanobut.hawk.Hawk
@@ -37,11 +38,11 @@ fun AssessmentHomeScreen(
     viewModel: AppViewModel,
     context: Context
 ) {
+    val user: UserModel? = Hawk.get("user_details")
 
     LaunchedEffect(Unit) {
-        viewModel.loadAssessment()
+        viewModel.loadAssessment(user!!.id)
     }
-
 
 
     if (viewModel.assessment.isEmpty()) {
@@ -88,7 +89,7 @@ fun AssessmentHomeScreen(
         ) {
             LazyColumn() {
                 items(viewModel.assessment) { assessment ->
-                    AssessmentCard(navController, assessment, viewModel, context)
+                    AssessmentCard(user!!.id, navController, assessment, viewModel, context)
                 }
             }
         }

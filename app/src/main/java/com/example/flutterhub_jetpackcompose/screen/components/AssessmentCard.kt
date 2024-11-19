@@ -13,8 +13,8 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -27,7 +27,6 @@ import com.example.flutterhub_jetpackcompose.ui.theme.DeleteRedDark
 import com.example.flutterhub_jetpackcompose.ui.theme.DeleteRedLight
 import com.example.flutterhub_jetpackcompose.ui.theme.EditGreenDark
 import com.example.flutterhub_jetpackcompose.ui.theme.EditGreenLight
-import com.example.flutterhub_jetpackcompose.ui.theme.KotlinHubTheme
 import com.example.flutterhub_jetpackcompose.ui.theme.TrackBlueDark
 import com.example.flutterhub_jetpackcompose.ui.theme.TrackBlueLight
 import com.example.flutterhub_jetpackcompose.viewmodel.AppViewModel
@@ -35,6 +34,7 @@ import com.orhanobut.hawk.Hawk
 
 @Composable
 fun AssessmentCard(
+    userId: String,
     navController: NavController,
     assessmentModel: AssessmentModel,
     viewModel: AppViewModel,
@@ -46,6 +46,12 @@ fun AssessmentCard(
     val editColor = if (isDarkMode) EditGreenDark else EditGreenLight
     val deleteColor = if (isDarkMode) DeleteRedDark else DeleteRedLight
     val trackColor = if (isDarkMode) TrackBlueDark else TrackBlueLight
+
+    // Get the specific link for the current user from the assessment
+    val userLink = assessmentModel.links[userId]
+
+    // Check if the userLink exists and if it's checked
+    val isChecked = userLink?.checked ?: false // Default to false if no link exists for the user
 
     Card(
         onClick = {
@@ -73,15 +79,25 @@ fun AssessmentCard(
                     style = MaterialTheme.typography.bodyLarge,
                     modifier = Modifier.weight(1f)
                 )
+
+                Checkbox(
+                    checked = isChecked, // Bind to the 'checked' status of the link
+                    onCheckedChange = null, // Disable interaction (no state change)
+                    enabled = false // Disable checkbox (non-interactive)
+                )
             }
         }
+
+
+
+
         Row(modifier = Modifier.align(Alignment.CenterHorizontally)) {
 
             //Track button
             if (Hawk.get<Boolean?>("role").equals("admin")) {
                 Button(
                     onClick = {
-                         navController.navigate("assessmentTrack/${assessmentModel.id}")
+                        navController.navigate("assessmentTrack/${assessmentModel.id}")
                     },
                     colors = ButtonDefaults.buttonColors(containerColor = trackColor),
                     modifier = Modifier.padding(8.dp)
@@ -103,7 +119,7 @@ fun AssessmentCard(
                 // Delete Button
                 Button(
                     onClick = {
-                        viewModel.deleteAssessment(assessmentModel.id,
+                        viewModel.deleteAssessment(userId, assessmentModel.id,
                             onSuccess = {
                                 Toast.makeText(
                                     context,

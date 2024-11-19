@@ -30,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.flutterhub_jetpackcompose.R
+import com.example.flutterhub_jetpackcompose.data.models.UserModel
 import com.example.flutterhub_jetpackcompose.screen.components.ImageCard
 import com.example.flutterhub_jetpackcompose.viewmodel.AppViewModel
 import com.orhanobut.hawk.Hawk
@@ -39,6 +40,7 @@ import com.orhanobut.hawk.Hawk
 fun AdminHomeScreen(navController: NavController, viewModel: AppViewModel, context: Context) {
 
     var expanded by remember { mutableStateOf(false) }
+    val user: UserModel? = Hawk.get("user_details")
 
     Scaffold(
         topBar = {
@@ -132,7 +134,7 @@ fun AdminHomeScreen(navController: NavController, viewModel: AppViewModel, conte
                             label = "Code Runner",
                             imageRes = R.drawable.developer, 300,
                             onClick = {
-                                viewModel.loadAssessment()
+                                viewModel.loadAssessment(user!!.id)
                                 navController.navigate("assessmentHome")
                             },
                             modifier = Modifier.weight(1f)

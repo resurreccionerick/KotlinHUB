@@ -33,8 +33,6 @@ fun TrackAssessmentScreen(
     context: Context,
     id: String,
 ) {
-    val userModel = Hawk.get<UserModel>("user_details")
-
     LaunchedEffect(Unit) {
         viewModel.loadLinks(id)
     }

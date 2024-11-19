@@ -275,11 +275,11 @@ class AppViewModel @Inject constructor(
 
 
     // ---------------------------------------------------- ASSESSMENT ---------------------------------------------------- //
-    fun loadAssessment() {
+    fun loadAssessment(userID: String) {
         if (isLoading) return
 
         viewModelScope.launch {
-            val _assessment = repository.getAssessment()
+            val _assessment = repository.getAssessment(userId = userID)
 
             assessment.clear()
             assessment.addAll(_assessment)
@@ -293,6 +293,7 @@ class AppViewModel @Inject constructor(
 
 
     fun addAssessment(
+        userID: String,
         assessmentModel: AssessmentModel,
         onSuccess: () -> Unit,
         onFailure: (String) -> Unit
@@ -300,7 +301,7 @@ class AppViewModel @Inject constructor(
         viewModelScope.launch {
             repository.addAssessment(assessmentModel, onSuccess = {
                 onSuccess()
-                loadAssessment()
+                loadAssessment(userID)
             }, onFailure = { msg ->
                 onFailure(msg)
             })
@@ -309,6 +310,7 @@ class AppViewModel @Inject constructor(
 
 
     fun updateAssessment(
+        userID: String,
         assessment: AssessmentModel,
         onSuccess: () -> Boolean,
         onFailure: (String) -> Unit
@@ -316,18 +318,23 @@ class AppViewModel @Inject constructor(
         viewModelScope.launch {
             repository.updateAssessment(assessment, onSuccess = {
                 onSuccess()
-                loadAssessment()
+                loadAssessment(userID)
             }, onFailure = { msg ->
                 onFailure(msg)
             })
         }
     }
 
-    fun deleteAssessment(id: String, onSuccess: () -> Unit, onFailure: (String) -> Unit) {
+    fun deleteAssessment(
+        userID: String,
+        id: String,
+        onSuccess: () -> Unit,
+        onFailure: (String) -> Unit
+    ) {
         viewModelScope.launch {
             repository.deleteAssessment(id, onSuccess = {
                 onSuccess()
-                loadAssessment()
+                loadAssessment(userID)
             }, onFailure = { msg ->
                 onFailure(msg)
             })

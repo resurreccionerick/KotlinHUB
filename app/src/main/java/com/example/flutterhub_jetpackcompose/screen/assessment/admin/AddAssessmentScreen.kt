@@ -29,7 +29,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.flutterhub_jetpackcompose.data.models.AssessmentModel
+import com.example.flutterhub_jetpackcompose.data.models.UserModel
 import com.example.flutterhub_jetpackcompose.viewmodel.AppViewModel
+import com.orhanobut.hawk.Hawk
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -39,6 +41,7 @@ fun AddAssessmentScreen(
 ) {
     var title by rememberSaveable { mutableStateOf("") }
     var instruction by rememberSaveable { mutableStateOf("") }
+    val user: UserModel? = Hawk.get("user_details")
 
     Scaffold(
         topBar = {
@@ -95,7 +98,7 @@ fun AddAssessmentScreen(
                     val assessmentWithId = assessment.copy(id = customId)
 
                     // Call the ViewModel to add the assessment with the custom ID
-                    viewModel.addAssessment(assessmentWithId, onSuccess = {
+                    viewModel.addAssessment(user!!.id, assessmentWithId, onSuccess = {
                         Toast.makeText(context, "Successfully Added", Toast.LENGTH_SHORT).show()
                         navController.popBackStack()
                     }, onFailure = { msg ->
