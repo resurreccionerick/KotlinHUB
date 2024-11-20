@@ -52,7 +52,6 @@ fun ScoreCard(
                 Text(
                     text = score.name,
                     style = MaterialTheme.typography.bodyLarge,
-                    color = Color.Black,
                     modifier = Modifier
                         .weight(2f)
                         .align(Alignment.CenterVertically)
@@ -69,7 +68,6 @@ fun ScoreCard(
                         .weight(1f)
                         .align(Alignment.CenterVertically)
                         .padding(8.dp),
-                    color = Color.Blue,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.End
                 )

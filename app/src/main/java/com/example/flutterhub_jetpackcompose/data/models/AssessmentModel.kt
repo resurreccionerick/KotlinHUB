@@ -5,7 +5,7 @@ data class AssessmentModel(
     val id: String = "",
     val title: String = "",
     val instructions: String = "",
-    val links: Map<String, AssessmentLink> = emptyMap() // Change List to Map
+    val links: Map<String, AssessmentLink>? = emptyMap() // Change List to Map
 )
 
 

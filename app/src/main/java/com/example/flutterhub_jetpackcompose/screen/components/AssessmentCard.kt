@@ -14,6 +14,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -48,7 +49,7 @@ fun AssessmentCard(
     val trackColor = if (isDarkMode) TrackBlueDark else TrackBlueLight
 
     // Get the specific link for the current user from the assessment
-    val userLink = assessmentModel.links[userId]
+    val userLink = assessmentModel.links?.get(userId)
 
     // Check if the userLink exists and if it's checked
     val isChecked = userLink?.checked ?: false // Default to false if no link exists for the user
@@ -80,11 +81,17 @@ fun AssessmentCard(
                     modifier = Modifier.weight(1f)
                 )
 
-                Checkbox(
-                    checked = isChecked, // Bind to the 'checked' status of the link
-                    onCheckedChange = null, // Disable interaction (no state change)
-                    enabled = false // Disable checkbox (non-interactive)
-                )
+                if (!Hawk.get<Boolean?>("role").equals("admin")) {
+                    Checkbox(
+                        checked = isChecked, // Bind to the 'checked' status of the link
+                        onCheckedChange = null, // Disable interaction (no state change)
+                        enabled = false, // Disable checkbox (non-interactive)
+                        colors = CheckboxDefaults.colors(
+                            disabledUncheckedColor = Color.DarkGray,
+                            disabledCheckedColor = Color.Green
+                        )
+                    )
+                }
             }
         }
 

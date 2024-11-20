@@ -1,6 +1,8 @@
 package com.example.flutterhub_jetpackcompose.screen.home
 
 import android.content.Context
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,7 +23,12 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -35,11 +42,18 @@ import com.orhanobut.hawk.Hawk
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UserHomeScreen(navController: NavController, viewModel: AppViewModel, context: Context) {
+    val animatedValue = remember { Animatable(0f) }
+    var user by remember { mutableStateOf<UserModel?>(null) }
 
     LaunchedEffect(Unit) {
         viewModel.refreshProfileDetails()
+        user = Hawk.get("user_details")
+        animatedValue.animateTo(
+            targetValue = 1f,
+            animationSpec = tween(durationMillis = 1200)
+        )
     }
-    val user: UserModel? = Hawk.get("user_details")
+
 
 
     Scaffold(
@@ -69,6 +83,7 @@ fun UserHomeScreen(navController: NavController, viewModel: AppViewModel, contex
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(paddingValues)
+                    .graphicsLayer(alpha = animatedValue.value)
             ) {
 
                 Column(
@@ -117,7 +132,7 @@ fun UserHomeScreen(navController: NavController, viewModel: AppViewModel, contex
                             imageRes = R.drawable.developer,
                             imgHeight = 450,
                             onClick = {
-                               // viewModel.loadAssessment(user!!.id)
+                                // viewModel.loadAssessment(user!!.id)
                                 navController.navigate("assessmentHome")
                             },
                             modifier = Modifier.weight(1f)

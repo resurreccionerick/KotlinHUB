@@ -460,7 +460,8 @@ class LessonRepository @Inject constructor() {
                 val assessment = child.getValue(AssessmentModel::class.java)
                 if (assessment != null) {
                     // Check if the user has checked the assessment
-                    val userLink = assessment.links[userId] // Get the link for the specific user
+                    val userLink =
+                        assessment.links?.get(userId) // Get the link for the specific user
 
                     if (userLink != null) {
                         // Log if the user has checked the assessment

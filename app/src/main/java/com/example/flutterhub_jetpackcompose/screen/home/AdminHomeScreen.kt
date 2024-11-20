@@ -134,7 +134,7 @@ fun AdminHomeScreen(navController: NavController, viewModel: AppViewModel, conte
                             label = "Code Runner",
                             imageRes = R.drawable.developer, 300,
                             onClick = {
-                                viewModel.loadAssessment(user!!.id)
+                               // viewModel.loadAssessment(user!!.id)
                                 navController.navigate("assessmentHome")
                             },
                             modifier = Modifier.weight(1f)
