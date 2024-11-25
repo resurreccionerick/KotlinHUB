@@ -77,16 +77,7 @@ fun AdminHomeScreen(navController: NavController, viewModel: AppViewModel, conte
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(paddingValues),
-//                .paint(
-//                    // Replace with your image id
-//                    painterResource(id = R.drawable.bg), contentScale = ContentScale.FillBounds
-//                )
-
             ) {
-
-                Box() {}
-
-
 
                 Column(
                     modifier = Modifier

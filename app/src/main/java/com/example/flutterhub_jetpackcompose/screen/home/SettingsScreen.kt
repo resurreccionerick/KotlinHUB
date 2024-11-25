@@ -129,7 +129,7 @@ fun SettingsScreen(
                 },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 16.dp, start = 16.dp, end = 16.dp, bottom = 16.dp),
+                    .padding(top = 16.dp, start = 16.dp, end = 16.dp),
                 elevation = CardDefaults.cardElevation(4.dp)
             ) {
                 Text(text = "Profile", modifier = Modifier.padding(12.dp))
@@ -146,8 +146,23 @@ fun SettingsScreen(
             ) {
                 Text(text = "About Us", modifier = Modifier.padding(12.dp))
             }
+
+            Button(
+                onClick = {
+                    viewModel.userLogout(onSuccess = {
+                        Hawk.deleteAll()
+                        navController.navigate("login")
+                    }, onFailure = { msg ->
+                        Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+                    })
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 36.dp, start = 16.dp, end = 16.dp, bottom = 16.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
+            ) {
+                Text("Logout", color = Color.White, modifier = Modifier.padding(8.dp))
+            }
         }
-
-
     }
 }

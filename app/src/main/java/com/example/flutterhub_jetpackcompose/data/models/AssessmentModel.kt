@@ -13,7 +13,8 @@ data class AssessmentLink(
     val id: String = "",
     val name: String = "",
     val link: String = "",
-    var checked: Boolean = false
+    var checked: String = "",
+    var comment: String? = ""
 )
 
 

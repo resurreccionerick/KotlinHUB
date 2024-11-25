@@ -114,22 +114,22 @@ fun ProfileComponent(navController: NavController, viewModel: AppViewModel, cont
 //                }
 
                 // Logout button
-                Button(
-                    onClick = {
-                        viewModel.userLogout(onSuccess = {
-                            Hawk.deleteAll()
-                            navController.navigate("login")
-                        }, onFailure = { msg ->
-                            Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
-                        })
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
-                ) {
-                    Text("Logout", color = Color.White, modifier = Modifier.padding(8.dp))
-                }
+//                Button(
+//                    onClick = {
+//                        viewModel.userLogout(onSuccess = {
+//                            Hawk.deleteAll()
+//                            navController.navigate("login")
+//                        }, onFailure = { msg ->
+//                            Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+//                        })
+//                    },
+//                    modifier = Modifier
+//                        .fillMaxWidth()
+//                        .padding(16.dp),
+//                    colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
+//                ) {
+//                    Text("Logout", color = Color.White, modifier = Modifier.padding(8.dp))
+//                }
 
                 if (openDialog.value) {
                     ChangePassAlertDialog(viewModel,

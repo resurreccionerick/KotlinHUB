@@ -59,7 +59,7 @@ fun AssessmentDetailsScreen(
 
     ) {
     var link by rememberSaveable { mutableStateOf("") }
-    var isApproved by remember { mutableStateOf(false) }
+    var isApproved by remember { mutableStateOf("") }
     var getLink by remember { mutableStateOf("") }
     var openAlertDialog = remember { mutableStateOf(false) }
 
@@ -110,7 +110,33 @@ fun AssessmentDetailsScreen(
                 }
 
                 item {
-                    if (!isApproved) {
+                    if (isApproved == "true" || isApproved == "null") {
+                        Box(
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            ExtendedFloatingActionButton(
+                                onClick = {
+                                    openTheLink(
+                                        context, getLink
+                                    )
+                                },
+                                icon = {
+                                    Icon(
+                                        Icons.Filled.Check, contentDescription = "Code Runner"
+                                    )
+                                },
+                                text = { Text(text = "See your work") },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .background(
+                                        Color.Blue,
+                                        shape = RoundedCornerShape(8.dp)
+                                    ),
+                                containerColor =   Color.Blue,
+                                contentColor = Color.White
+                            )
+                        }
+                    } else {
                         Box(
                             modifier = Modifier.fillMaxWidth()
                         ) {
@@ -131,51 +157,23 @@ fun AssessmentDetailsScreen(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .background(
-                                        Color.Red,
-                                        shape = RoundedCornerShape(8.dp)
+                                        Color.Red, shape = RoundedCornerShape(8.dp)
                                     ),
                                 containerColor = Color.Red,
-                                contentColor = Color.White
-                            )
-                        }
-                    } else {
-                        Box(
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            ExtendedFloatingActionButton(
-                                onClick = {
-                                    openTheLink(
-                                        context, getLink
-                                    )
-                                },
-                                icon = {
-                                    Icon(
-                                        Icons.Filled.Check, contentDescription = "Code Runner"
-                                    )
-                                },
-                                text = { Text(text = "See your work") },
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .background(
-                                        MaterialTheme.colorScheme.onTertiaryContainer,
-                                        shape = RoundedCornerShape(8.dp)
-                                    ),
-                                containerColor = MaterialTheme.colorScheme.onTertiaryContainer,
                                 contentColor = Color.White
                             )
                         }
                     }
 
                     if (openAlertDialog.value) {
-                        InstructionsAlertDialog(
-                            context = context, onDismiss = { openAlertDialog.value = false }
-                        )
+                        InstructionsAlertDialog(context = context,
+                            onDismiss = { openAlertDialog.value = false })
                     }
                 }
             }
 
 
-            if (!isApproved) {
+            if (isApproved == "false") {
                 Column(
                     modifier = Modifier
                         .align(Alignment.BottomCenter) // Aligns this at the bottom

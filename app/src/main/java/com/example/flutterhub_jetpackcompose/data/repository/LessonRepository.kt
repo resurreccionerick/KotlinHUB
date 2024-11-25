@@ -465,7 +465,10 @@ class LessonRepository @Inject constructor() {
 
                     if (userLink != null) {
                         // Log if the user has checked the assessment
-                        Log.d("Assessment Checked", "User: $userId, Assessment: ${assessment.title}, Link: ${userLink.name}, CHECKED: ${userLink.checked}")
+                        Log.d(
+                            "Assessment Checked",
+                            "User: $userId, Assessment: ${assessment.title}, Link: ${userLink.name}, CHECKED: ${userLink.checked}"
+                        )
                     }
 
                     // Add the assessment to the list
@@ -479,7 +482,6 @@ class LessonRepository @Inject constructor() {
             emptyList()
         }
     }
-
 
 
 //    suspend fun getAssessment(): List<AssessmentModel> {
@@ -536,7 +538,7 @@ class LessonRepository @Inject constructor() {
         val linkData = hashMapOf(
             "id" to userId,
             "name" to userName,
-            "checked" to false,
+            "checked" to "null",
             "link" to link
         )
 
@@ -558,12 +560,14 @@ class LessonRepository @Inject constructor() {
         assessmentId: String,
         linkId: String,
         authID: String,
-        checked: Boolean,
+        checked: String,
+        comment: String,
         onSuccess: () -> Unit,
         onFailure: (String) -> Unit
     ) {
         val linkData = mapOf(
-            "checked" to checked
+            "checked" to checked,
+            "comment" to comment
         )
 
         Log.d(
@@ -588,7 +592,7 @@ class LessonRepository @Inject constructor() {
     fun checkIfUserChecked(
         assessmentId: String,
         userName: String,
-        onResult: (Boolean) -> Unit,
+        onResult: (String) -> Unit,
         getLink: (String) -> Unit
     ) {
         // Access the specific child node in the Realtime Database
@@ -596,23 +600,23 @@ class LessonRepository @Inject constructor() {
             .addOnSuccessListener { snapshot ->
                 if (snapshot.exists()) {
                     // Check if the 'checked' field is true/false
-                    val isChecked = snapshot.child("checked").getValue(Boolean::class.java) ?: false
+                    val isChecked = snapshot.child("checked").getValue(String::class.java) ?: false
                     // Get the link associated with the user, if needed
                     val link = snapshot.child("link").getValue(String::class.java) ?: ""
 
                     Log.d("checkIfUserChecked", "Check status for $userName: $isChecked")
 
                     // Return the results through the callbacks
-                    onResult(isChecked)
+                    onResult(isChecked.toString())
                     getLink(link)
                 } else {
                     Log.d("checkIfUserChecked", "Data for $userName not found.")
-                    onResult(false) // Default to false if no data found
+                    onResult("false") // Default to false if no data found
                 }
             }
             .addOnFailureListener { e ->
                 Log.e("checkIfUserChecked ERROR", "Failed to fetch data: ${e.message}")
-                onResult(false) // Default to false on failure
+                onResult("false") // Default to false on failure
             }
     }
 

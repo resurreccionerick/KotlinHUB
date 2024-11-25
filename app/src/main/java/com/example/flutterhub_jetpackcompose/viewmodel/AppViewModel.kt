@@ -364,16 +364,22 @@ class AppViewModel @Inject constructor(
         assessmentId: String,
         linkId: String,
         authID: String,
-        checked: Boolean,
+        checked: String,
+        comment: String,
         onSuccess: () -> Unit,
         onFailure: (String) -> Unit
     ) {
         viewModelScope.launch {
-            repository.updateAssessmentLink(assessmentId, linkId, authID, checked,
+            repository.updateAssessmentLink(assessmentId,
+                linkId,
+                authID,
+                checked,
+                comment,
                 onSuccess = {
                     onSuccess()
 
-                }, onFailure = { msg ->
+                },
+                onFailure = { msg ->
                     onFailure(msg)
                 })
         }
@@ -382,7 +388,7 @@ class AppViewModel @Inject constructor(
     fun checkUserStatus(
         id: String,
         userID: String,
-        onResult: (Boolean) -> Unit,
+        onResult: (String) -> Unit,
         getLink: (String) -> Unit
     ) {
         viewModelScope.launch {

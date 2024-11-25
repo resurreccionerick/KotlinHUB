@@ -5,16 +5,24 @@ import android.widget.Toast
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Comment
+import androidx.compose.material.icons.filled.NotInterested
+import androidx.compose.material.icons.filled.Pending
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Checkbox
-import androidx.compose.material3.CheckboxDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -52,7 +60,8 @@ fun AssessmentCard(
     val userLink = assessmentModel.links?.get(userId)
 
     // Check if the userLink exists and if it's checked
-    val isChecked = userLink?.checked ?: false // Default to false if no link exists for the user
+    val isChecked = userLink?.checked ?: null // Default to false if no link exists for the user
+    val theComment = userLink?.comment ?: null
 
     Card(
         onClick = {
@@ -64,88 +73,160 @@ fun AssessmentCard(
             .padding(8.dp), // Card padding
         elevation = CardDefaults.cardElevation(4.dp) // Card elevation (shadow effect)
     ) {
-        // Box to align content inside the card
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp) // Padding inside the card
+                .padding(8.dp) // Padding inside the card
         ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically, // Center vertically
-                horizontalArrangement = Arrangement.SpaceBetween // Spread text and buttons
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                verticalArrangement = Arrangement.SpaceBetween
             ) {
+                // Title at the top
                 Text(
                     text = "Title: ${assessmentModel.title}",
                     style = MaterialTheme.typography.bodyLarge,
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier
+                        .padding(top = 8.dp)
                 )
 
+                // IconButton and Text in a Row
                 if (!Hawk.get<Boolean?>("role").equals("admin")) {
-                    Checkbox(
-                        checked = isChecked, // Bind to the 'checked' status of the link
-                        onCheckedChange = null, // Disable interaction (no state change)
-                        enabled = false, // Disable checkbox (non-interactive)
-                        colors = CheckboxDefaults.colors(
-                            disabledUncheckedColor = Color.DarkGray,
-                            disabledCheckedColor = Color.Green
-                        )
-                    )
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier
+                                .padding(horizontal = 8.dp)
+                                .align(Alignment.CenterVertically)
+                        ) {
+                            IconButton(onClick = {
+                                // Define action here if needed
+                            }) {
+                                val imageVector = when (isChecked) {
+                                    "true" -> {
+                                        Icons.Default.Check
+                                    }
+
+                                    "false" -> {
+                                        Icons.Default.NotInterested
+                                    }
+
+                                    else -> {
+                                        Icons.Default.Pending
+                                    }
+                                }
+
+                                Icon(
+                                    imageVector = imageVector,
+                                    contentDescription = null,
+                                    tint = Color(0xFF039be5)
+                                )
+
+                            }
+
+                            //Spacer(modifier = Modifier.width(4.dp))
+
+                            Text(
+
+                                text = when (isChecked.toString()) {
+                                    "true" -> "Status: Done!"
+                                    "false" -> "Status: Not Approved!"
+                                    else -> "Status: Pending"
+                                },
+                                style = MaterialTheme.typography.bodySmall
+                            )
+                        }
+                    }
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .padding(horizontal = 8.dp)
+                    ) {
+                        if (isChecked == "false" && !theComment.isNullOrEmpty()) {
+                            IconButton(onClick = {
+                            }) {
+                                Icon(
+                                    imageVector = Icons.Default.Comment,
+                                    contentDescription = null,
+                                    tint = Color.Red
+                                )
+
+                            }
+                            Text(
+                                maxLines = 2,
+                                text = "Comment: $theComment",
+                                style = MaterialTheme.typography.bodySmall
+                            )
+                        }
+                    }
                 }
-            }
-        }
 
+                if (Hawk.get<Boolean?>("role").equals("admin")) {
+                    // Buttons at the bottom
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 4.dp),
+                        horizontalArrangement = Arrangement.SpaceEvenly
+                    ) {
+                        if (Hawk.get<Boolean?>("role").equals("admin")) {
+                            // Track button
+                            Button(
+                                onClick = {
+                                    navController.navigate("assessmentTrack/${assessmentModel.id}")
+                                },
+                                colors = ButtonDefaults.buttonColors(containerColor = trackColor),
+                                modifier = Modifier.padding(8.dp)
+                            ) {
+                                Text("Track", color = Color.White)
+                            }
 
+                            // Edit button
+                            Button(
+                                onClick = {
+                                    navController.navigate("editAssessment/${assessmentModel.id}")
+                                },
+                                colors = ButtonDefaults.buttonColors(containerColor = editColor),
+                                modifier = Modifier.padding(8.dp)
+                            ) {
+                                Text("Edit", color = Color.White)
+                            }
 
-
-        Row(modifier = Modifier.align(Alignment.CenterHorizontally)) {
-
-            //Track button
-            if (Hawk.get<Boolean?>("role").equals("admin")) {
-                Button(
-                    onClick = {
-                        navController.navigate("assessmentTrack/${assessmentModel.id}")
-                    },
-                    colors = ButtonDefaults.buttonColors(containerColor = trackColor),
-                    modifier = Modifier.padding(8.dp)
-                ) {
-                    Text("Track", color = Color.White)
-                }
-
-                // Edit Button
-                Button(
-                    onClick = {
-                        navController.navigate("editAssessment/${assessmentModel.id}")
-                    },
-                    colors = ButtonDefaults.buttonColors(containerColor = editColor),
-                    modifier = Modifier.padding(8.dp) // Spacing between buttons
-                ) {
-                    Text("Edit", color = Color.White)
-                }
-
-                // Delete Button
-                Button(
-                    onClick = {
-                        viewModel.deleteAssessment(userId, assessmentModel.id,
-                            onSuccess = {
-                                Toast.makeText(
-                                    context,
-                                    "Successfully deleted",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-
-                            },
-                            onFailure = { error ->
-                                Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
-                            })
-                    },
-                    colors = ButtonDefaults.buttonColors(containerColor = deleteColor),
-                    modifier = Modifier.padding(8.dp)
-                ) {
-                    Text("Delete", color = Color.White)
+                            // Delete button
+                            Button(
+                                onClick = {
+                                    viewModel.deleteAssessment(
+                                        userId,
+                                        assessmentModel.id,
+                                        onSuccess = {
+                                            Toast.makeText(
+                                                context,
+                                                "Successfully deleted",
+                                                Toast.LENGTH_SHORT
+                                            ).show()
+                                        },
+                                        onFailure = { error ->
+                                            Toast.makeText(context, error, Toast.LENGTH_SHORT)
+                                                .show()
+                                        }
+                                    )
+                                },
+                                colors = ButtonDefaults.buttonColors(containerColor = deleteColor),
+                                modifier = Modifier.padding(8.dp)
+                            ) {
+                                Text("Delete", color = Color.White)
+                            }
+                        }
+                    }
                 }
             }
         }
     }
 }
-
