@@ -326,6 +326,7 @@ class LessonRepository @Inject constructor() {
     }
 
     suspend fun saveQuiz(
+        userID:String,
         scoreModel: QuizScoreModel,
         onSuccess: () -> Unit,
         onFailure: (String) -> Unit
@@ -333,13 +334,11 @@ class LessonRepository @Inject constructor() {
         try {
             val difficulty = Hawk.get("difficulty", "")
             val saveRef = firestore.collection("quiz_scores_$difficulty").document()
-            val scoreWithId = scoreModel.copy(id = saveRef.id)
+            val scoreWithId = scoreModel.copy(id = userID)
 
             val userRef = firestore.collection("users").document(auth.currentUser!!.uid)
 
             // Prepare the fields to update based on the difficulty level
-
-
             val updates = if (difficulty.equals("basic")) {
                 Log.d("DIFFICULTY WAS: ", difficulty)
                 mapOf("basic_Score" to scoreModel.score)
@@ -372,7 +371,6 @@ class LessonRepository @Inject constructor() {
             val scoreList = scoreSnapshots.toObjects(QuizScoreModel::class.java)
 
             scoreList.sortedByDescending { it.score }
-            //basicScoreSnapshots.toObjects(QuizScoreModel::class.java)
         } catch (e: Exception) {
             Log.e("GET getBasicScores ERROR: ", e.message.toString())
             emptyList()

@@ -14,6 +14,7 @@ import com.example.flutterhub_jetpackcompose.screen.assessment.admin.AddAssessme
 import com.example.flutterhub_jetpackcompose.screen.assessment.admin.EditAssessmentScreen
 import com.example.flutterhub_jetpackcompose.screen.assessment.admin.TrackAssessmentScreen
 import com.example.flutterhub_jetpackcompose.screen.assessment.user.AssessmentHomeScreen
+import com.example.flutterhub_jetpackcompose.screen.components.AboutUsScreen
 import com.example.flutterhub_jetpackcompose.screen.components.AssessmentDetailsScreen
 import com.example.flutterhub_jetpackcompose.screen.components.LeaderboardScreen
 import com.example.flutterhub_jetpackcompose.screen.components.LessonDetailsScreen
@@ -102,6 +103,10 @@ fun NavGraph(navController: NavHostController, viewModel: AppViewModel, context:
 
         composable("profile") {
             ProfileComponent(navController, viewModel, context)
+        }
+
+        composable("aboutUs") {
+            AboutUsScreen(navController, viewModel, context)
         }
 
 

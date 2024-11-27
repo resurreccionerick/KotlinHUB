@@ -39,10 +39,17 @@ fun QuizDifficultyScreen(
         topBar = {
             TopAppBar(
                 title = {
-                    Text(
-                        "Your Overall Score: " + ((userModel?.basic_Score?.toIntOrNull()
-                            ?: 0) + (userModel?.intermediate_Score?.toIntOrNull() ?: 0))
-                    )
+                    if (!Hawk.get<Boolean?>("role").equals("admin")) {
+                        Text(
+                            "Your Overall Score: " + ((userModel?.basic_Score?.toIntOrNull()
+                                ?: 0) + (userModel?.intermediate_Score?.toIntOrNull() ?: 0))
+                        )
+                    } else {
+                        Text(
+                            text =
+                            "Quiz"
+                        )
+                    }
                 },
                 navigationIcon = {
                     IconButton(onClick = {

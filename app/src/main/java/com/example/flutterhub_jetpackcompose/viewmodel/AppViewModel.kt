@@ -182,12 +182,13 @@ class AppViewModel @Inject constructor(
 
 
     fun saveQuizScore(
+        userID: String,
         scoreModel: QuizScoreModel,
         onSuccess: () -> Unit,
         onFailure: (String) -> Unit
     ) {
         viewModelScope.launch {
-            repository.saveQuiz(scoreModel,
+            repository.saveQuiz(userID, scoreModel,
                 onSuccess = {
                     onSuccess()
                 }, onFailure = { errorMsg ->

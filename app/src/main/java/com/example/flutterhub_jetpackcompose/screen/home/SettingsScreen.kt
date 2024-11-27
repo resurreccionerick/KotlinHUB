@@ -93,34 +93,7 @@ fun SettingsScreen(
                     )
                 }
             }
-//            Card(
-//                modifier = Modifier
-//                    .fillMaxWidth()
-//                    .padding(top = 16.dp, start = 16.dp, end = 16.dp, bottom = 0.dp),
-//                elevation = CardDefaults.cardElevation(4.dp)
-//            ) {
-//                Column(
-//                ) {
-//                    // Switch for toggling theme
-//                    Row(
-//                        verticalAlignment = Alignment.CenterVertically,
-//                        horizontalArrangement = Arrangement.SpaceBetween,
-//                        modifier = Modifier.fillMaxWidth()
-//                    ) {
-//                        Text(
-//                            if (darkModeState) "Light Mode" else "Dark Mode",
-//                            modifier = Modifier.padding(12.dp)
-//                        )
-//                        Switch(
-//                            checked = darkModeState,
-//                            onCheckedChange = { isChecked ->
-//                                // Toggle the theme state in ViewModel
-//                                viewModel.toggleDarkMode(isChecked)
-//                            }
-//                        )
-//                    }
-//                }
-//            }
+
 
 
             Card(
@@ -137,7 +110,7 @@ fun SettingsScreen(
 
             Card(
                 onClick = {
-
+                    navController.navigate("aboutUs")
                 },
                 modifier = Modifier
                     .fillMaxWidth()

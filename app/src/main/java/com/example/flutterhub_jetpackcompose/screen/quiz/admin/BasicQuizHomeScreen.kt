@@ -82,19 +82,19 @@ fun BasicQuizHomeScreen(
 //                    Icon(Icons.Default.Quiz, contentDescription = "Add Quiz")
 //                }
                 } else {
-                    FloatingActionButton(
-                        modifier = Modifier.padding(bottom = 16.dp),
-                        onClick = {
-                            Hawk.put("difficulty", "basic")
-                            viewModel.refreshLeaderboardsDifficulty()
-                            navController.navigate("scoreQuiz")
-                        }) {
-                        Icon(
-                            Icons.Default.Star,
-                            contentDescription = "Leaderboard",
-                            tint = Color.Blue
-                        )
-                    }
+//                    FloatingActionButton(
+//                        modifier = Modifier.padding(bottom = 16.dp),
+//                        onClick = {
+//                            Hawk.put("difficulty", "basic")
+//                            viewModel.refreshLeaderboardsDifficulty()
+//                            navController.navigate("scoreQuiz")
+//                        }) {
+//                        Icon(
+//                            Icons.Default.Star,
+//                            contentDescription = "Leaderboard",
+//                            tint = Color.Blue
+//                        )
+//                    }
 
                     FloatingActionButton(onClick = {
                         navController.navigate("adminAddQuiz")

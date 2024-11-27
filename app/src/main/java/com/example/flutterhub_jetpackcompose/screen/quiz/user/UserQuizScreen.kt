@@ -54,6 +54,7 @@ fun UserQuizScreen(
     var answered by remember { mutableStateOf(false) } // Track if answer is submitted
     var showDesc by remember { mutableStateOf(false) }
     var isCorrect by remember { mutableStateOf(false) }
+    val user: UserModel? = Hawk.get("user_details")
 
     // Load quizzes when the screen opens
     LaunchedEffect(Unit) {
@@ -95,7 +96,7 @@ fun UserQuizScreen(
                     )
 
                 viewModel.refreshLessonDifficulty()
-                viewModel.saveQuizScore(scoreModel,
+                viewModel.saveQuizScore(user!!.id, scoreModel,
                     onSuccess = {
                         Toast.makeText(context, "Score saved", Toast.LENGTH_SHORT).show();
                     }, onFailure = { msg ->
@@ -231,10 +232,10 @@ fun UserQuizScreen(
 
         Box(modifier = Modifier.padding(start = 16.dp, end = 16.dp)) {
             if (answered) {
-                if(isCorrect){
-                    AnswerDescription(isCorrect,currentQuiz.correctDesc)
-                }else{
-                    AnswerDescription(isCorrect,currentQuiz.wrongDesc)
+                if (isCorrect) {
+                    AnswerDescription(isCorrect, currentQuiz.correctDesc)
+                } else {
+                    AnswerDescription(isCorrect, currentQuiz.wrongDesc)
                 }
             }
         }
