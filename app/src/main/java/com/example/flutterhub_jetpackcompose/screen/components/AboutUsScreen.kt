@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -16,7 +15,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -33,7 +31,7 @@ fun AboutUsScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(text = "About Us") },
+                title = { Text(text = "Meet the team") },
                 navigationIcon = {
                     IconButton(onClick = {
                         navController.popBackStack()
@@ -56,15 +54,9 @@ fun AboutUsScreen(
                         8.dp
                     ),
                 ) {
-                    Text(
-                        text = "Meet The Team:",
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .align(Alignment.CenterHorizontally)
-                            .padding(bottom = 16.dp)
-                    )
-                    ImageCard(
+                    ImageCardWithRole(
                         label = "Nathaniel Domingo",
+                        role = "Backend Developer",
                         imageRes = R.drawable.developer,
                         imgHeight = 250,
                         onClick = {
@@ -75,8 +67,9 @@ fun AboutUsScreen(
 
                     Spacer(modifier = Modifier.height(8.dp))
 
-                    ImageCard(
+                    ImageCardWithRole(
                         label = "Hanan Edres",
+                        role = "Software Developer",
                         imageRes = R.drawable.developer,
                         imgHeight = 250,
                         onClick = {
@@ -87,8 +80,9 @@ fun AboutUsScreen(
 
                     Spacer(modifier = Modifier.height(8.dp))
 
-                    ImageCard(
+                    ImageCardWithRole(
                         label = "Carl Louie Felipe",
+                        role = "Frontend Developer",
                         imageRes = R.drawable.developer,
                         imgHeight = 250,
                         onClick = {
@@ -96,6 +90,7 @@ fun AboutUsScreen(
                         },
                         modifier = Modifier.weight(1f)
                     )
+
                 }
             }
         })
