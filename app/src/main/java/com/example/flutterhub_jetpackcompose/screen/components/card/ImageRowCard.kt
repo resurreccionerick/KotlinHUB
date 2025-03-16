@@ -1,4 +1,4 @@
-package com.example.flutterhub_jetpackcompose.screen.components
+package com.example.flutterhub_jetpackcompose.screen.components.card
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable

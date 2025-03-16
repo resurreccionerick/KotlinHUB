@@ -14,11 +14,11 @@ import com.example.flutterhub_jetpackcompose.screen.assessment.admin.AddAssessme
 import com.example.flutterhub_jetpackcompose.screen.assessment.admin.EditAssessmentScreen
 import com.example.flutterhub_jetpackcompose.screen.assessment.admin.TrackAssessmentScreen
 import com.example.flutterhub_jetpackcompose.screen.assessment.user.AssessmentHomeScreen
-import com.example.flutterhub_jetpackcompose.screen.components.AboutUsScreen
-import com.example.flutterhub_jetpackcompose.screen.components.AssessmentDetailsScreen
-import com.example.flutterhub_jetpackcompose.screen.components.LeaderboardScreen
-import com.example.flutterhub_jetpackcompose.screen.components.LessonDetailsScreen
-import com.example.flutterhub_jetpackcompose.screen.components.OverallLeaderboardScreen
+import com.example.flutterhub_jetpackcompose.screen.components.screen.AboutUsScreen
+import com.example.flutterhub_jetpackcompose.screen.components.screen.AssessmentDetailsScreen
+import com.example.flutterhub_jetpackcompose.screen.components.screen.LeaderboardScreen
+import com.example.flutterhub_jetpackcompose.screen.components.screen.LessonDetailsScreen
+import com.example.flutterhub_jetpackcompose.screen.components.screen.OverallLeaderboardScreen
 import com.example.flutterhub_jetpackcompose.screen.components.ProfileComponent
 import com.example.flutterhub_jetpackcompose.screen.components.WebView
 import com.example.flutterhub_jetpackcompose.screen.home.AdminHomeScreen

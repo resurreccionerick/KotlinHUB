@@ -15,11 +15,14 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.flutterhub_jetpackcompose.screen.components.LessonCard
+import com.example.flutterhub_jetpackcompose.screen.components.alert_dialog.LessonAlertDialog
+import com.example.flutterhub_jetpackcompose.screen.components.card.LessonCard
 import com.example.flutterhub_jetpackcompose.viewmodel.AppViewModel
 import com.orhanobut.hawk.Hawk
 
@@ -30,6 +33,7 @@ fun IntermediateHomeScreen(
     viewModel: AppViewModel,
     context: Context
 ) {
+    val openDialog = remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
@@ -45,13 +49,25 @@ fun IntermediateHomeScreen(
             )
         },
 
+//        floatingActionButton = {
+//            if (Hawk.get<Boolean?>("role").equals("admin")) {
+//                FloatingActionButton(onClick = {
+//                    Hawk.put("difficulty", "intermediate")
+//                    navController.navigate("addLesson")
+//                }) {
+//                    Icon(Icons.Default.Add, contentDescription = "Add lesson")
+//                }
+//            }
+//        }
         floatingActionButton = {
-            if (Hawk.get<Boolean?>("role").equals("admin")) {
-                FloatingActionButton(onClick = {
-                    Hawk.put("difficulty", "intermediate")
-                    navController.navigate("addLesson")
-                }) {
-                    Icon(Icons.Default.Add, contentDescription = "Add lesson")
+            if (Hawk.get<String?>("role") == "admin") { // Show FAB only for admins
+                FloatingActionButton(
+                    onClick = {
+                        openDialog.value = true;
+                        Hawk.put("difficulty", "intermediate")
+                    } // Open dialog on press
+                ) {
+                    Icon(Icons.Default.Add, contentDescription = "Add Lesson")
                 }
             }
         }
@@ -60,10 +76,6 @@ fun IntermediateHomeScreen(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-//                .paint(
-//                    // Replace with your image id
-//                    painterResource(id = R.drawable.bg),
-//                    contentScale = ContentScale.FillBounds)
 
         ) {
             Column(
@@ -81,6 +93,14 @@ fun IntermediateHomeScreen(
             }
         }
 
+        // Show the dialog only if openDialog.value is true
+        if (openDialog.value) {
+            LessonAlertDialog(
+                context = context,
+                onDismiss = { openDialog.value = false },
+                viewModel = viewModel
+            )
+        }
     }
 }
 

@@ -31,7 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.flutterhub_jetpackcompose.R
 import com.example.flutterhub_jetpackcompose.data.models.UserModel
-import com.example.flutterhub_jetpackcompose.screen.components.ImageCard
+import com.example.flutterhub_jetpackcompose.screen.components.card.ImageCard
 import com.example.flutterhub_jetpackcompose.viewmodel.AppViewModel
 import com.orhanobut.hawk.Hawk
 

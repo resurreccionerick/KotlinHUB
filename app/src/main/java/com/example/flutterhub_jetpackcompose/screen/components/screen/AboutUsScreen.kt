@@ -1,4 +1,4 @@
-package com.example.flutterhub_jetpackcompose.screen.components
+package com.example.flutterhub_jetpackcompose.screen.components.screen
 
 import android.content.Context
 import androidx.compose.foundation.layout.Column
@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.flutterhub_jetpackcompose.R
+import com.example.flutterhub_jetpackcompose.screen.components.card.ImageCardWithRole
 import com.example.flutterhub_jetpackcompose.viewmodel.AppViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)

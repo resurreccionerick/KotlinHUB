@@ -1,4 +1,4 @@
-package com.example.flutterhub_jetpackcompose.screen.components
+package com.example.flutterhub_jetpackcompose.screen.components.screen
 
 import android.content.Context
 import android.content.Intent
@@ -23,7 +23,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.compose.material3.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
@@ -73,20 +72,21 @@ fun LessonDetailsScreen(
                     )
                 }
 
-                item {
-                    Card(
-                        shape = RoundedCornerShape(8.dp),
-                        modifier = Modifier.padding(8.dp),
-                        elevation = CardDefaults.cardElevation(5.dp)
-                    ) {
-                        // Add padding inside the Card
-                        Text(
-                            text = lessonModel.description,
-                            fontWeight = FontWeight.Medium,
-                            modifier = Modifier.padding(16.dp)
-                        )
-                    }
-                }
+                //todo: ayusin
+//                item {
+//                    Card(
+//                        shape = RoundedCornerShape(8.dp),
+//                        modifier = Modifier.padding(8.dp),
+//                        elevation = CardDefaults.cardElevation(5.dp)
+//                    ) {
+//                        // Add padding inside the Card
+//                        Text(
+//                            text = lessonModel.,
+//                            fontWeight = FontWeight.Medium,
+//                            modifier = Modifier.padding(16.dp)
+//                        )
+//                    }
+//                }
 
                 item {
                     // Use Box to apply background color to the button
@@ -96,7 +96,11 @@ fun LessonDetailsScreen(
                             .padding(horizontal = 8.dp)
                     ) {
                         ExtendedFloatingActionButton(
-                            onClick = { openYoutubeVid(context, lessonModel.link) },
+                            onClick = {
+                                //todo:ayusin
+//                                openYoutubeVid(context, lessonModel.link)
+
+                                      },
                             icon = {
                                 Icon(
                                     Icons.Filled.VideoLibrary,

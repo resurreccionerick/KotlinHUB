@@ -9,11 +9,13 @@ import androidx.lifecycle.viewModelScope
 import com.example.flutterhub_jetpackcompose.data.models.AssessmentLink
 import com.example.flutterhub_jetpackcompose.data.models.AssessmentModel
 import com.example.flutterhub_jetpackcompose.data.models.LessonModel
+import com.example.flutterhub_jetpackcompose.data.models.LessonSubtopic
 import com.example.flutterhub_jetpackcompose.data.models.QuizModel
 import com.example.flutterhub_jetpackcompose.data.models.QuizScoreModel
 import com.example.flutterhub_jetpackcompose.data.repository.LessonRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import java.time.LocalDateTime
 import javax.inject.Inject
 
 //The ViewModel acts as the bridge between the Repository and the UI. It fetches the data and holds the UI state.
@@ -70,15 +72,12 @@ class AppViewModel @Inject constructor(
 
     fun addNewLesson(
         name: String,
-        desc: String,
-        link: String,
         onSuccess: () -> Unit,
         onFailure: (String) -> Unit
     ) {
         viewModelScope.launch {
             val lesson = LessonModel(
                 id = "", name = name,
-                description = desc, link = link
             )
 
             repository.addLesson(lesson,
@@ -89,6 +88,29 @@ class AppViewModel @Inject constructor(
                     onFailure(errorMsg)
                 })
 
+        }
+    }
+
+    fun addNewSubLesson(
+        name: String,
+        desc: String,
+        link: String,
+        onSuccess: () -> Unit,
+        onFailure: (String) -> Unit
+    ) {
+        viewModelScope.launch {
+            val lesson = LessonSubtopic(
+                id = "", name = name,
+                description = desc, link = link,
+            )
+
+//            repository.addSubLesson(lesson,
+//                onSuccess = {
+//                    onSuccess()
+//                    loadLessons() //refresh the list
+//                }, onFailure = { errorMsg ->
+//                    onFailure(errorMsg)
+//                })
         }
     }
 

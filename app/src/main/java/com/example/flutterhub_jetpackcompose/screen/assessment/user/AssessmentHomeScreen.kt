@@ -27,7 +27,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.flutterhub_jetpackcompose.data.models.UserModel
-import com.example.flutterhub_jetpackcompose.screen.components.AssessmentCard
+import com.example.flutterhub_jetpackcompose.screen.components.card.AssessmentCard
 import com.example.flutterhub_jetpackcompose.viewmodel.AppViewModel
 import com.orhanobut.hawk.Hawk
 

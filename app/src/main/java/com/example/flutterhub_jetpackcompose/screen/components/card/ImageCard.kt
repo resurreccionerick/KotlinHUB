@@ -1,4 +1,4 @@
-package com.example.flutterhub_jetpackcompose.screen.components
+package com.example.flutterhub_jetpackcompose.screen.components.card
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -24,9 +24,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun ImageCardWithRole(
+fun ImageCard(
     label: String,
-    role: String,
     imageRes: Int,
     imgHeight: Int,
     onClick: () -> Unit,
@@ -59,7 +58,6 @@ fun ImageCardWithRole(
             )
             Spacer(modifier = Modifier.height(16.dp))
             Text(text = label, fontWeight = FontWeight.Bold)
-            Text(text = role, fontWeight = FontWeight.ExtraLight)
         }
     }
 }

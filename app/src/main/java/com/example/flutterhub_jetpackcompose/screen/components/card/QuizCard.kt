@@ -1,4 +1,4 @@
-package com.example.flutterhub_jetpackcompose.screen.components
+package com.example.flutterhub_jetpackcompose.screen.components.card
 
 import android.content.Context
 import android.widget.Toast
@@ -21,20 +21,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.flutterhub_jetpackcompose.data.models.LessonModel
+
+import com.example.flutterhub_jetpackcompose.data.models.QuizModel
 import com.example.flutterhub_jetpackcompose.ui.theme.DeleteRedDark
 import com.example.flutterhub_jetpackcompose.ui.theme.DeleteRedLight
 import com.example.flutterhub_jetpackcompose.ui.theme.EditGreenDark
 import com.example.flutterhub_jetpackcompose.ui.theme.EditGreenLight
-import com.example.flutterhub_jetpackcompose.ui.theme.TrackBlueDark
-import com.example.flutterhub_jetpackcompose.ui.theme.TrackBlueLight
 import com.example.flutterhub_jetpackcompose.viewmodel.AppViewModel
 import com.orhanobut.hawk.Hawk
 
 @Composable
-fun LessonCard(
+fun QuizCard(
     navController: NavController,
-    lesson: LessonModel,
+    quiz: QuizModel,
     viewModel: AppViewModel,
     context: Context
 ) {
@@ -46,14 +45,11 @@ fun LessonCard(
 
 
     Card(
-        onClick = {
-            navController.navigate("lessonView/${lesson.id}")
-        },
-        shape = RoundedCornerShape(8.dp), // Rounded corners for the card
+        shape = RoundedCornerShape(15.dp), // Rounded corners for the card
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp), // Card padding
-        elevation = CardDefaults.cardElevation(4.dp) // Card elevation (shadow effect)
+        elevation = CardDefaults.cardElevation(10.dp) // Card elevation (shadow effect)
     ) {
         // Box to align content inside the card
         Box(
@@ -67,7 +63,7 @@ fun LessonCard(
                 horizontalArrangement = Arrangement.SpaceBetween // Spread text and buttons
             ) {
                 Text(
-                    text = "Title: ${lesson.name}",
+                    text = "Title: ${quiz.question}",
                     style = MaterialTheme.typography.bodyLarge,
                     modifier = Modifier.weight(1f)
                 )
@@ -79,7 +75,7 @@ fun LessonCard(
                 // Edit Button
                 Button(
                     onClick = {
-                        navController.navigate("editLesson/${lesson.id}")
+                        navController.navigate("adminEditQuiz/${quiz.id}")
                     },
                     colors = ButtonDefaults.buttonColors(containerColor = editColor),
                     modifier = Modifier.padding(end = 8.dp) // Spacing between buttons
@@ -90,11 +86,13 @@ fun LessonCard(
                 // Delete Button
                 Button(
                     onClick = {
-                        viewModel.deleteLesson(lesson.id,
+                        viewModel.deleteQuiz(quiz.id,
                             onSuccess = {
+                                viewModel.quizzes
+
                                 Toast.makeText(
                                     context,
-                                    "Successfully deleted",
+                                    "Quiz Successfully deleted",
                                     Toast.LENGTH_SHORT
                                 ).show()
 

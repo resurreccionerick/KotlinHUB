@@ -175,8 +175,30 @@ class LessonRepository @Inject constructor() {
 
 
     // ---------------------------------------------------- LESSON ---------------------------------------------------- //
-
     suspend fun addLesson(
+        lesson: LessonModel, onSuccess: () -> Unit, onFailure: (String) -> Unit
+    ) {
+        try {
+            val difficulty = getDifficulty()
+
+            val lessonDocRef =
+                firestore.collection(difficulty) // Generate a document reference with an auto-ID
+                    .document()
+
+            val lessonWithID =
+                lesson.copy(id = lessonDocRef.id)  // Add the generated ID to the lesson model
+
+            lessonDocRef.set(lessonWithID) // Upload the lesson with the auto-generated ID
+                .await()
+
+            onSuccess()
+        } catch (e: Exception) {
+            onFailure(e.message.toString())
+            Log.e("ADD LESSON ERROR: ", e.message.toString())
+        }
+    }
+
+    suspend fun addSubLesson(
         lesson: LessonModel, onSuccess: () -> Unit, onFailure: (String) -> Unit
     ) {
         try {

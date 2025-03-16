@@ -16,6 +16,7 @@ import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.ui.PlayerView
 import androidx.compose.ui.Modifier
 import com.example.flutterhub_jetpackcompose.R
+import com.example.flutterhub_jetpackcompose.screen.components.screen.openTheLink
 
 
 @Composable

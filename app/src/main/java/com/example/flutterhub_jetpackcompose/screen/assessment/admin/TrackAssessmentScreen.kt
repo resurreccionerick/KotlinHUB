@@ -20,10 +20,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.flutterhub_jetpackcompose.data.models.UserModel
-import com.example.flutterhub_jetpackcompose.screen.components.TrackAssessmentCard
+import com.example.flutterhub_jetpackcompose.screen.components.card.TrackAssessmentCard
 import com.example.flutterhub_jetpackcompose.viewmodel.AppViewModel
-import com.orhanobut.hawk.Hawk
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

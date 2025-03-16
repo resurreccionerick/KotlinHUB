@@ -1,4 +1,4 @@
-package com.example.flutterhub_jetpackcompose.screen.components
+package com.example.flutterhub_jetpackcompose.screen.components.alert_dialog
 
 import android.content.Context
 import androidx.compose.material.icons.Icons
@@ -10,6 +10,8 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import com.example.flutterhub_jetpackcompose.screen.components.WatchInstructions
+import com.example.flutterhub_jetpackcompose.screen.components.screen.openTheLink
 
 @Composable
 fun InstructionsAlertDialog(context: Context, onDismiss: () -> Unit) {

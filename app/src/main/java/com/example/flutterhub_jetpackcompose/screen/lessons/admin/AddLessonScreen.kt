@@ -13,6 +13,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.flutterhub_jetpackcompose.viewmodel.AppViewModel
+import java.time.LocalDateTime
+import java.util.Date
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -79,7 +81,7 @@ fun AddLessonScreen(
 
                 Button(onClick = {
                     if (title.isNotEmpty() && description.isNotEmpty() && link.isNotEmpty()) {
-                        viewModel.addNewLesson(
+                        viewModel.addNewSubLesson(
                             title,
                             description,
                             link,

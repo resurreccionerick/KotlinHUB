@@ -1,4 +1,4 @@
-package com.example.flutterhub_jetpackcompose.screen.components
+package com.example.flutterhub_jetpackcompose.screen.components.screen
 
 import android.content.Context
 import androidx.compose.foundation.background
@@ -18,25 +18,17 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavController
+import com.example.flutterhub_jetpackcompose.screen.components.card.ScoreCard
 import com.example.flutterhub_jetpackcompose.viewmodel.AppViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun OverallLeaderboardScreen(
-    navController: NavController,
-    viewModel: AppViewModel,
-    context: Context
-) {
-
-    LaunchedEffect(Unit) {
-        viewModel.getOverallLeaderboards()
-    }
+fun LeaderboardScreen(navController: NavController, viewModel: AppViewModel, context: Context) {
 
     if (viewModel.scores.isEmpty()) {
         Box(
@@ -51,7 +43,7 @@ fun OverallLeaderboardScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(title = { Text("Overall Leaderboard") }, navigationIcon = {
+            TopAppBar(title = { Text("Leaderboard") }, navigationIcon = {
                 IconButton(onClick = {
                     navController.popBackStack()
                 }) {
