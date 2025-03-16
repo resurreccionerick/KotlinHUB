@@ -45,7 +45,7 @@ fun LessonCard(
 
     Card(
         onClick = {
-            navController.navigate("lessonView/${lesson.id}")
+            navController.navigate("lessonListView/${lesson.id}")
         },
         shape = RoundedCornerShape(8.dp), // Rounded corners for the card
         modifier = Modifier

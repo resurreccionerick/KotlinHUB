@@ -19,6 +19,7 @@ import java.util.Date
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddLessonScreen(
+    lessonID: String,
     navController: NavController,
     viewModel: AppViewModel,
     context: Context
@@ -82,6 +83,7 @@ fun AddLessonScreen(
                 Button(onClick = {
                     if (title.isNotEmpty() && description.isNotEmpty() && link.isNotEmpty()) {
                         viewModel.addNewSubLesson(
+                            lessonID,
                             title,
                             description,
                             link,

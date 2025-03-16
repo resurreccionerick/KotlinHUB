@@ -26,6 +26,7 @@ import com.example.flutterhub_jetpackcompose.screen.home.SettingsScreen
 import com.example.flutterhub_jetpackcompose.screen.home.UserHomeScreen
 import com.example.flutterhub_jetpackcompose.screen.lessons.admin.AddLessonScreen
 import com.example.flutterhub_jetpackcompose.screen.lessons.admin.EditLessonScreen
+import com.example.flutterhub_jetpackcompose.screen.lessons.admin.SubLessonListScreen
 import com.example.flutterhub_jetpackcompose.screen.lessons.user.BasicHomeScreen
 import com.example.flutterhub_jetpackcompose.screen.lessons.user.IntermediateHomeScreen
 import com.example.flutterhub_jetpackcompose.screen.login_register.ForgotPassScreen
@@ -146,8 +147,22 @@ fun NavGraph(navController: NavHostController, viewModel: AppViewModel, context:
 
         // ---------------------------------------------------- LESSON ---------------------------------------------------- //
 
-        composable("addLesson") {
-            AddLessonScreen(navController, viewModel, context)
+        composable("addLesson/{lessonId}",
+            arguments = listOf(navArgument("lessonId") { type = NavType.StringType })
+            ) {backStackEntry->
+            val lessonId = backStackEntry.arguments?.getString("lessonId") ?: ""
+            AddLessonScreen(lessonId, navController, viewModel, context)
+        }
+
+
+        composable(
+            "lessonListView/{lessonId}",
+            arguments = listOf(navArgument("lessonId") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val lessonId = backStackEntry.arguments?.getString("lessonId") ?: ""
+            // Fetch the lesson by ID (if needed)
+            val lesson = viewModel.getLessonById(lessonId)
+            SubLessonListScreen(navController, viewModel, lesson, context)
         }
 
         composable(

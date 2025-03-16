@@ -4,6 +4,7 @@ import android.util.Log
 import com.example.flutterhub_jetpackcompose.data.models.AssessmentLink
 import com.example.flutterhub_jetpackcompose.data.models.AssessmentModel
 import com.example.flutterhub_jetpackcompose.data.models.LessonModel
+import com.example.flutterhub_jetpackcompose.data.models.LessonSubtopic
 import com.example.flutterhub_jetpackcompose.data.models.QuizModel
 import com.example.flutterhub_jetpackcompose.data.models.QuizScoreModel
 import com.example.flutterhub_jetpackcompose.data.models.UserModel
@@ -199,22 +200,37 @@ class LessonRepository @Inject constructor() {
     }
 
     suspend fun addSubLesson(
-        lesson: LessonModel, onSuccess: () -> Unit, onFailure: (String) -> Unit
+        lessonID: String,
+        sublesson: LessonSubtopic, onSuccess: () -> Unit, onFailure: (String) -> Unit
     ) {
-        try {
-            val difficulty = getDifficulty()
+            try {
+                // Define the Firestore path for the lesson
+                val difficulty = getDifficulty() // Assuming this returns the correct difficulty level
+                val lessonDocRef = firestore.collection(difficulty).document(lessonID)
 
-            val lessonDocRef =
-                firestore.collection(difficulty) // Generate a document reference with an auto-ID
-                    .document()
+                // Add the sublesson to the "sublessons" subcollection under the lesson document
+                val sublessonCollectionRef = lessonDocRef.collection("subtopics")
+                val sublessonDocRef = sublessonCollectionRef.document() // Auto-generate a sublesson ID
 
-            val lessonWithID =
-                lesson.copy(id = lessonDocRef.id)  // Add the generated ID to the lesson model
+                // Add the sublesson with the auto-generated ID
+                val sublessonWithID = sublesson.copy(id = sublessonDocRef.id)
+                sublessonDocRef.set(sublessonWithID).await()
 
-            lessonDocRef.set(lessonWithID) // Upload the lesson with the auto-generated ID
-                .await()
-
-            onSuccess()
+                // Notify success
+                onSuccess()
+//            val difficulty = getDifficulty()
+//
+//            val lessonDocRef =
+//                firestore.collection(difficulty) // Generate a document reference with an auto-ID
+//                    .document()
+//
+//            val lessonWithID =
+//                lesson.copy(id = lessonDocRef.id)  // Add the generated ID to the lesson model
+//
+//            lessonDocRef.set(lessonWithID) // Upload the lesson with the auto-generated ID
+//                .await()
+//
+//            onSuccess()
         } catch (e: Exception) {
             onFailure(e.message.toString())
             Log.e("ADD LESSON ERROR: ", e.message.toString())
@@ -348,7 +364,7 @@ class LessonRepository @Inject constructor() {
     }
 
     suspend fun saveQuiz(
-        userID:String,
+        userID: String,
         scoreModel: QuizScoreModel,
         onSuccess: () -> Unit,
         onFailure: (String) -> Unit

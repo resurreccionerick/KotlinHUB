@@ -92,6 +92,7 @@ class AppViewModel @Inject constructor(
     }
 
     fun addNewSubLesson(
+        lessonId:String,
         name: String,
         desc: String,
         link: String,
@@ -104,13 +105,13 @@ class AppViewModel @Inject constructor(
                 description = desc, link = link,
             )
 
-//            repository.addSubLesson(lesson,
-//                onSuccess = {
-//                    onSuccess()
-//                    loadLessons() //refresh the list
-//                }, onFailure = { errorMsg ->
-//                    onFailure(errorMsg)
-//                })
+            repository.addSubLesson(lessonId, lesson,
+                onSuccess = {
+                    onSuccess()
+                    loadLessons() //refresh the list
+                }, onFailure = { errorMsg ->
+                    onFailure(errorMsg)
+                })
         }
     }
 
