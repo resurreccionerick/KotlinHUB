@@ -161,8 +161,8 @@ fun NavGraph(navController: NavHostController, viewModel: AppViewModel, context:
         ) { backStackEntry ->
             val lessonId = backStackEntry.arguments?.getString("lessonId") ?: ""
             // Fetch the lesson by ID (if needed)
-            val lesson = viewModel.getLessonById(lessonId)
-            SubLessonListScreen(navController, viewModel, lesson, context)
+//            val lesson = viewModel.getSubLessonById(lessonId)
+            SubLessonListScreen(navController, viewModel, lessonId, context)
         }
 
         composable(

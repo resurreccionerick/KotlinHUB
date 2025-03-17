@@ -21,7 +21,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.flutterhub_jetpackcompose.data.models.LessonModel
 import com.example.flutterhub_jetpackcompose.data.models.LessonSubtopic
 import com.example.flutterhub_jetpackcompose.ui.theme.DeleteRedDark
 import com.example.flutterhub_jetpackcompose.ui.theme.DeleteRedLight
@@ -31,9 +30,9 @@ import com.example.flutterhub_jetpackcompose.viewmodel.AppViewModel
 import com.orhanobut.hawk.Hawk
 
 @Composable
-fun LessonCard(
+fun SubLessonCard(
     navController: NavController,
-    lesson: LessonModel,
+    lesson: LessonSubtopic?,
     viewModel: AppViewModel,
     context: Context
 ) {
@@ -46,7 +45,7 @@ fun LessonCard(
 
     Card(
         onClick = {
-            navController.navigate("lessonListView/${lesson.id}")
+            navController.navigate("lessonListView/${lesson?.id}")
         },
         shape = RoundedCornerShape(8.dp), // Rounded corners for the card
         modifier = Modifier
@@ -66,7 +65,7 @@ fun LessonCard(
                 horizontalArrangement = Arrangement.SpaceBetween // Spread text and buttons
             ) {
                 Text(
-                    text = "Title: ${lesson.name}",
+                    text = "Title: ${lesson?.name}",
                     style = MaterialTheme.typography.bodyLarge,
                     modifier = Modifier.weight(1f)
                 )
@@ -78,7 +77,7 @@ fun LessonCard(
                 // Edit Button
                 Button(
                     onClick = {
-                        navController.navigate("editLesson/${lesson.id}")
+                        navController.navigate("editLesson/${lesson?.id}")
                     },
                     colors = ButtonDefaults.buttonColors(containerColor = editColor),
                     modifier = Modifier.padding(end = 8.dp) // Spacing between buttons
@@ -89,7 +88,7 @@ fun LessonCard(
                 // Delete Button
                 Button(
                     onClick = {
-                        viewModel.deleteLesson(lesson.id,
+                        viewModel.deleteLesson(lesson!!.id,
                             onSuccess = {
                                 Toast.makeText(
                                     context,

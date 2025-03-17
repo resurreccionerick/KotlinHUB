@@ -260,12 +260,86 @@ class LessonRepository @Inject constructor() {
             val snapshot = firestore.collection(difficulty).get().await()
 
 
+            // Iterate and log each document
+            snapshot.documents.forEach { document ->
+                Log.e("LESSON DATA:", "ID: ${document.id}, Data: ${document.data}")
+            }
+
             snapshot.toObjects(LessonModel::class.java)
         } catch (e: Exception) {
             Log.e("GET LESSON ERROR: ", e.message.toString())
             emptyList()
         }
     }
+
+    suspend fun getSubtopics(lessonID: String): List<LessonSubtopic> {
+        return try {
+            val difficulty = getDifficulty()
+            val lessonDocRef = firestore.collection(difficulty).document(lessonID)
+
+            // Fetch subtopics from the subcollection
+            val querySnapshot = lessonDocRef.collection("subtopics").get().await()
+            val subtopicsFromCollection = querySnapshot.documents.map { document ->
+                LessonSubtopic(
+                    id = document.id,
+                    name = document.getString("name") ?: "",
+                    link = document.getString("link") ?: "",
+                    description = document.getString("description") ?: ""
+                )
+            }
+
+            // Fetch subtopics from the main document (nested field)
+            val lessonSnapshot = lessonDocRef.get().await()
+            val subtopicsFromField = lessonSnapshot.get("subtopics") as? List<Map<String, Any>> ?: emptyList()
+
+            val subtopicsFromFieldConverted = subtopicsFromField.map { data ->
+                LessonSubtopic(
+                    id = data["id"] as? String ?: "",
+                    name = data["name"] as? String ?: "",
+                    link = data["link"] as? String ?: "",
+                    description = data["description"] as? String ?: ""
+                )
+            }
+
+            // Combine both lists
+            val allSubtopics = subtopicsFromCollection + subtopicsFromFieldConverted
+            Log.d("FETCHED SUBTOPICS", "Total: ${allSubtopics.size}")
+
+            return allSubtopics
+        } catch (e: Exception) {
+            Log.e("GET SUBTOPICS ERROR", "Failed to fetch subtopics: ${e.message}")
+            emptyList()
+        }
+    }
+
+//    suspend fun getSubtopics(lessonID: String): List<LessonSubtopic> {
+//        return try {
+//            val difficulty = getDifficulty() // e.g., "basic"
+//            val lessonDocRef = firestore.collection(difficulty).document(lessonID)
+//
+//            // Fetch all documents from the subtopics subcollection
+//            val querySnapshot = lessonDocRef.collection("subtopics").get().await()
+//
+//            // Log the fetched data for debugging
+//            querySnapshot.documents.forEach { document ->
+//                Log.d("SUBTOPICS DATA", "ID: ${document.id}, Data: ${document.data}")
+//            }
+//
+//            // Convert Firestore documents to LessonSubtopic objects
+//            querySnapshot.documents.map { document ->
+//                LessonSubtopic(
+//                    id = document.id, // Set the Firestore document ID
+//                    name = document.getString("name") ?: "", // Ensure field names match Firestore
+//                    link = document.getString("link") ?: "",
+//                    description = document.getString("description") ?: "",
+//
+//                )
+//            }
+//        } catch (e: Exception) {
+//            Log.e("GET SUBTOPICS ERROR", "Failed to fetch subtopics: ${e.message}")
+//            emptyList() // Return an empty list in case of error
+//        }
+//    }
 
     //update
     fun updateLesson(

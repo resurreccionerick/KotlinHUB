@@ -1,6 +1,7 @@
 package com.example.flutterhub_jetpackcompose.viewmodel
 
 
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -15,7 +16,6 @@ import com.example.flutterhub_jetpackcompose.data.models.QuizScoreModel
 import com.example.flutterhub_jetpackcompose.data.repository.LessonRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import java.time.LocalDateTime
 import javax.inject.Inject
 
 //The ViewModel acts as the bridge between the Repository and the UI. It fetches the data and holds the UI state.
@@ -28,12 +28,13 @@ class AppViewModel @Inject constructor(
     val links = mutableStateListOf<AssessmentLink>()
     val quizzes = mutableStateListOf<QuizModel>()
     val lessons = mutableStateListOf<LessonModel>()
+    val subLessons = mutableStateListOf<LessonSubtopic>()
     val scores = mutableStateListOf<QuizScoreModel>()
     val darkMode = mutableStateOf(false)
     val darkModeState: State<Boolean> = darkMode
+    val isLoading = mutableStateOf(false)
 
 
-    private var isLoading = false
 
     // Toggle dark mode state
     fun toggleDarkMode(isDarkMode: Boolean) {
@@ -62,13 +63,34 @@ class AppViewModel @Inject constructor(
 
 
     private fun loadLessons() {
-        if (isLoading) return
+        if (isLoading.value) return
 
         viewModelScope.launch {
             lessons.clear()
             lessons.addAll(repository.getLessons())
         }
     }
+
+    fun loadSubLessons(lessonID: String) {
+        if (isLoading.value) return  // Prevent duplicate calls
+
+        viewModelScope.launch {
+            isLoading.value = true // Start loading
+
+            try {
+                val fetchedSubLessons = repository.getSubtopics(lessonID)
+                Log.e("LOAD SUBTOPICS", "Fetched ${fetchedSubLessons.size} subtopics")
+
+                subLessons.clear()
+                subLessons.addAll(fetchedSubLessons)
+            } catch (e: Exception) {
+                Log.e("LOAD ERROR", e.message ?: "Unknown error")
+            } finally {
+                isLoading.value = false
+            }
+        }
+    }
+
 
     fun addNewLesson(
         name: String,
@@ -87,12 +109,11 @@ class AppViewModel @Inject constructor(
                 }, onFailure = { errorMsg ->
                     onFailure(errorMsg)
                 })
-
         }
     }
 
     fun addNewSubLesson(
-        lessonId:String,
+        lessonId: String,
         name: String,
         desc: String,
         link: String,
@@ -194,7 +215,7 @@ class AppViewModel @Inject constructor(
     // ---------------------------------------------------- QUIZZES ---------------------------------------------------- //
 
     fun loadQuizzes() {
-        if (isLoading) return
+        if (isLoading.value) return
 
         viewModelScope.launch {
             val newQuizzes = repository.getQuizzes()
@@ -280,7 +301,7 @@ class AppViewModel @Inject constructor(
 
     // ---------------------------------------------------- SCORES ---------------------------------------------------- //
     private fun loadLeaderboards() {
-        if (isLoading) return
+        if (isLoading.value) return
 
         viewModelScope.launch {
             scores.clear()
@@ -289,7 +310,7 @@ class AppViewModel @Inject constructor(
     }
 
     private fun loadOverallLeaderboards() {
-        if (isLoading) return
+        if (isLoading.value) return
 
         viewModelScope.launch {
             scores.clear()
@@ -300,7 +321,7 @@ class AppViewModel @Inject constructor(
 
     // ---------------------------------------------------- ASSESSMENT ---------------------------------------------------- //
     fun loadAssessment(userID: String) {
-        if (isLoading) return
+        if (isLoading.value) return
 
         viewModelScope.launch {
             val _assessment = repository.getAssessment(userId = userID)
@@ -425,7 +446,7 @@ class AppViewModel @Inject constructor(
     }
 
     fun loadLinks(id: String) {
-        if (isLoading) return
+        if (isLoading.value) return
 
         viewModelScope.launch {
             val _links = repository.getLinksByID(id)
