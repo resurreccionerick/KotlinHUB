@@ -53,7 +53,7 @@ fun SubLessonListScreen(
             if (Hawk.get<String?>("role") == "admin") { // Show FAB only for admins
                 FloatingActionButton(
                     onClick = {
-                        navController.navigate("addLesson/${lesson.id}\"")
+                        navController.navigate("addLesson/${lesson.id}")
                     } // Open dialog on press
                 ) {
                     Icon(Icons.Default.Add, contentDescription = "Add Lesson")

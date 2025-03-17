@@ -12,6 +12,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.FirebaseFirestoreException
 import com.orhanobut.hawk.Hawk
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -201,39 +202,53 @@ class LessonRepository @Inject constructor() {
 
     suspend fun addSubLesson(
         lessonID: String,
-        sublesson: LessonSubtopic, onSuccess: () -> Unit, onFailure: (String) -> Unit
+        sublesson: LessonSubtopic,
+        onSuccess: () -> Unit,
+        onFailure: (String) -> Unit
     ) {
-            try {
-                // Define the Firestore path for the lesson
-                val difficulty = getDifficulty() // Assuming this returns the correct difficulty level
-                val lessonDocRef = firestore.collection(difficulty).document(lessonID)
+        try {
+            val difficulty = getDifficulty()
+            val lessonDocRef = firestore.collection(difficulty).document(lessonID)
 
-                // Add the sublesson to the "sublessons" subcollection under the lesson document
-                val sublessonCollectionRef = lessonDocRef.collection("subtopics")
-                val sublessonDocRef = sublessonCollectionRef.document() // Auto-generate a sublesson ID
+            // Log the Firestore path
+            println("Firestore Path: ${lessonDocRef.path}")
 
-                // Add the sublesson with the auto-generated ID
-                val sublessonWithID = sublesson.copy(id = sublessonDocRef.id)
-                sublessonDocRef.set(sublessonWithID).await()
+            val lessonSnapshot = lessonDocRef.get().await()
+
+            if (lessonSnapshot.exists()) {
+                println("Lesson document found: ${lessonSnapshot.id}")
+
+                // Get the current subtopics array (if it exists)
+                val currentSubtopics = lessonSnapshot.get("subtopics") as? List<Map<String, Any>> ?: emptyList()
+
+                // Convert the new sublesson to a map
+                val newSublessonMap = mapOf(
+                    "name" to sublesson.name,
+                    "description" to sublesson.description,
+                    "link" to sublesson.link
+                )
+
+                // Add the new sublesson to the array
+                val updatedSubtopics = currentSubtopics.toMutableList().apply {
+                    add(newSublessonMap)
+                }
+
+                // Update the lesson document with the new subtopics array
+                lessonDocRef.update("subtopics", updatedSubtopics).await()
 
                 // Notify success
                 onSuccess()
-//            val difficulty = getDifficulty()
-//
-//            val lessonDocRef =
-//                firestore.collection(difficulty) // Generate a document reference with an auto-ID
-//                    .document()
-//
-//            val lessonWithID =
-//                lesson.copy(id = lessonDocRef.id)  // Add the generated ID to the lesson model
-//
-//            lessonDocRef.set(lessonWithID) // Upload the lesson with the auto-generated ID
-//                .await()
-//
-//            onSuccess()
+            } else {
+                println("Lesson document not found")
+                onFailure("Lesson not found")
+            }
         } catch (e: Exception) {
-            onFailure(e.message.toString())
-            Log.e("ADD LESSON ERROR: ", e.message.toString())
+            val errorMsg = when (e) {
+                is FirebaseFirestoreException -> "Failed to add sublesson: ${e.message}"
+                else -> "An unexpected error occurred: ${e.message}"
+            }
+            onFailure(errorMsg)
+            Log.e("ADD SUBLESSON ERROR: ", e.message.toString())
         }
     }
 
