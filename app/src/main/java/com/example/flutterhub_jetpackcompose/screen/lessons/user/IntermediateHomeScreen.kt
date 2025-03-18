@@ -7,6 +7,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -48,17 +49,6 @@ fun IntermediateHomeScreen(
                 }
             )
         },
-
-//        floatingActionButton = {
-//            if (Hawk.get<Boolean?>("role").equals("admin")) {
-//                FloatingActionButton(onClick = {
-//                    Hawk.put("difficulty", "intermediate")
-//                    navController.navigate("addLesson")
-//                }) {
-//                    Icon(Icons.Default.Add, contentDescription = "Add lesson")
-//                }
-//            }
-//        }
         floatingActionButton = {
             if (Hawk.get<String?>("role") == "admin") { // Show FAB only for admins
                 FloatingActionButton(
@@ -85,9 +75,13 @@ fun IntermediateHomeScreen(
                     .padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                LazyColumn {
-                    items(viewModel.lessons) { lesson ->
-                        LessonCard(navController, lesson, viewModel, context)
+                if (viewModel.isLoading.value) {
+                    CircularProgressIndicator()
+                } else {
+                    LazyColumn {
+                        items(viewModel.lessons) { lesson ->
+                            LessonCard(navController, lesson, viewModel, context)
+                        }
                     }
                 }
             }

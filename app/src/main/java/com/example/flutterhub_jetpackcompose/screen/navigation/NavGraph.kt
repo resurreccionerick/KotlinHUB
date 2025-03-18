@@ -181,13 +181,12 @@ fun NavGraph(navController: NavHostController, viewModel: AppViewModel, context:
         ) { backStackEntry ->
             val lessonId = backStackEntry.arguments?.getString("lessonId") ?: ""
             // Fetch the lesson by ID (if needed)
-            val lesson = viewModel.getLessonById(lessonId)
+            val lesson = viewModel.getSubLessonById(lessonId)
             LessonDetailsScreen(navController, context, lesson)
         }
 
         // ---------------------------------------------------- WEB VIEW ---------------------------------------------------- //
         composable("webView") {
-            //TheWebView("https://pl.kotl.in/Eaa0qDeSD")
             WebView(navController, context)
         }
 

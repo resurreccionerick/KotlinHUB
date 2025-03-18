@@ -23,6 +23,67 @@ fun EditLessonScreen(
     lessonModel: LessonModel,
     context: Context
 ) {
+
+    var title by rememberSaveable { mutableStateOf(lessonModel.name) }
+
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text(text = "Edit Lesson") },
+                navigationIcon = {
+                    IconButton(onClick = {
+                        navController.popBackStack()
+                    }) {
+                        Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Back")
+                    }
+                }
+            )
+        },
+        content = { paddingValues ->
+
+            Column(
+                modifier = Modifier
+                    .padding(paddingValues)
+                    .fillMaxSize()
+                    .padding(16.dp)
+            ) {
+                OutlinedTextField(
+                    value = title,
+                    onValueChange = { title = it },
+                    label = { Text("Lesson title") },
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+
+
+                Spacer(modifier = Modifier.height(32.dp))
+
+                Button(onClick = {
+                    if (title.isNotEmpty() ) {
+                        val lesson = lessonModel.copy(name = title)
+                        viewModel.updateLesson(
+                            lesson,
+                            onSuccess = {
+                                Toast.makeText(context, "Successfully Updated", Toast.LENGTH_SHORT)
+                                    .show()
+
+                                navController.popBackStack()
+                            }, onFailure = { errorMsg ->
+                                Toast.makeText(context, errorMsg, Toast.LENGTH_SHORT).show()
+                            })
+
+
+                    } else {
+                        Toast.makeText(context, "Please enter all fields", Toast.LENGTH_LONG).show()
+                    }
+
+                }, modifier = Modifier.align(Alignment.End)) { Text("Update") }
+            }
+        }
+    )
+
 //    var title by rememberSaveable { mutableStateOf(lessonModel.name) }
 //    var description by rememberSaveable { mutableStateOf(lessonModel.description) }
 //    var link by rememberSaveable { mutableStateOf(lessonModel.link) }

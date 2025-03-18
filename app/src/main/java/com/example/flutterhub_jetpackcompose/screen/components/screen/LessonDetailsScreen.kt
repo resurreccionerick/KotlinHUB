@@ -7,7 +7,6 @@ import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -26,14 +25,14 @@ import androidx.compose.material3.*
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
-import com.example.flutterhub_jetpackcompose.data.models.LessonModel
+import com.example.flutterhub_jetpackcompose.data.models.LessonSubtopic
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LessonDetailsScreen(
     navController: NavController,
     context: Context,
-    lessonModel: LessonModel,
+    lessonModel: LessonSubtopic,
 ) {
 
     Scaffold(
@@ -66,27 +65,23 @@ fun LessonDetailsScreen(
                         text = lessonModel.name,
                         fontWeight = FontWeight.Bold,
                         fontSize = 26.sp,
-//                        modifier = Modifier
-//                            .fillMaxWidth()
-//                            .align(Alignment.CenterHorizontally)
                     )
                 }
 
-                //todo: ayusin
-//                item {
-//                    Card(
-//                        shape = RoundedCornerShape(8.dp),
-//                        modifier = Modifier.padding(8.dp),
-//                        elevation = CardDefaults.cardElevation(5.dp)
-//                    ) {
-//                        // Add padding inside the Card
-//                        Text(
-//                            text = lessonModel.,
-//                            fontWeight = FontWeight.Medium,
-//                            modifier = Modifier.padding(16.dp)
-//                        )
-//                    }
-//                }
+                item {
+                    Card(
+                        shape = RoundedCornerShape(8.dp),
+                        modifier = Modifier.padding(8.dp),
+                        elevation = CardDefaults.cardElevation(5.dp)
+                    ) {
+                        // Add padding inside the Card
+                        Text(
+                            text = lessonModel.description,
+                            fontWeight = FontWeight.Medium,
+                            modifier = Modifier.padding(16.dp)
+                        )
+                    }
+                }
 
                 item {
                     // Use Box to apply background color to the button
@@ -97,10 +92,8 @@ fun LessonDetailsScreen(
                     ) {
                         ExtendedFloatingActionButton(
                             onClick = {
-                                //todo:ayusin
-//                                openYoutubeVid(context, lessonModel.link)
-
-                                      },
+                                openYoutubeVid(context, lessonModel.link)
+                            },
                             icon = {
                                 Icon(
                                     Icons.Filled.VideoLibrary,
@@ -134,7 +127,8 @@ fun openYoutubeVid(context: Context, url: String) {
         if (webIntent.resolveActivity(context.packageManager) != null) {
             context.startActivity(webIntent)
         } else {
-            Toast.makeText(context, "No application can handle this request", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "No application can handle this request", Toast.LENGTH_SHORT)
+                .show()
         }
     }
 }

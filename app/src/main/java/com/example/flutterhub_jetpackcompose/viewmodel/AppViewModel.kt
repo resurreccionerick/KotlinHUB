@@ -52,11 +52,6 @@ class AppViewModel @Inject constructor(
         loadQuizzes()
     }
 
-    fun refreshLeaderboardsDifficulty() {
-        repository.refreshDifficulty()
-        loadLeaderboards()
-    }
-
     fun getOverallLeaderboards() {
         loadOverallLeaderboards()
     }
@@ -66,8 +61,16 @@ class AppViewModel @Inject constructor(
         if (isLoading.value) return
 
         viewModelScope.launch {
+            isLoading.value = true // Start loading
             lessons.clear()
-            lessons.addAll(repository.getLessons())
+
+            try {
+                lessons.addAll(repository.getLessons())
+            } catch (e: Exception) {
+                Log.e("LOAD ERROR", e.message ?: "Unknown error")
+            } finally {
+                isLoading.value = false
+            }
         }
     }
 
@@ -209,6 +212,11 @@ class AppViewModel @Inject constructor(
     fun getLessonById(lessonId: String): LessonModel {
         // This function returns the lesson by its ID.
         return lessons.find { it.id == lessonId } ?: LessonModel()
+    }
+
+    fun getSubLessonById(lessonId: String): LessonSubtopic {
+        // This function returns the lesson by its ID.
+        return subLessons.find { it.id == lessonId } ?: LessonSubtopic()
     }
 
 

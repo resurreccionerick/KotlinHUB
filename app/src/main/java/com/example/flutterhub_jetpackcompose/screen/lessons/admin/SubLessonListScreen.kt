@@ -46,7 +46,7 @@ fun SubLessonListScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(text = "List of Sub-Lesson") },
+                title = { Text(text = "Table of contents") },
                 navigationIcon = {
                     IconButton(onClick = {
                         navController.popBackStack()
@@ -74,7 +74,7 @@ fun SubLessonListScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .padding(16.dp),
+                .padding(8.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             if (viewModel.isLoading.value) {

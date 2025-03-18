@@ -19,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.flutterhub_jetpackcompose.data.models.LessonSubtopic
@@ -45,19 +46,19 @@ fun SubLessonCard(
 
     Card(
         onClick = {
-            navController.navigate("lessonListView/${lesson?.id}")
+            navController.navigate("lessonView/${lesson?.id}")
         },
-        shape = RoundedCornerShape(8.dp), // Rounded corners for the card
+        shape = RoundedCornerShape(4.dp), // Rounded corners for the card
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp), // Card padding
-        elevation = CardDefaults.cardElevation(4.dp) // Card elevation (shadow effect)
+            .padding(bottom = 8.dp, start = 8.dp, end = 8.dp), // Card padding
+        elevation = CardDefaults.cardElevation(2.dp) // Card elevation (shadow effect)
     ) {
         // Box to align content inside the card
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp) // Padding inside the card
+                .padding(8.dp) // Padding inside the card
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -66,7 +67,8 @@ fun SubLessonCard(
             ) {
                 Text(
                     text = "Title: ${lesson?.name}",
-                    style = MaterialTheme.typography.bodyLarge,
+                    style = MaterialTheme.typography.bodyLarge, color = Color.Blue,
+                    textDecoration = TextDecoration.Underline,
                     modifier = Modifier.weight(1f)
                 )
             }

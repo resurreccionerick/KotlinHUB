@@ -7,6 +7,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -50,7 +51,8 @@ fun BasicHomeScreen(navController: NavController, viewModel: AppViewModel, conte
                 FloatingActionButton(
                     onClick = {
                         Hawk.put("difficulty", "basic")
-                        openDialog.value = true } // Open dialog on press
+                        openDialog.value = true
+                    } // Open dialog on press
                 ) {
                     Icon(Icons.Default.Add, contentDescription = "Add Lesson")
                 }
@@ -65,9 +67,13 @@ fun BasicHomeScreen(navController: NavController, viewModel: AppViewModel, conte
                 .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            LazyColumn {
-                items(viewModel.lessons) { lesson ->
-                    LessonCard(navController, lesson, viewModel, context)
+            if (viewModel.isLoading.value) {
+                CircularProgressIndicator()
+            } else {
+                LazyColumn {
+                    items(viewModel.lessons) { lesson ->
+                        LessonCard(navController, lesson, viewModel, context)
+                    }
                 }
             }
         }
