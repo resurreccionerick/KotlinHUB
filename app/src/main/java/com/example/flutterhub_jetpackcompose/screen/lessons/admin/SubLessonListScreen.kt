@@ -88,7 +88,7 @@ fun SubLessonListScreen(
                 LazyColumn {
                     items(viewModel.subLessons) { subLesson ->
                         SubLessonCard(
-                            navController,
+                            navController, lessonID,
                             subLesson,
                             viewModel = viewModel,
                             context = context

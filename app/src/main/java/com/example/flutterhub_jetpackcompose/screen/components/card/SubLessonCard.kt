@@ -33,7 +33,8 @@ import com.orhanobut.hawk.Hawk
 @Composable
 fun SubLessonCard(
     navController: NavController,
-    lesson: LessonSubtopic?,
+    lessonID: String,
+    subTopic: LessonSubtopic?,
     viewModel: AppViewModel,
     context: Context
 ) {
@@ -46,7 +47,7 @@ fun SubLessonCard(
 
     Card(
         onClick = {
-            navController.navigate("lessonView/${lesson?.id}")
+            navController.navigate("lessonView/${subTopic?.id}")
         },
         shape = RoundedCornerShape(4.dp), // Rounded corners for the card
         modifier = Modifier
@@ -66,7 +67,7 @@ fun SubLessonCard(
                 horizontalArrangement = Arrangement.SpaceBetween // Spread text and buttons
             ) {
                 Text(
-                    text = "Title: ${lesson?.name}",
+                    text = "Title: ${subTopic?.name}",
                     style = MaterialTheme.typography.bodyLarge, color = Color.Blue,
                     textDecoration = TextDecoration.Underline,
                     modifier = Modifier.weight(1f)
@@ -79,7 +80,10 @@ fun SubLessonCard(
                 // Edit Button
                 Button(
                     onClick = {
-                        navController.navigate("editLesson/${lesson?.id}")
+                        val subTopicId = subTopic?.id ?: ""
+                        val lessonId = lessonID ?: ""
+
+                        navController.navigate("editSubLesson/$subTopicId/$lessonId")
                     },
                     colors = ButtonDefaults.buttonColors(containerColor = editColor),
                     modifier = Modifier.padding(end = 8.dp) // Spacing between buttons
@@ -90,7 +94,7 @@ fun SubLessonCard(
                 // Delete Button
                 Button(
                     onClick = {
-                        viewModel.deleteLesson(lesson!!.id,
+                        viewModel.deleteSubLesson(lessonID, subTopic!!.id,
                             onSuccess = {
                                 Toast.makeText(
                                     context,
@@ -98,6 +102,7 @@ fun SubLessonCard(
                                     Toast.LENGTH_SHORT
                                 ).show()
 
+                                navController.navigate("adminHome")
                             },
                             onFailure = { error ->
                                 Toast.makeText(context, error, Toast.LENGTH_SHORT).show()

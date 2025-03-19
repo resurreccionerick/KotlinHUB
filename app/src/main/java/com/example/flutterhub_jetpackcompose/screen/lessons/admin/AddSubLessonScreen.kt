@@ -13,12 +13,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.flutterhub_jetpackcompose.viewmodel.AppViewModel
-import java.time.LocalDateTime
-import java.util.Date
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddLessonScreen(
+fun AddSubLessonScreen(
     lessonID: String,
     navController: NavController,
     viewModel: AppViewModel,

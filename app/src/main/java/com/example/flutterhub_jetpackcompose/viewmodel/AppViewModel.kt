@@ -16,6 +16,7 @@ import com.example.flutterhub_jetpackcompose.data.models.QuizScoreModel
 import com.example.flutterhub_jetpackcompose.data.repository.LessonRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import java.util.Calendar
 import javax.inject.Inject
 
 //The ViewModel acts as the bridge between the Repository and the UI. It fetches the data and holds the UI state.
@@ -33,7 +34,6 @@ class AppViewModel @Inject constructor(
     val darkMode = mutableStateOf(false)
     val darkModeState: State<Boolean> = darkMode
     val isLoading = mutableStateOf(false)
-
 
 
     // Toggle dark mode state
@@ -125,14 +125,14 @@ class AppViewModel @Inject constructor(
     ) {
         viewModelScope.launch {
             val lesson = LessonSubtopic(
-                id = "", name = name,
+                id = "1", name = name,
                 description = desc, link = link,
             )
 
             repository.addSubLesson(lessonId, lesson,
                 onSuccess = {
                     onSuccess()
-                    loadLessons() //refresh the list
+                    loadLessons()
                 }, onFailure = { errorMsg ->
                     onFailure(errorMsg)
                 })
@@ -148,9 +148,37 @@ class AppViewModel @Inject constructor(
         }
     }
 
+    fun updateSubLesson(
+        lessonId: String,
+        subTopic: LessonSubtopic,
+        onSuccess: () -> Unit,
+        onFailure: (String) -> Unit
+    ) {
+        viewModelScope.launch {
+            repository.updateSubLesson(lessonId, subTopic, onSuccess, onFailure)
+            Log.d(
+                "EDIT SUBLESSON VM",
+                "edit lessid $lessonId..subid:${subTopic.id}"
+            );
+            loadLessons() //refresh list
+        }
+    }
+
     fun deleteLesson(lessonID: String, onSuccess: () -> Unit, onFailure: (String) -> Unit) {
         viewModelScope.launch {
             repository.deleteLesson(lessonID, onSuccess, onFailure)
+            loadLessons() //refresh
+        }
+    }
+
+    fun deleteSubLesson(
+        lessonID: String,
+        subTopicID: String,
+        onSuccess: () -> Unit,
+        onFailure: (String) -> Unit
+    ) {
+        viewModelScope.launch {
+            repository.deleteSubLesson(lessonID, subTopicID, onSuccess, onFailure)
             loadLessons() //refresh
         }
     }
@@ -164,25 +192,44 @@ class AppViewModel @Inject constructor(
         onSuccess: () -> Unit,
         onFailure: (String) -> Unit
     ) {
+        if (isLoading.value) return
         viewModelScope.launch {
-            repository.userRegister(name, email, password, onSuccess = {
-                onSuccess()
-            }, onFailure = { errorMsg ->
-                onFailure(errorMsg)
-            });
+            try {
+                isLoading.value = true
+
+                repository.userRegister(name, email, password, onSuccess = {
+                    onSuccess()
+                }, onFailure = { errorMsg ->
+                    onFailure(errorMsg)
+                });
+
+            } catch (e: Exception) {
+                Log.e("Signup ERROR", e.message ?: "Unknown error")
+            } finally {
+                isLoading.value = false
+            }
         }
+
     }
 
     fun userLogin(
         email: String, password: String, onSuccess: () -> Unit, onFailure: (String) -> Unit
     ) {
-
+        if (isLoading.value) return  // Prevent duplicate calls
         viewModelScope.launch {
-            repository.userLogin(email, password, onSuccess = {
-                onSuccess()
-            }, onFailure = { errorMsg ->
-                onFailure(errorMsg)
-            })
+            isLoading.value = true // Start loading
+            try {
+                repository.userLogin(email, password, onSuccess = {
+                    onSuccess()
+                }, onFailure = { errorMsg ->
+                    onFailure(errorMsg)
+                })
+            } catch (e: Exception) {
+                Log.e("Login ERROR", e.message ?: "Unknown error")
+            } finally {
+                isLoading.value = false // Start loading
+            }
+
         }
     }
 

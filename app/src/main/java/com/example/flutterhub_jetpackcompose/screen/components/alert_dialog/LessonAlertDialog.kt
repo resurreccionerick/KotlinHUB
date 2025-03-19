@@ -24,9 +24,6 @@ fun LessonAlertDialog(context: Context, onDismiss: () -> Unit, viewModel: AppVie
     var lessonTitle by remember { mutableStateOf("") }
 
     AlertDialog(
-        icon = {
-            Icon(Icons.Default.Add, contentDescription = "Example Icon")
-        },
         title = {
             Text(text = "Add Lesson:")
         },
@@ -58,10 +55,12 @@ fun LessonAlertDialog(context: Context, onDismiss: () -> Unit, viewModel: AppVie
             TextButton(
                 onClick = {
                     viewModel.addNewLesson(lessonTitle, onSuccess = {
+
                         Toast.makeText(context, "Successfully added", Toast.LENGTH_SHORT)
                             .show()
 
                         openDialog.value = false
+                        onDismiss()
                     }, onFailure = { errorMsg ->
                         Toast.makeText(context, errorMsg, Toast.LENGTH_SHORT).show()
                     })

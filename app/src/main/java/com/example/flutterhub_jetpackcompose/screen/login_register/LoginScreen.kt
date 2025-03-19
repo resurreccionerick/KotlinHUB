@@ -43,7 +43,7 @@ fun LoginScreen(navController: NavController, viewModel: AppViewModel, context: 
 
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-    var isLoading by remember { mutableStateOf(false) }
+    var isLoading by remember { mutableStateOf(viewModel.isLoading.value) }
 
     if (isLoading) {
         Box(

@@ -17,6 +17,8 @@ import com.orhanobut.hawk.Hawk
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
+import java.util.Calendar
+import java.util.UUID
 import javax.inject.Inject
 
 //The repository handles FireStore operations. Here’s an example for adding lessons to Firestore.
@@ -219,10 +221,13 @@ class LessonRepository @Inject constructor() {
                 println("Lesson document found: ${lessonSnapshot.id}")
 
                 // Get the current subtopics array (if it exists)
-                val currentSubtopics = lessonSnapshot.get("subtopics") as? List<Map<String, Any>> ?: emptyList()
+                val currentSubtopics =
+                    lessonSnapshot.get("subtopics") as? List<Map<String, Any>> ?: emptyList()
 
                 // Convert the new sublesson to a map
+                val uniqueId = UUID.randomUUID().toString()
                 val newSublessonMap = mapOf(
+                    "id" to sublesson.name +"_"+ uniqueId,
                     "name" to sublesson.name,
                     "description" to sublesson.description,
                     "link" to sublesson.link
@@ -281,7 +286,7 @@ class LessonRepository @Inject constructor() {
             val querySnapshot = lessonDocRef.collection("subtopics").get().await()
             val subtopicsFromCollection = querySnapshot.documents.map { document ->
                 LessonSubtopic(
-                    id = document.id,
+                    id = document.getString("id") ?: "",
                     name = document.getString("name") ?: "",
                     link = document.getString("link") ?: "",
                     description = document.getString("description") ?: ""
@@ -290,7 +295,8 @@ class LessonRepository @Inject constructor() {
 
             // Fetch subtopics from the main document (nested field)
             val lessonSnapshot = lessonDocRef.get().await()
-            val subtopicsFromField = lessonSnapshot.get("subtopics") as? List<Map<String, Any>> ?: emptyList()
+            val subtopicsFromField =
+                lessonSnapshot.get("subtopics") as? List<Map<String, Any>> ?: emptyList()
 
             val subtopicsFromFieldConverted = subtopicsFromField.map { data ->
                 LessonSubtopic(
@@ -312,34 +318,6 @@ class LessonRepository @Inject constructor() {
         }
     }
 
-//    suspend fun getSubtopics(lessonID: String): List<LessonSubtopic> {
-//        return try {
-//            val difficulty = getDifficulty() // e.g., "basic"
-//            val lessonDocRef = firestore.collection(difficulty).document(lessonID)
-//
-//            // Fetch all documents from the subtopics subcollection
-//            val querySnapshot = lessonDocRef.collection("subtopics").get().await()
-//
-//            // Log the fetched data for debugging
-//            querySnapshot.documents.forEach { document ->
-//                Log.d("SUBTOPICS DATA", "ID: ${document.id}, Data: ${document.data}")
-//            }
-//
-//            // Convert Firestore documents to LessonSubtopic objects
-//            querySnapshot.documents.map { document ->
-//                LessonSubtopic(
-//                    id = document.id, // Set the Firestore document ID
-//                    name = document.getString("name") ?: "", // Ensure field names match Firestore
-//                    link = document.getString("link") ?: "",
-//                    description = document.getString("description") ?: "",
-//
-//                )
-//            }
-//        } catch (e: Exception) {
-//            Log.e("GET SUBTOPICS ERROR", "Failed to fetch subtopics: ${e.message}")
-//            emptyList() // Return an empty list in case of error
-//        }
-//    }
 
     //update
     fun updateLesson(
@@ -359,7 +337,115 @@ class LessonRepository @Inject constructor() {
         }
     }
 
+    suspend fun updateSubLesson(
+        lessonId: String, // ID of the lesson document
+        updatedSubtopic: LessonSubtopic, // Updated subtopic data
+        onSuccess: () -> Unit,
+        onFailure: (String) -> Unit
+    ) {
+        try {
+            val difficulty = getDifficulty() // e.g., "basic"
+            val lessonDocRef = firestore.collection(difficulty).document(lessonId)
+            Log.d(
+                "PATH LINK",
+                "DIFF $difficulty .. lessonid $lessonId .. subtopicID ${updatedSubtopic.id}"
+            )
+
+            // Fetch the lesson document
+            val lessonSnapshot = lessonDocRef.get().await()
+
+            if (lessonSnapshot.exists()) {
+                // Get the current subtopics array
+                val currentSubtopics =
+                    lessonSnapshot.get("subtopics") as? List<Map<String, Any>> ?: emptyList()
+
+                // Find the index of the subtopic to update
+                val subtopicIndex = currentSubtopics.indexOfFirst { it["id"] == updatedSubtopic.id }
+
+                if (subtopicIndex != -1) {
+                    // Create a new subtopic map with updated fields
+                    val updatedSubtopicMap = mapOf(
+                        "id" to updatedSubtopic.id,
+                        "name" to updatedSubtopic.name,
+                        "description" to updatedSubtopic.description,
+                        "link" to updatedSubtopic.link
+                    )
+
+                    // Update the subtopic in the array
+                    val updatedSubtopics = currentSubtopics.toMutableList().apply {
+                        this[subtopicIndex] = updatedSubtopicMap
+                    }
+
+                    // Save the updated array to Firestore
+                    lessonDocRef.update("subtopics", updatedSubtopics).await()
+
+                    // Notify success
+                    onSuccess()
+                } else {
+                    onFailure("Subtopic not found")
+                }
+            } else {
+                onFailure("Lesson not found")
+            }
+        } catch (e: Exception) {
+            val errorMsg = when (e) {
+                is FirebaseFirestoreException -> "Failed to update subtopic: ${e.message}"
+                else -> "An unexpected error occurred: ${e.message}"
+            }
+            onFailure(errorMsg)
+            Log.e("UPDATE SUBTOPIC ERROR: ", e.message.toString())
+        }
+    }
+
     //DELETE
+    suspend fun deleteSubLesson(
+        lessonId: String, // ID of the lesson document
+        subtopicId: String, // ID of the subtopic to delete
+        onSuccess: () -> Unit,
+        onFailure: (String) -> Unit
+    ) {
+        try {
+            val difficulty = getDifficulty() // e.g., "basic"
+            val lessonDocRef = firestore.collection(difficulty).document(lessonId)
+
+            // Fetch the lesson document
+            val lessonSnapshot = lessonDocRef.get().await()
+
+            if (lessonSnapshot.exists()) {
+                // Get the current subtopics array
+                val currentSubtopics = lessonSnapshot.get("subtopics") as? List<Map<String, Any>> ?: emptyList()
+
+                // Find the index of the subtopic to delete
+                val subtopicIndex = currentSubtopics.indexOfFirst { it["id"] == subtopicId }
+
+                if (subtopicIndex != -1) {
+                    // Remove the subtopic from the array
+                    val updatedSubtopics = currentSubtopics.toMutableList().apply {
+                        removeAt(subtopicIndex)
+                    }
+
+                    // Save the updated array to Firestore
+                    lessonDocRef.update("subtopics", updatedSubtopics).await()
+
+                    // Notify success
+                    onSuccess()
+                } else {
+                    onFailure("Subtopic not found")
+                }
+            } else {
+                onFailure("Lesson not found")
+            }
+        } catch (e: Exception) {
+            val errorMsg = when (e) {
+                is FirebaseFirestoreException -> "Failed to delete subtopic: ${e.message}"
+                else -> "An unexpected error occurred: ${e.message}"
+            }
+            onFailure(errorMsg)
+            Log.e("DELETE SUBTOPIC ERROR: ", e.message.toString())
+        }
+    }
+
+
     fun deleteLesson(id: String, onSuccess: () -> Unit, onFailure: (String) -> Unit) {
         try {
             val difficulty = getDifficulty()

@@ -24,8 +24,9 @@ import com.example.flutterhub_jetpackcompose.screen.components.WebView
 import com.example.flutterhub_jetpackcompose.screen.home.AdminHomeScreen
 import com.example.flutterhub_jetpackcompose.screen.home.SettingsScreen
 import com.example.flutterhub_jetpackcompose.screen.home.UserHomeScreen
-import com.example.flutterhub_jetpackcompose.screen.lessons.admin.AddLessonScreen
+import com.example.flutterhub_jetpackcompose.screen.lessons.admin.AddSubLessonScreen
 import com.example.flutterhub_jetpackcompose.screen.lessons.admin.EditLessonScreen
+import com.example.flutterhub_jetpackcompose.screen.lessons.admin.EditSubLessonScreen
 import com.example.flutterhub_jetpackcompose.screen.lessons.admin.SubLessonListScreen
 import com.example.flutterhub_jetpackcompose.screen.lessons.user.BasicHomeScreen
 import com.example.flutterhub_jetpackcompose.screen.lessons.user.IntermediateHomeScreen
@@ -147,11 +148,12 @@ fun NavGraph(navController: NavHostController, viewModel: AppViewModel, context:
 
         // ---------------------------------------------------- LESSON ---------------------------------------------------- //
 
-        composable("addLesson/{lessonId}",
+        composable(
+            "addLesson/{lessonId}",
             arguments = listOf(navArgument("lessonId") { type = NavType.StringType })
-            ) {backStackEntry->
+        ) { backStackEntry ->
             val lessonId = backStackEntry.arguments?.getString("lessonId") ?: ""
-            AddLessonScreen(lessonId, navController, viewModel, context)
+            AddSubLessonScreen(lessonId, navController, viewModel, context)
         }
 
 
@@ -160,8 +162,6 @@ fun NavGraph(navController: NavHostController, viewModel: AppViewModel, context:
             arguments = listOf(navArgument("lessonId") { type = NavType.StringType })
         ) { backStackEntry ->
             val lessonId = backStackEntry.arguments?.getString("lessonId") ?: ""
-            // Fetch the lesson by ID (if needed)
-//            val lesson = viewModel.getSubLessonById(lessonId)
             SubLessonListScreen(navController, viewModel, lessonId, context)
         }
 
@@ -174,6 +174,25 @@ fun NavGraph(navController: NavHostController, viewModel: AppViewModel, context:
             val lesson = viewModel.getLessonById(lessonId)
             EditLessonScreen(navController, viewModel, lesson, context)
         }
+
+        composable(
+            "editSubLesson/{subTopicId}/{lessonId}",
+            arguments = listOf(
+                navArgument("subTopicId") { type = NavType.StringType },
+                navArgument("lessonId") { type = NavType.StringType }
+            )
+        ) { backStackEntry ->
+            val subTopicId = backStackEntry.arguments?.getString("subTopicId") ?: ""
+            val lessonId = backStackEntry.arguments?.getString("lessonId") ?: ""
+
+            // Fetch the lesson by ID (if needed)
+            val subTopic = viewModel.getSubLessonById(subTopicId)
+
+            EditSubLessonScreen(navController, viewModel, lessonId, subTopic, context)
+        }
+
+
+
 
         composable(
             "lessonView/{lessonId}",
