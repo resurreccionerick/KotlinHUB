@@ -21,6 +21,7 @@ import com.example.flutterhub_jetpackcompose.screen.components.screen.LessonDeta
 import com.example.flutterhub_jetpackcompose.screen.components.screen.OverallLeaderboardScreen
 import com.example.flutterhub_jetpackcompose.screen.components.ProfileComponent
 import com.example.flutterhub_jetpackcompose.screen.components.WebView
+import com.example.flutterhub_jetpackcompose.screen.components.screen.WebViewScreen
 import com.example.flutterhub_jetpackcompose.screen.home.AdminHomeScreen
 import com.example.flutterhub_jetpackcompose.screen.home.SettingsScreen
 import com.example.flutterhub_jetpackcompose.screen.home.UserHomeScreen
@@ -41,6 +42,7 @@ import com.example.flutterhub_jetpackcompose.screen.quiz.admin.QuizDifficultyScr
 import com.example.flutterhub_jetpackcompose.screen.user.UserQuizScreen
 import com.example.flutterhub_jetpackcompose.viewmodel.AppViewModel
 import com.orhanobut.hawk.Hawk
+import kotlin.math.log
 
 @Composable
 fun NavGraph(navController: NavHostController, viewModel: AppViewModel, context: Context) {
@@ -193,20 +195,37 @@ fun NavGraph(navController: NavHostController, viewModel: AppViewModel, context:
 
 
 
-
         composable(
-            "lessonView/{lessonId}",
-            arguments = listOf(navArgument("lessonId") { type = NavType.StringType })
+            "lessonView/{subtopicId}",
+            arguments = listOf(navArgument("subtopicId") { type = NavType.StringType })
         ) { backStackEntry ->
-            val lessonId = backStackEntry.arguments?.getString("lessonId") ?: ""
-            // Fetch the lesson by ID (if needed)
-            val lesson = viewModel.getSubLessonById(lessonId)
-            LessonDetailsScreen(navController, context, lesson)
+            val subtopicId = backStackEntry.arguments?.getString("subtopicId") ?: ""
+            val currentSubtopic = viewModel.subLessons.find { it.id == subtopicId }
+            val currentIndex = viewModel.subLessons.indexOfFirst { it.id == subtopicId }
+
+            if (currentSubtopic != null) {
+                LessonDetailsScreen(
+                    navController = navController,
+                    context = context,
+                    lessonModel = currentSubtopic,
+                    subtopics = viewModel.subLessons,
+                    currentIndex = currentIndex
+                )
+            }
         }
 
         // ---------------------------------------------------- WEB VIEW ---------------------------------------------------- //
         composable("webView") {
             WebView(navController, context)
+        }
+
+        composable(
+            "webViewAssessment/{assessmentLink}",
+            arguments = listOf(navArgument("assessmentLink") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val link = backStackEntry.arguments?.getString("assessmentLink") ?: ""
+            print("THE LINK IS: " + link);
+            WebViewScreen(navController, context, link);
         }
 
 

@@ -107,18 +107,24 @@ fun AssessmentCard(
                             IconButton(onClick = {
                                 // Define action here if needed
                             }) {
-                                val imageVector = when (isChecked) {
-                                    "true" -> {
-                                        Icons.Default.Check
-                                    }
+//                                val imageVector = when (isChecked) {
+//                                    "true" -> {
+//                                        Icons.Default.Check
+//                                    }
+//
+//                                    "false" -> {
+//                                        Icons.Default.NotInterested
+//                                    }
+//
+//                                    else -> {
+//                                        Icons.Default.Pending
+//                                    }
+//                                }
+                                val imageVector = if (isChecked != null) {
+                                    Icons.Default.Check
+                                } else {
+                                    Icons.Default.Pending
 
-                                    "false" -> {
-                                        Icons.Default.NotInterested
-                                    }
-
-                                    else -> {
-                                        Icons.Default.Pending
-                                    }
                                 }
 
                                 Icon(
@@ -129,15 +135,16 @@ fun AssessmentCard(
 
                             }
 
-                            //Spacer(modifier = Modifier.width(4.dp))
-
+//                            Text(
+//                                text = when (isChecked.toString()) {
+//                                    "true" -> "Status: Done!"
+//                                    "false" -> "Status: Not Approved!"
+//                                    else -> "Status: Pending"
+//                                },
+//                                style = MaterialTheme.typography.bodySmall
+//                            )
                             Text(
-
-                                text = when (isChecked.toString()) {
-                                    "true" -> "Status: Done!"
-                                    "false" -> "Status: Not Approved!"
-                                    else -> "Status: Pending"
-                                },
+                                text = if (isChecked != null) "Status: Done!" else "Status: Not done",
                                 style = MaterialTheme.typography.bodySmall
                             )
                         }
@@ -176,15 +183,15 @@ fun AssessmentCard(
                     ) {
                         if (Hawk.get<Boolean?>("role").equals("admin")) {
                             // Track button
-                            Button(
-                                onClick = {
-                                    navController.navigate("assessmentTrack/${assessmentModel.id}")
-                                },
-                                colors = ButtonDefaults.buttonColors(containerColor = trackColor),
-                                modifier = Modifier.padding(8.dp)
-                            ) {
-                                Text("Track", color = Color.White)
-                            }
+//                            Button(
+//                                onClick = {
+//                                    navController.navigate("assessmentTrack/${assessmentModel.id}")
+//                                },
+//                                colors = ButtonDefaults.buttonColors(containerColor = trackColor),
+//                                modifier = Modifier.padding(8.dp)
+//                            ) {
+//                                Text("Track", color = Color.White)
+//                            }
 
                             // Edit button
                             Button(

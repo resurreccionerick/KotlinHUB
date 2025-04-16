@@ -7,13 +7,17 @@ import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.VideoLibrary
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBar
@@ -33,26 +37,72 @@ fun LessonDetailsScreen(
     navController: NavController,
     context: Context,
     lessonModel: LessonSubtopic,
+    subtopics: List<LessonSubtopic>,
+    currentIndex: Int
 ) {
+    val canGoPrevious = currentIndex > 0
+    val canGoNext = currentIndex < subtopics.size - 1
 
     Scaffold(
         topBar = {
             TopAppBar(
                 title = { Text("Lesson Details") },
                 navigationIcon = {
-                    IconButton(onClick = {
-                        navController.popBackStack()
-                    }) {
-                        Icon(
-                            imageVector = Icons.Default.ArrowBack,
-                            contentDescription = "Back"
-                        )
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(Icons.Default.ArrowBack, contentDescription = "Back")
                     }
                 }
             )
         },
+        bottomBar = {
+            BottomAppBar {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 8.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    OutlinedButton(
+                        onClick = {
+                            if (canGoPrevious) {
+                                val previousSubtopic = subtopics[currentIndex - 1]
+                                navController.navigate("lessonView/${previousSubtopic.id}") {
+                                    popUpTo("lessonView/${lessonModel.id}")
+                                    launchSingleTop = true
+                                }
+                            }
+                        },
+                        enabled = canGoPrevious,
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Icon(Icons.Default.ArrowBack, contentDescription = "Previous")
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Text("Previous")
+                    }
+
+                    Spacer(modifier = Modifier.width(16.dp))
+
+                    OutlinedButton(
+                        onClick = {
+                            if (canGoNext) {
+                                val nextSubtopic = subtopics[currentIndex + 1]
+                                navController.navigate("lessonView/${nextSubtopic.id}") {
+                                    popUpTo("lessonView/${lessonModel.id}")
+                                    launchSingleTop = true
+                                }
+                            }
+                        },
+                        enabled = canGoNext,
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text("Next")
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Icon(Icons.Default.ArrowForward, contentDescription = "Next")
+                    }
+                }
+            }
+        },
         content = { paddingValues ->
-            // Use `Column` inside `LazyColumn` to make the content scrollable
             LazyColumn(
                 modifier = Modifier
                     .padding(paddingValues)
@@ -74,7 +124,6 @@ fun LessonDetailsScreen(
                         modifier = Modifier.padding(8.dp),
                         elevation = CardDefaults.cardElevation(5.dp)
                     ) {
-                        // Add padding inside the Card
                         Text(
                             text = lessonModel.description,
                             fontWeight = FontWeight.Medium,
@@ -84,23 +133,15 @@ fun LessonDetailsScreen(
                 }
 
                 item {
-                    // Use Box to apply background color to the button
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 8.dp)
                     ) {
                         ExtendedFloatingActionButton(
-                            onClick = {
-                                openYoutubeVid(context, lessonModel.link)
-                            },
-                            icon = {
-                                Icon(
-                                    Icons.Filled.VideoLibrary,
-                                    contentDescription = "Watch Tutorial"
-                                )
-                            },
-                            text = { Text(text = "Watch Tutorial") },
+                            onClick = { openYoutubeVid(context, lessonModel.link) },
+                            icon = { Icon(Icons.Filled.VideoLibrary, "Watch Tutorial") },
+                            text = { Text("Watch Tutorial") },
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .background(Color.Red, shape = RoundedCornerShape(8.dp)),
@@ -113,7 +154,6 @@ fun LessonDetailsScreen(
         }
     )
 }
-
 fun openYoutubeVid(context: Context, url: String) {
     try {
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url)).apply {

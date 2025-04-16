@@ -39,74 +39,59 @@ fun SubLessonCard(
     context: Context
 ) {
     val isDarkMode = isSystemInDarkTheme()
-
-    // Conditionally apply colors
     val editColor = if (isDarkMode) EditGreenDark else EditGreenLight
     val deleteColor = if (isDarkMode) DeleteRedDark else DeleteRedLight
-
 
     Card(
         onClick = {
             navController.navigate("lessonView/${subTopic?.id}")
         },
-        shape = RoundedCornerShape(4.dp), // Rounded corners for the card
+        shape = RoundedCornerShape(4.dp),
         modifier = Modifier
             .fillMaxWidth()
-            .padding(bottom = 8.dp, start = 8.dp, end = 8.dp), // Card padding
-        elevation = CardDefaults.cardElevation(2.dp) // Card elevation (shadow effect)
+            .padding(bottom = 8.dp, start = 8.dp, end = 8.dp),
+        elevation = CardDefaults.cardElevation(2.dp)
     ) {
-        // Box to align content inside the card
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp) // Padding inside the card
-        ) {
+        Box(modifier = Modifier.fillMaxWidth().padding(8.dp)) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically, // Center vertically
-                horizontalArrangement = Arrangement.SpaceBetween // Spread text and buttons
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
                     text = "Title: ${subTopic?.name}",
-                    style = MaterialTheme.typography.bodyLarge, color = Color.Blue,
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = Color.Blue,
                     textDecoration = TextDecoration.Underline,
                     modifier = Modifier.weight(1f)
                 )
             }
         }
         Row(modifier = Modifier.align(Alignment.CenterHorizontally)) {
-
-            if (Hawk.get<Boolean?>("role").equals("admin")) {
-                // Edit Button
+            if (Hawk.get<String?>("role") == "admin") {
                 Button(
                     onClick = {
-                        val subTopicId = subTopic?.id ?: ""
-                        val lessonId = lessonID ?: ""
-
-                        navController.navigate("editSubLesson/$subTopicId/$lessonId")
+                        navController.navigate("editSubLesson/${subTopic?.id}/$lessonID")
                     },
                     colors = ButtonDefaults.buttonColors(containerColor = editColor),
-                    modifier = Modifier.padding(end = 8.dp) // Spacing between buttons
+                    modifier = Modifier.padding(end = 8.dp)
                 ) {
                     Text("Edit", color = Color.White)
                 }
 
-                // Delete Button
                 Button(
                     onClick = {
-                        viewModel.deleteSubLesson(lessonID, subTopic!!.id,
+                        viewModel.deleteSubLesson(
+                            lessonID,
+                            subTopic!!.id,
                             onSuccess = {
-                                Toast.makeText(
-                                    context,
-                                    "Successfully deleted",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-
+                                Toast.makeText(context, "Deleted successfully", Toast.LENGTH_SHORT).show()
                                 navController.navigate("adminHome")
                             },
                             onFailure = { error ->
                                 Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
-                            })
+                            }
+                        )
                     },
                     colors = ButtonDefaults.buttonColors(containerColor = deleteColor)
                 ) {
@@ -116,4 +101,3 @@ fun SubLessonCard(
         }
     }
 }
-

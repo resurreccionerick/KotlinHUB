@@ -116,9 +116,11 @@ fun AssessmentDetailsScreen(
                         ) {
                             ExtendedFloatingActionButton(
                                 onClick = {
-                                    openTheLink(
-                                        context, getLink
-                                    )
+//                                    openTheLink(
+//                                        context, getLink
+//                                    )
+                                    val encodedUrl = Uri.encode(getLink)
+                                    navController.navigate("webViewAssessment/${encodedUrl}")
                                 },
                                 icon = {
                                     Icon(
@@ -132,7 +134,7 @@ fun AssessmentDetailsScreen(
                                         Color.Blue,
                                         shape = RoundedCornerShape(8.dp)
                                     ),
-                                containerColor =   Color.Blue,
+                                containerColor = Color.Blue,
                                 contentColor = Color.White
                             )
                         }
@@ -142,7 +144,9 @@ fun AssessmentDetailsScreen(
                         ) {
                             ExtendedFloatingActionButton(
                                 onClick = {
-                                    openAlertDialog.value = true
+                                    //openAlertDialog.value = true
+                                    val encodedUrl = Uri.encode("https://play.kotlinlang.org/")
+                                    navController.navigate("webViewAssessment/${encodedUrl}")
                                 },
 
 
@@ -225,13 +229,8 @@ fun openTheLink(context: Context, s: String) {
     val intent = Intent(Intent.ACTION_VIEW)
     intent.data = Uri.parse(url)
 
-//    if (intent.resolveActivity(context.packageManager) != null) {
     context.startActivity(intent)  // Launch browser with the URL
-//    } else {
-//        Toast.makeText(
-//            context, "No browser found to open this link", Toast.LENGTH_SHORT
-//        ).show()
-//    }
+
 }
 
 fun isKotlinLangUrl(url: String): Boolean {

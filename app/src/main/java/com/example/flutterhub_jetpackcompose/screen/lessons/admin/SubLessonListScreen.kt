@@ -38,7 +38,6 @@ fun SubLessonListScreen(
     lessonID: String,
     context: Context
 ) {
-
     LaunchedEffect(lessonID) {
         viewModel.loadSubLessons(lessonID)
     }
@@ -46,29 +45,23 @@ fun SubLessonListScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(text = "Table of contents") },
+                title = { Text("Table of contents") },
                 navigationIcon = {
-                    IconButton(onClick = {
-                        navController.popBackStack()
-                    }) {
-                        Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Back")
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(Icons.Default.ArrowBack, contentDescription = "Back")
                     }
                 }
             )
         },
-
         floatingActionButton = {
-            if (Hawk.get<String?>("role") == "admin") { // Show FAB only for admins
+            if (Hawk.get<String?>("role") == "admin") {
                 FloatingActionButton(
-                    onClick = {
-                        navController.navigate("addLesson/${lessonID}")
-                    } // Open dialog on press
+                    onClick = { navController.navigate("addLesson/$lessonID") }
                 ) {
                     Icon(Icons.Default.Add, contentDescription = "Add Lesson")
                 }
             }
         }
-
     ) { paddingValues ->
         Column(
             modifier = Modifier
@@ -78,18 +71,14 @@ fun SubLessonListScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             if (viewModel.isLoading.value) {
-                CircularProgressIndicator() // Show a loading indicator
+                CircularProgressIndicator()
             } else {
-                if (viewModel.subLessons.isNotEmpty()) {
-                    Log.e("SUBLESSONS DATA", "Fetched ${viewModel.subLessons.size} sub-lessons")
-                } else {
-                    Log.e("SUBLESSONS DATA", "No sub-lessons found")
-                }
                 LazyColumn {
                     items(viewModel.subLessons) { subLesson ->
                         SubLessonCard(
-                            navController, lessonID,
-                            subLesson,
+                            navController = navController,
+                            lessonID = lessonID,
+                            subTopic = subLesson,
                             viewModel = viewModel,
                             context = context
                         )
