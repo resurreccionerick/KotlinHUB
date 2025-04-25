@@ -1,6 +1,7 @@
 package com.example.flutterhub_jetpackcompose.screen.home
 
 import android.content.Context
+import android.net.Uri
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Arrangement
@@ -127,16 +128,30 @@ fun UserHomeScreen(navController: NavController, viewModel: AppViewModel, contex
                             )
                         }
 
-                        ImageCard(
-                            label = "Code Runner",
-                            imageRes = R.drawable.developer,
-                            imgHeight = 450,
-                            onClick = {
-                                // viewModel.loadAssessment(user!!.id)
-                                navController.navigate("assessmentHome")
-                            },
-                            modifier = Modifier.weight(1f)
-                        )
+                        Column(Modifier.weight(1f)) {
+                            ImageCard(
+                                label = "Code Runner",
+                                imageRes = R.drawable.code_runner,
+                                imgHeight = 201,
+                                onClick = {
+                                    val encodedUrl = Uri.encode("https://play.kotlinlang.org/")
+                                    navController.navigate("webViewAssessment/${encodedUrl}")
+                                },
+                                modifier = Modifier.weight(1f) // Add weight modifier here
+                            )
+
+                            Spacer(modifier = Modifier.height(8.dp))
+
+                            ImageCard(
+                                label = "Assessment",
+                                imageRes = R.drawable.developer,
+                                imgHeight = 201,
+                                onClick = {
+                                    navController.navigate("assessmentHome")
+                                },
+                                modifier = Modifier.weight(1f) // Add weight modifier here
+                            )
+                        }
                     }
 
                     Spacer(modifier = Modifier.height(50.dp))

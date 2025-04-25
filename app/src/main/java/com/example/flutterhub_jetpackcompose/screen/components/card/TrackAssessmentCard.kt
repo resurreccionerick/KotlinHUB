@@ -88,7 +88,7 @@ fun TrackAssessmentCard(
 
                         Button(
                             onClick = {
-                                openTheLink(context, link.link)
+                                openTheLink(navController,link.link)
                             },
                             colors = ButtonDefaults.buttonColors(
                                 containerColor = Color.Magenta.copy(alpha = 0.5f)

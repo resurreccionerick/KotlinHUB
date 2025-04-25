@@ -15,12 +15,13 @@ import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.ui.PlayerView
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavController
 import com.example.flutterhub_jetpackcompose.R
 import com.example.flutterhub_jetpackcompose.screen.components.screen.openTheLink
 
 
 @Composable
-fun WatchInstructions(context: Context, onDismiss: () -> Unit) {
+fun WatchInstructions(navController: NavController, context: Context, onDismiss: () -> Unit) {
     AlertDialog(
         title = {
             Text(text = "Video Tutorial:", modifier = Modifier.fillMaxWidth())
@@ -58,8 +59,7 @@ fun WatchInstructions(context: Context, onDismiss: () -> Unit) {
             TextButton(
                 onClick = {
                     openTheLink(
-                        context,
-                        "https://pl.kotl.in/uEvbtyfH0"
+                        navController = navController, "https://play.kotlinlang.org/"
                     )
                 }
             ) {
@@ -69,8 +69,5 @@ fun WatchInstructions(context: Context, onDismiss: () -> Unit) {
         onDismissRequest = {
             onDismiss()
         },
-
-
-
-        )
+    )
 }

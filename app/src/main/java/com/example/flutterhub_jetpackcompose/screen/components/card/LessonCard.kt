@@ -66,7 +66,7 @@ fun LessonCard(
                 horizontalArrangement = Arrangement.SpaceBetween // Spread text and buttons
             ) {
                 Text(
-                    text = "Title: ${lesson.name}",
+                    text =  lesson.name,
                     style = MaterialTheme.typography.bodyLarge,
                     modifier = Modifier.weight(1f)
                 )

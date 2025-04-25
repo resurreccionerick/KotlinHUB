@@ -116,9 +116,6 @@ fun AssessmentDetailsScreen(
                         ) {
                             ExtendedFloatingActionButton(
                                 onClick = {
-//                                    openTheLink(
-//                                        context, getLink
-//                                    )
                                     val encodedUrl = Uri.encode(getLink)
                                     navController.navigate("webViewAssessment/${encodedUrl}")
                                 },
@@ -144,9 +141,7 @@ fun AssessmentDetailsScreen(
                         ) {
                             ExtendedFloatingActionButton(
                                 onClick = {
-                                    //openAlertDialog.value = true
-                                    val encodedUrl = Uri.encode("https://play.kotlinlang.org/")
-                                    navController.navigate("webViewAssessment/${encodedUrl}")
+                                    openAlertDialog.value = true
                                 },
 
 
@@ -170,7 +165,7 @@ fun AssessmentDetailsScreen(
                     }
 
                     if (openAlertDialog.value) {
-                        InstructionsAlertDialog(context = context,
+                        InstructionsAlertDialog(navController, context = context,
                             onDismiss = { openAlertDialog.value = false })
                     }
                 }
@@ -224,12 +219,14 @@ fun AssessmentDetailsScreen(
     })
 }
 
-fun openTheLink(context: Context, s: String) {
-    val url = s
-    val intent = Intent(Intent.ACTION_VIEW)
-    intent.data = Uri.parse(url)
-
-    context.startActivity(intent)  // Launch browser with the URL
+fun openTheLink(navController: NavController, link: String) {
+//    val url = s
+//    val intent = Intent(Intent.ACTION_VIEW)
+//    intent.data = Uri.parse(url)
+//
+//    context.startActivity(intent)  // Launch browser with the URL
+    val encodedUrl = Uri.encode(link)
+    navController.navigate("webViewAssessment/${encodedUrl}")
 
 }
 

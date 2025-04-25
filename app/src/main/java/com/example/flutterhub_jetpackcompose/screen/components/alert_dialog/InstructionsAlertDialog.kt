@@ -10,11 +10,12 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.navigation.NavController
 import com.example.flutterhub_jetpackcompose.screen.components.WatchInstructions
 import com.example.flutterhub_jetpackcompose.screen.components.screen.openTheLink
 
 @Composable
-fun InstructionsAlertDialog(context: Context, onDismiss: () -> Unit) {
+fun InstructionsAlertDialog(navController: NavController, context: Context, onDismiss: () -> Unit) {
     val openWatchDialog = remember { mutableStateOf(false) }
 
     AlertDialog(
@@ -32,15 +33,15 @@ fun InstructionsAlertDialog(context: Context, onDismiss: () -> Unit) {
                         "4. Paste the copied link into the input text box at the bottom part of the assessment form/page."
             )
         },
-        dismissButton = {
-            TextButton(
-                onClick = {
-                    openWatchDialog.value = true
-                }
-            ) {
-                Text("Watch Tutorial")
-            }
-        },
+//        dismissButton = {
+//            TextButton(
+//                onClick = {
+//                    openWatchDialog.value = true
+//                }
+//            ) {
+//                Text("Watch Tutorial")
+//            }
+//        },
 
         onDismissRequest = {
             onDismiss()
@@ -49,8 +50,8 @@ fun InstructionsAlertDialog(context: Context, onDismiss: () -> Unit) {
             TextButton(
                 onClick = {
                     openTheLink(
-                        context,
-                        "https://pl.kotl.in/uEvbtyfH0"
+                        navController,
+                        "https://play.kotlinlang.org/"
                     )
                 }
             ) {
@@ -58,7 +59,10 @@ fun InstructionsAlertDialog(context: Context, onDismiss: () -> Unit) {
             }
 
             if (openWatchDialog.value) {
-                WatchInstructions(context = context, onDismiss = { openWatchDialog.value = false }
+                WatchInstructions(
+                    navController = navController,
+                    context = context,
+                    onDismiss = { openWatchDialog.value = false }
                 )
             }
         },

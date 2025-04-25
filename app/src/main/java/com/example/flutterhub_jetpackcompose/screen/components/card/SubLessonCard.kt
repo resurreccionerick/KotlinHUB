@@ -59,7 +59,7 @@ fun SubLessonCard(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = "Title: ${subTopic?.name}",
+                    text = "${subTopic?.name}",
                     style = MaterialTheme.typography.bodyLarge,
                     color = Color.Blue,
                     textDecoration = TextDecoration.Underline,

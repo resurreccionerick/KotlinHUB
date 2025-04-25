@@ -83,7 +83,7 @@ fun AssessmentCard(
             ) {
                 // Title at the top
                 Text(
-                    text = "Title: ${assessmentModel.title}",
+                    text = assessmentModel.title,
                     style = MaterialTheme.typography.bodyLarge,
                     modifier = Modifier
                         .padding(top = 8.dp)

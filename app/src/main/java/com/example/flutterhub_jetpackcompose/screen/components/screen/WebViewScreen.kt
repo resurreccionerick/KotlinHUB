@@ -3,6 +3,7 @@ package com.example.flutterhub_jetpackcompose.screen.components.screen
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Build
+import android.view.LayoutInflater
 import android.webkit.WebChromeClient
 import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
@@ -19,22 +20,27 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavController
+import com.example.flutterhub_jetpackcompose.R
 
 @OptIn(ExperimentalMaterial3Api::class)
-@SuppressLint("SetJavaScriptEnabled") // Suppress warning for enabling JavaScript
+@SuppressLint("SetJavaScriptEnabled")
 @Composable
 fun WebViewScreen(
     navController: NavController,
     context: Context,
     link: String
 ) {
-    // This state will hold the WebView instance
+
     var webView: WebView? by remember { mutableStateOf(null) }
+
+    LaunchedEffect(true) {
+        println("THE LINK WAS: $link")
+    }
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(text = "Assessment") },
+                title = { Text(text = "") },
                 navigationIcon = {
                     IconButton(onClick = {
                         if (webView?.canGoBack() == true) {
@@ -55,53 +61,22 @@ fun WebViewScreen(
                 .fillMaxSize()
                 .padding(paddingValues),
             factory = { ctx ->
-                WebView(ctx).apply {
-                    webViewClient = object : WebViewClient() {
-                        override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
-                            view.loadUrl(request.url.toString())
-                            return false
-                        }
-                    }
+                val view = LayoutInflater.from(ctx).inflate(R.layout.layout, null, false)
+                val webView = view.findViewById<WebView>(R.id.webView)
 
-                    webChromeClient = WebChromeClient()
-
-                    settings.apply {
-                        javaScriptEnabled = true
-                        domStorageEnabled = true
-                        databaseEnabled = true
-                        setSupportMultipleWindows(true)
-                        javaScriptCanOpenWindowsAutomatically = true
-                        loadsImagesAutomatically = true
-                        mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
-                        userAgentString = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
-                    }
-
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                        WebView.setWebContentsDebuggingEnabled(true)
-                    }
-
+                webView.apply {
+                    settings.javaScriptEnabled = true
+                    settings.domStorageEnabled = true
+                    settings.loadWithOverviewMode = true
+                    settings.useWideViewPort = true
+                    webViewClient = WebViewClient()
                     loadUrl(link)
-                    webView = this
                 }
+
+                view // Return the root view
             }
         )
     }
-//    { paddingValues ->
-//
-//        AndroidView(
-//            modifier = Modifier
-//                .fillMaxSize()
-//                .padding(paddingValues),
-//            factory = {
-//                WebView(context).apply {
-//                    webViewClient = WebViewClient()
-//                    settings.javaScriptEnabled = true
-//                    loadUrl(link)
-//                    webView = this
-//                }
-//            }
-//        )
-//    }
 
     // Optional: handle hardware back press
     BackHandler(enabled = webView?.canGoBack() == true) {
