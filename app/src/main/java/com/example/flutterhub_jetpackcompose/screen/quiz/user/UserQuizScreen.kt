@@ -73,43 +73,49 @@ fun UserQuizScreen(
     }
 
     if (showResult) {
-        // Show the quiz result
-        Column(
+        // Show the quiz result centered
+        Box(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            contentAlignment = Alignment.Center
         ) {
-            Text(text = "Quiz Completed!", fontSize = 32.sp, fontWeight = FontWeight.Bold)
-            Spacer(modifier = Modifier.height(16.dp))
-            Text(text = "Your Score: $score / ${quizzes.size}", fontSize = 24.sp)
-            Spacer(modifier = Modifier.height(32.dp))
-            Button(onClick = {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(text = "Quiz Completed!", fontSize = 32.sp, fontWeight = FontWeight.Bold)
+                Spacer(modifier = Modifier.height(16.dp))
+                Text(text = "Your Score: $score / ${quizzes.size}", fontSize = 24.sp)
+                Spacer(modifier = Modifier.height(32.dp))
+                Button(onClick = {
 
-                val userModel = Hawk.get<UserModel>("user_details")
+                    val userModel = Hawk.get<UserModel>("user_details")
 
-                val scoreModel =
-                    quizScoreModel.copy(
+                    val scoreModel = quizScoreModel.copy(
                         id = userModel.id,
                         score = score.toString(),
                         name = userModel.name
                     )
 
-                viewModel.refreshLessonDifficulty()
-                viewModel.saveQuizScore(user!!.id, scoreModel,
-                    onSuccess = {
-                        Toast.makeText(context, "Score saved", Toast.LENGTH_SHORT).show();
-                    }, onFailure = { msg ->
-                        Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
-                    })
-                navController.popBackStack()
+                    viewModel.refreshLessonDifficulty()
+                    viewModel.saveQuizScore(user!!.id, scoreModel,
+                        onSuccess = {
+                            Toast.makeText(context, "Score saved", Toast.LENGTH_SHORT).show()
+                        },
+                        onFailure = { msg ->
+                            Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+                        }
+                    )
+                    navController.popBackStack()
 
-            }) {
-                Text("Back to Home")
+                }) {
+                    Text("Back to Home")
+                }
             }
         }
         return
     }
+
 
     // Get the current quiz question
     val currentQuiz = quizzes[currentIndex]

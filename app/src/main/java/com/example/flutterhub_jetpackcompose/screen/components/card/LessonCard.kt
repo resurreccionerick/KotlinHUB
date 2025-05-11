@@ -9,13 +9,19 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -42,7 +48,7 @@ fun LessonCard(
     // Conditionally apply colors
     val editColor = if (isDarkMode) EditGreenDark else EditGreenLight
     val deleteColor = if (isDarkMode) DeleteRedDark else DeleteRedLight
-
+    var openDeleteDialog by remember { mutableStateOf(false) }
 
     Card(
         onClick = {
@@ -66,7 +72,7 @@ fun LessonCard(
                 horizontalArrangement = Arrangement.SpaceBetween // Spread text and buttons
             ) {
                 Text(
-                    text =  lesson.name,
+                    text = lesson.name,
                     style = MaterialTheme.typography.bodyLarge,
                     modifier = Modifier.weight(1f)
                 )
@@ -87,22 +93,42 @@ fun LessonCard(
                 }
 
                 // Delete Button
-                Button(
-                    onClick = {
-                        viewModel.deleteLesson(lesson.id,
-                            onSuccess = {
-                                Toast.makeText(
-                                    context,
-                                    "Successfully deleted",
-                                    Toast.LENGTH_SHORT
-                                ).show()
+                if (openDeleteDialog) {
+                    AlertDialog(
+                        onDismissRequest = { openDeleteDialog = false },
+                        title = { Text("Confirm Deletion") },
+                        text = { Text("Are you sure you want to delete this lesson?") },
+                        confirmButton = {
+                            TextButton(onClick = {
+                                viewModel.deleteLesson(lessonID = lesson.id,
+                                    onSuccess = {
+                                        Toast.makeText(
+                                            context,
+                                            "Successfully deleted",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    },
+                                    onFailure = { error ->
+                                        Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
+                                    }
+                                )
+                                openDeleteDialog = false  // Close dialog after confirmation
+                            }) {
+                                Text("Yes")
+                            }
+                        },
+                        dismissButton = {
+                            TextButton(onClick = { openDeleteDialog = false }) {
+                                Text("Cancel")
+                            }
+                        }
+                    )
+                }
 
-                            },
-                            onFailure = { error ->
-                                Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
-                            })
-                    },
-                    colors = ButtonDefaults.buttonColors(containerColor = deleteColor)
+                // Button to trigger dialog
+                Button(
+                    onClick = { openDeleteDialog = true },
+                    colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
                 ) {
                     Text("Delete", color = Color.White)
                 }

@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
@@ -34,6 +35,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -53,11 +55,35 @@ fun LoginScreen(navController: NavController, viewModel: AppViewModel, context: 
     var isPasswordVisible by remember { mutableStateOf(false) }
     var isLoading by remember { mutableStateOf(viewModel.isLoading.value) }
 
+
+    fun performSignIn() {
+        if (email.isNotEmpty() && password.isNotEmpty()) {
+            isLoading = true
+            viewModel.userLogin(email, password,
+                onSuccess = {
+                    isLoading = false
+                    if (email == "esr@gmail.com" || email == "hanansworks@gmail.com") {
+                        Hawk.put("role", "admin")
+                        navController.navigate("adminHome")
+                    } else {
+                        Hawk.put("role", "user")
+                        navController.navigate("userHome")
+                    }
+                },
+                onFailure = { errorMsg ->
+                    isLoading = false
+                    Toast.makeText(context, errorMsg, Toast.LENGTH_SHORT).show()
+                })
+        } else {
+            Toast.makeText(context, "Please enter all fields", Toast.LENGTH_SHORT).show()
+        }
+    }
+
     if (isLoading) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color.Black.copy(alpha = 0.5f)), // Semi-transparent overlay
+                .background(Color.Black.copy(alpha = 0.5f)),
             contentAlignment = Alignment.Center
         ) {
             CircularProgressIndicator()
@@ -70,7 +96,6 @@ fun LoginScreen(navController: NavController, viewModel: AppViewModel, context: 
                 title = { Text(text = "") },
             )
         },
-
         content = { paddingValues ->
             Column(
                 modifier = Modifier
@@ -78,9 +103,7 @@ fun LoginScreen(navController: NavController, viewModel: AppViewModel, context: 
                     .padding(paddingValues)
                     .padding(16.dp),
             ) {
-
                 if (!isLoading) {
-
                     Image(
                         painter = painterResource(id = R.drawable.app_logo_login),
                         contentDescription = "app logo",
@@ -116,7 +139,14 @@ fun LoginScreen(navController: NavController, viewModel: AppViewModel, context: 
                                 )
                             }
                         },
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth(),
+                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                        keyboardActions = KeyboardActions(
+                            onDone = {
+                                performSignIn()
+                            }
+                        ),
+                        singleLine = true
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))
@@ -130,32 +160,7 @@ fun LoginScreen(navController: NavController, viewModel: AppViewModel, context: 
                     Spacer(modifier = Modifier.height(16.dp))
 
                     Button(onClick = {
-                        if (email.isNotEmpty() && password.isNotEmpty()) {
-                            isLoading = true
-
-
-                            viewModel.userLogin(email, password,
-                                onSuccess = {
-                                    isLoading = false
-                                    if (email == "esr@gmail.com" || email == "hanansworks@gmail.com") {
-                                        Hawk.put("role", "admin")
-                                        navController.navigate("adminHome")
-                                    } else {
-                                        Hawk.put("role", "user")
-                                        navController.navigate("userHome")
-                                    }
-
-                                },
-                                onFailure = { errorMsg ->
-                                    isLoading = false
-                                    Toast.makeText(context, errorMsg, Toast.LENGTH_SHORT).show()
-                                })
-
-
-                        } else {
-                            Toast.makeText(context, "Please enter all fields", Toast.LENGTH_SHORT)
-                                .show()
-                        }
+                        performSignIn()
                     }, modifier = Modifier.align(Alignment.CenterHorizontally)) {
                         Text("Sign In")
                     }
@@ -167,8 +172,6 @@ fun LoginScreen(navController: NavController, viewModel: AppViewModel, context: 
                     }, modifier = Modifier.align(Alignment.CenterHorizontally)) {
                         Text("Don't have an account yet? Sign up now")
                     }
-
-
                 }
             }
         })
