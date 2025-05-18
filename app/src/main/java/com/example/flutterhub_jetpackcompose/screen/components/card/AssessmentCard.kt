@@ -2,6 +2,7 @@ package com.example.flutterhub_jetpackcompose.screen.components.card
 
 import android.content.Context
 import android.widget.Toast
+import androidx.compose.foundation.border
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -57,8 +58,8 @@ fun AssessmentCard(
 
     // Conditionally apply colors
     val editColor = if (isDarkMode) EditGreenDark else EditGreenLight
-    val deleteColor = if (isDarkMode) DeleteRedDark else DeleteRedLight
-    val trackColor = if (isDarkMode) TrackBlueDark else TrackBlueLight
+//    val deleteColor = if (isDarkMode) DeleteRedDark else DeleteRedLight
+//    val trackColor = if (isDarkMode) TrackBlueDark else TrackBlueLight
 
     // Get the specific link for the current user from the assessment
     val userLink = assessmentModel.links?.get(userId)
@@ -76,8 +77,16 @@ fun AssessmentCard(
         shape = RoundedCornerShape(8.dp), // Rounded corners for the card
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp), // Card padding
-        elevation = CardDefaults.cardElevation(4.dp) // Card elevation (shadow effect)
+            .padding(8.dp)
+            .then(
+                if (isChecked != null) Modifier.border(
+                    width = 2.dp,
+                    color = MaterialTheme.colorScheme.primary,
+                    shape = RoundedCornerShape(8.dp)
+                ) else Modifier
+            ),
+        elevation = CardDefaults.cardElevation(4.dp)
+
     ) {
         Box(
             modifier = Modifier

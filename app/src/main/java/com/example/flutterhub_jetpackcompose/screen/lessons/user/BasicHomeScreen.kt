@@ -71,7 +71,7 @@ fun BasicHomeScreen(navController: NavController, viewModel: AppViewModel, conte
                 CircularProgressIndicator()
             } else {
                 LazyColumn {
-                    items(viewModel.lessons) { lesson ->
+                    items(viewModel.lessons.sortedBy { it.order }) { lesson ->
                         LessonCard(navController, lesson, viewModel, context)
                     }
                 }

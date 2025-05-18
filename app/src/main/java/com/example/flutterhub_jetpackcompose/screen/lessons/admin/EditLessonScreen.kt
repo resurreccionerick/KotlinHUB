@@ -3,6 +3,7 @@ package com.example.flutterhub_jetpackcompose.screen.lessons.admin
 import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
@@ -10,6 +11,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.flutterhub_jetpackcompose.data.models.LessonModel
@@ -23,8 +25,8 @@ fun EditLessonScreen(
     lessonModel: LessonModel,
     context: Context
 ) {
-
-    var title by rememberSaveable { mutableStateOf(lessonModel.name) }
+    var title by remember { mutableStateOf(lessonModel.name) }
+    var order by remember { mutableStateOf(lessonModel.order.toString()) }
 
     Scaffold(
         topBar = {
@@ -47,6 +49,7 @@ fun EditLessonScreen(
                     .fillMaxSize()
                     .padding(16.dp)
             ) {
+
                 OutlinedTextField(
                     value = title,
                     onValueChange = { title = it },
@@ -54,11 +57,25 @@ fun EditLessonScreen(
                     modifier = Modifier.fillMaxWidth()
                 )
 
+                Spacer(modifier = Modifier.height(8.dp))
+
+                OutlinedTextField(
+                    value = order,
+                    onValueChange = { newValue ->
+                        if (newValue.isEmpty() || newValue.toIntOrNull() != null) {
+                            order = newValue
+                        }
+                    },
+                    label = { Text("Order") },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    modifier = Modifier.fillMaxWidth()
+                )
+
                 Spacer(modifier = Modifier.height(32.dp))
 
                 Button(onClick = {
-                    if (title.isNotEmpty() ) {
-                        val lesson = lessonModel.copy(name = title)
+                    if (title.isNotEmpty()) {
+                        val lesson = lessonModel.copy(name = title, order = order.toInt())
                         viewModel.updateLesson(
                             lesson,
                             onSuccess = {

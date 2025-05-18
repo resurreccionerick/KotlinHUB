@@ -97,12 +97,13 @@ class AppViewModel @Inject constructor(
 
     fun addNewLesson(
         name: String,
+        order: Int,
         onSuccess: () -> Unit,
         onFailure: (String) -> Unit
     ) {
         viewModelScope.launch {
             val lesson = LessonModel(
-                id = "", name = name,
+                id = "", name = name, order = order
             )
 
             repository.addLesson(lesson,

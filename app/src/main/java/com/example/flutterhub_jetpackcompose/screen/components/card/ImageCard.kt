@@ -33,7 +33,7 @@ fun ImageCard(
 ) {
     Card(
         modifier = modifier
-            .padding(8.dp, 0.dp, 0.dp, 0.dp)
+            .padding(4.dp, 0.dp, 4.dp, 0.dp)
             .height(imgHeight.dp)
             .clickable {
                 onClick()
@@ -53,10 +53,10 @@ fun ImageCard(
                 painter = painterResource(id = imageRes),
                 contentDescription = null,
                 modifier = Modifier
-                    .size(100.dp)
+                    .size(60.dp)
                     .clip(CircleShape)
             )
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(8.dp))
             Text(text = label, fontWeight = FontWeight.Bold)
         }
     }

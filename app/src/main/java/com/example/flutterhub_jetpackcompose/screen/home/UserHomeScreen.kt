@@ -92,67 +92,71 @@ fun UserHomeScreen(navController: NavController, viewModel: AppViewModel, contex
                         .fillMaxSize()
                         .padding(16.dp)
                 ) {
+                    Text("Kotlin Lesson: ", fontWeight = FontWeight.Bold)
 
-                    Row(
-                        modifier = Modifier.weight(2f)
-                    ) {
-                        Column(
-                            modifier = Modifier
-                                .weight(1f)
-                                .padding(end = 8.dp),
-                            verticalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            ImageRowCard(
-                                label = "Basic", imageRes = R.drawable.easy_colored, onClick = {
-                                    Hawk.put("difficulty", "basic")
-                                    viewModel.refreshLessonDifficulty()
-                                    navController.navigate("adminBasic")
-                                }, modifier = Modifier.weight(1f)
-                            )
+                    Row() {
+                        ImageCard(
+                            label = "Basic",
+                            imageRes = R.drawable.easy_colored,
+                            imgHeight = 120,
+                            onClick = {
+                                Hawk.put("difficulty", "basic")
+                                viewModel.refreshLessonDifficulty()
+                                navController.navigate("adminBasic")
+                            },
+                            modifier = Modifier.weight(1f)
+                        )
 
-                            ImageRowCard(
-                                label = "Intermediate",
-                                imageRes = R.drawable.muscle_colored,
-                                onClick = {
-                                    Hawk.put("difficulty", "intermediate")
-                                    viewModel.refreshLessonDifficulty()
-                                    navController.navigate("adminIntermediate")
-                                }, modifier = Modifier.weight(1f)
-                            )
+                        ImageCard(
+                            label = "Intermediate",
+                            imageRes = R.drawable.muscle_colored,
+                            imgHeight = 120,
+                            onClick = {
+                                Hawk.put("difficulty", "intermediate")
+                                viewModel.refreshLessonDifficulty()
+                                navController.navigate("adminIntermediate")
+                            },
+                            modifier = Modifier.weight(1f)
+                        )
 
-                            ImageRowCard(
-                                label = "Quiz", imageRes = R.drawable.quiz, onClick = {
-                                    viewModel.loadQuizzes()
-                                    navController.navigate("difficultyQuiz")
-                                }, modifier = Modifier.weight(1f)
-                            )
-                        }
-
-                        Column(Modifier.weight(1f)) {
-                            ImageCard(
-                                label = "Code Runner",
-                                imageRes = R.drawable.code_runner,
-                                imgHeight = 201,
-                                onClick = {
-                                    val encodedUrl = Uri.encode("https://play.kotlinlang.org/")
-                                    navController.navigate("webViewAssessment/${encodedUrl}")
-                                },
-                                modifier = Modifier.weight(1f) // Add weight modifier here
-                            )
-
-                            Spacer(modifier = Modifier.height(8.dp))
-
-                            ImageCard(
-                                label = "Assessment",
-                                imageRes = R.drawable.developer,
-                                imgHeight = 201,
-                                onClick = {
-                                    navController.navigate("assessmentHome")
-                                },
-                                modifier = Modifier.weight(1f) // Add weight modifier here
-                            )
-                        }
                     }
+
+                    Spacer(modifier = Modifier.height(20.dp))
+                    Text("Test your knowledge: ", fontWeight = FontWeight.Bold)
+
+                    Row() {
+                        ImageCard(
+                            label = "Quiz",
+                            imageRes = R.drawable.quiz,
+                            imgHeight = 120,
+                            onClick = {
+                                viewModel.loadQuizzes()
+                                navController.navigate("difficultyQuiz")
+                            },
+                            modifier = Modifier.weight(1f)
+                        )
+
+                        ImageCard(
+                            label = "Assessment",
+                            imageRes = R.drawable.developer,
+                            imgHeight = 120,
+                            onClick = {
+                                navController.navigate("assessmentHome")
+                            },
+                            modifier = Modifier.weight(1f)
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(10.dp))
+                    ImageCard(
+                        label = "Kotlin Sandbox",
+                        imageRes = R.drawable.code_runner,
+                        imgHeight = 120,
+                        onClick = {
+                            val encodedUrl = Uri.encode("https://play.kotlinlang.org/")
+                            navController.navigate("webViewAssessment/${encodedUrl}")
+                        },
+                        modifier = Modifier.weight(1f) // Add weight modifier here
+                    )
 
                     Spacer(modifier = Modifier.height(50.dp))
 

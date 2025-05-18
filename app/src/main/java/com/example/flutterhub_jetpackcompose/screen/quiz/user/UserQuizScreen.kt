@@ -12,11 +12,20 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.RadioButton
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -28,6 +37,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -39,6 +49,7 @@ import com.example.flutterhub_jetpackcompose.viewmodel.AppViewModel
 import com.orhanobut.hawk.Hawk
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UserQuizScreen(
     navController: NavController,
@@ -51,12 +62,13 @@ fun UserQuizScreen(
     var selectedAnswer by remember { mutableStateOf("") }
     var score by remember { mutableIntStateOf(0) }
     var showResult by remember { mutableStateOf(false) }
-    var answered by remember { mutableStateOf(false) } // Track if answer is submitted
+    var answered by remember { mutableStateOf(false) }
     var showDesc by remember { mutableStateOf(false) }
     var isCorrect by remember { mutableStateOf(false) }
+    var showExitDialog by remember { mutableStateOf(false) }
+
     val user: UserModel? = Hawk.get("user_details")
 
-    // Load quizzes when the screen opens
     LaunchedEffect(Unit) {
         quizzes = viewModel.quizzes
     }
@@ -67,30 +79,24 @@ fun UserQuizScreen(
             contentAlignment = Alignment.Center
         ) {
             CircularProgressIndicator()
-            Toast.makeText(context, "No quiz available", Toast.LENGTH_SHORT)
         }
         return
     }
 
     if (showResult) {
-        // Show the quiz result centered
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(16.dp),
             contentAlignment = Alignment.Center
         ) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(text = "Quiz Completed!", fontSize = 32.sp, fontWeight = FontWeight.Bold)
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(text = "Your Score: $score / ${quizzes.size}", fontSize = 24.sp)
                 Spacer(modifier = Modifier.height(32.dp))
                 Button(onClick = {
-
                     val userModel = Hawk.get<UserModel>("user_details")
-
                     val scoreModel = quizScoreModel.copy(
                         id = userModel.id,
                         score = score.toString(),
@@ -98,7 +104,8 @@ fun UserQuizScreen(
                     )
 
                     viewModel.refreshLessonDifficulty()
-                    viewModel.saveQuizScore(user!!.id, scoreModel,
+                    viewModel.saveQuizScore(
+                        user!!.id, scoreModel,
                         onSuccess = {
                             Toast.makeText(context, "Score saved", Toast.LENGTH_SHORT).show()
                         },
@@ -107,7 +114,6 @@ fun UserQuizScreen(
                         }
                     )
                     navController.popBackStack()
-
                 }) {
                     Text("Back to Home")
                 }
@@ -116,134 +122,141 @@ fun UserQuizScreen(
         return
     }
 
-
-    // Get the current quiz question
     val currentQuiz = quizzes[currentIndex]
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        // Show question number
-        Text(
-            text = "Question ${currentIndex + 1} / ${quizzes.size}",
-            fontSize = 14.sp,
-            fontWeight = FontWeight.Medium
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Show the question
-        Text(text = currentQuiz.question, fontSize = 20.sp, fontWeight = FontWeight.Bold)
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Display answer choices
-        currentQuiz.choices.forEach { choice ->
-            Row(
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text("Question ${currentIndex + 1} / ${quizzes.size}")
+                },
+                navigationIcon = {
+                    IconButton(onClick = {
+                        showExitDialog = true
+                    }) {
+                        Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                    }
+                }
+            )
+        }
+    ) { padding ->
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding),
+            contentAlignment = Alignment.Center
+        ) {
+            Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clickable { selectedAnswer = choice }
-                    .padding(vertical = 8.dp),
-                verticalAlignment = Alignment.CenterVertically
+                    .padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                RadioButton(
-                    selected = selectedAnswer == choice,
+                Text(
+                    text = currentQuiz.question,
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Center
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                currentQuiz.choices.forEach { choice ->
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable { selectedAnswer = choice }
+                            .padding(vertical = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        RadioButton(
+                            selected = selectedAnswer == choice,
+                            onClick = {
+                                if (!answered) selectedAnswer = choice
+                            },
+                            enabled = !answered
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            text = choice,
+                            fontSize = 16.sp,
+                            modifier = Modifier.clickable(enabled = !answered) {
+                                if (!answered) selectedAnswer = choice
+                            }
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Button(
                     onClick = {
                         if (!answered) {
-                            selectedAnswer = choice
+                            if (selectedAnswer.isNotEmpty()) {
+                                isCorrect = selectedAnswer == currentQuiz.selectedAns
+                                showDesc = isCorrect
+                                if (isCorrect) score++
+                                answered = true
+                            } else {
+                                Toast.makeText(context, "Please select an answer", Toast.LENGTH_SHORT).show()
+                            }
+                        } else {
+                            if (currentIndex < quizzes.size - 1) {
+                                currentIndex++
+                                answered = false
+                                selectedAnswer = ""
+                            } else {
+                                showResult = true
+                            }
                         }
                     },
-                    enabled = !answered // Disable after answering
-
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                Text(
-                    text = choice,
-                    fontSize = 16.sp,
-                    modifier = Modifier.clickable(enabled = !answered) {
-                        if (!answered) selectedAnswer = choice
-                    })
-            }
-        }
-
-
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Single button for both actions
-        Button(
-            onClick = {
-                if (!answered) {
-                    // Check if answer is selected
-                    if (selectedAnswer.isNotEmpty()) {
-                        isCorrect = selectedAnswer == currentQuiz.selectedAns
-                        showDesc = isCorrect
-
-                        if (isCorrect) {
-                            score++
-                        }
-
-                        // Show toast feedback
-//                        if (isCorrect) {
-//                            Toast.makeText(
-//                                context,
-//                                "Correct! ${currentQuiz.selectedAns}",
-//                                Toast.LENGTH_SHORT
-//                            ).show()
-//                        } else {
-//                            Toast.makeText(
-//                                context,
-//                                "Wrong! ${currentQuiz.selectedAns}",
-//                                Toast.LENGTH_SHORT
-//                            ).show()
-//                        }
-
-                        answered = true // Mark as answered
-                    } else {
-                        Toast.makeText(context, "Please select an answer", Toast.LENGTH_SHORT)
-                            .show()
-                    }
-                } else {
-                    // Move to the next question or show result
-                    if (currentIndex < quizzes.size - 1) {
-                        currentIndex++
-                        answered = false // Reset for next question
-                        selectedAnswer = "" // Clear selected answer
-                    } else {
-                        showResult = true // Show final result
-                    }
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = if (answered) Color(0xFF1A1A1A) else Color(0xFF2196F3)
+                    )
+                ) {
+                    Text(
+                        text = if (answered) "Next" else "Submit",
+                        color = Color.White
+                    )
                 }
-            },
-            modifier = Modifier.fillMaxWidth(),
-            colors = ButtonDefaults.buttonColors(
-                containerColor =
+
+                Spacer(modifier = Modifier.height(32.dp))
+
                 if (answered) {
-                    Color(0xFF1A1A1A)
-                } else {
-                    Color(0xFF2196F3)
-                }
-            )
-        )
-        {
-            Text(
-                text = if (answered) "Next" else "Submit",
-                color = Color.White
-            )
-        }
-
-        Spacer(modifier = Modifier.height(32.dp))
-
-        Box(modifier = Modifier.padding(start = 16.dp, end = 16.dp)) {
-            if (answered) {
-                if (isCorrect) {
-                    AnswerDescription(isCorrect, currentQuiz.correctDesc)
-                } else {
-                    AnswerDescription(isCorrect, currentQuiz.wrongDesc)
+                    Box(modifier = Modifier.padding(horizontal = 16.dp)) {
+                        if (isCorrect) {
+                            AnswerDescription(isCorrect, currentQuiz.correctDesc)
+                        } else {
+                            AnswerDescription(isCorrect, currentQuiz.wrongDesc)
+                        }
+                    }
                 }
             }
+        }
+
+        // Exit Confirmation Dialog
+        if (showExitDialog) {
+            AlertDialog(
+                onDismissRequest = { showExitDialog = false },
+                title = { Text("Exit Quiz") },
+                text = { Text("Do you want to quit? Your score will not be recorded.") },
+                confirmButton = {
+                    TextButton(
+                        onClick = {
+                            showExitDialog = false
+                            navController.popBackStack()
+                        }
+                    ) {
+                        Text("Yes")
+                    }
+                },
+                dismissButton = {
+                    TextButton(onClick = { showExitDialog = false }) {
+                        Text("No")
+                    }
+                }
+            )
         }
     }
 }
